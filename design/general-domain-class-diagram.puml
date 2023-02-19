@@ -93,11 +93,8 @@ enum Emoji {
     SKELETON
 }
 
-class PageVisit {
-    page : String
-    starttime : DateTime
-    endtime : DateTime
-}
+
+
 
 GeneralAdmin --|> Admin
 CouncilAdmin --|> Admin
@@ -126,10 +123,84 @@ Theme --o Idea
 
 Annoucement --* NewsFeed
 
-Displayable -- Reaction : reactions
-Displayable -- Share : shares
+Displayable "1" -- "*" Reaction : reactions
+Displayable "1" -- "*" Share : shares
 
 Share "*"--"1" User
 Reaction "*"--"1" User
+
+
+' Start design class diagram
+class PageVisit {
+    page : String
+    starttime : DateTime
+    endtime : DateTime
+}
+
+interface UserRepository{
+    save(user : User)
+    delete(user : User)
+    findAll() : List<User>
+    findById(id : Long) : User
+    findByEmail(email : String) : User
+}
+class UserRepositoryImpl implements UserRepository{
+
+}
+
+interface DisplayableRepository{
+    save(displayable : Displayable)
+    delete(displayable : Displayable)
+    findAll() : List<Displayable>
+    findById(id : Long) : Displayable
+}
+class DisplayableRepositoryImpl implements DisplayableRepository{
+
+}
+interface YouthCouncilRepository{
+    save(youthCouncil : YouthCouncil)
+    delete(youthCouncil : YouthCouncil)
+    findAll() : List<YouthCouncil>
+    findById(id : Long) : YouthCouncil
+}
+class YouthCouncilRepositoryImpl implements YouthCouncilRepository{
+}
+interface UserService{
+    getAllUsers() : List<User>
+
+}
+class UserServiceImpl implements UserService{
+    modelMapper : ModelMapper
+}
+interface DisplayableService{
+    getAllDisplayables() : List<Displayable>
+
+}
+class DisplayableServiceImpl implements DisplayableService{
+    modelMapper : ModelMapper
+}
+interface YouthCouncilService{
+    getAllCouncils() : List<YouthCouncil>
+
+}
+class YouthCouncilServiceImpl implements YouthCouncilService{
+    modelMapper : ModelMapper
+}
+
+class DisplayableController{
+
+}
+
+class YouthCouncilController{
+}
+
+UserServiceImpl -- UserRepository
+DisplayableServiceImpl -- DisplayableRepository
+YouthCouncilServiceImpl -- YouthCouncilRepository
+YouthCouncilServiceImpl -- DisplayableRepository
+YouthCouncilController -- YouthCouncilService
+
+DisplayableServiceImpl -- UserRepository
+
 
 @enduml

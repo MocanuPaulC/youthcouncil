@@ -1,0 +1,23 @@
+@startuml
+
+participant ":DisplayableController" as DisplayableController
+participant ":DisplayableService" as DisplayableService
+participant ":DisplayableRepository" as DisplayableRepository
+participant ":UserRepository" as UserRepository
+participant ":Reaction" as Reaction
+participant "displayable1:Displayable" as displayable1
+participant "user1:User" as user1
+
+-> DisplayableController: .react(id, reaction: String, userId)
+DisplayableController-> DisplayableService: .createReactionToPost(id, reaction: String, userID)
+DisplayableService-> DisplayableRepository: .findById(id)
+DisplayableRepository--> DisplayableService: displayable1
+DisplayableService-> UserRepository: .findById(userId)
+UserRepository--> DisplayableService: user1
+DisplayableService-> Reaction : <<create>>(reaction: String)
+DisplayableService-> displayable1 : .addReaction(:Reaction)
+DisplayableService-> user1 : .addReaction(:Reaction)
+
+
+
+@enduml
