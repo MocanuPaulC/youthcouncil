@@ -1,0 +1,12 @@
+@startuml
+
+participant GeneralAdmin
+participant YouthCouncil
+participant CouncilAdmin
+
+
+activate
+GeneralAdmin->YouthCouncil : <<create>>
+
+
+@enduml

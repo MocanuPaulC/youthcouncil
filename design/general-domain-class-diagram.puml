@@ -1,0 +1,135 @@
+@startuml
+' tested userstories
+'26 7
+
+abstract User {
+    firstName : String
+    lastName : String
+    email : String
+    password : String
+    postcode : String
+}
+
+abstract Admin {
+
+}
+
+class GeneralAdmin {
+
+}
+
+class CouncilAdmin {
+    
+}
+
+class Member {
+    isModerator : boolean
+}
+
+class YouthCouncil {
+    councilName : String
+    municipalityName : String
+    councilLogo : String
+    councilQrCode : String
+    afterElection : boolean
+    pathToModulesJson : String
+}
+
+abstract Displayable {
+    title : String
+    description : String
+    images : List<String>
+    videos : List<String>
+}
+
+class CallForIdeas {
+
+}
+
+class Idea {
+}
+
+class InformativePage {
+
+}
+
+class ActionPoint {
+    theme : String
+    label : Label
+}
+
+class Annoucement {
+
+}
+
+class Theme {
+    name : String
+}
+
+enum Label {
+    NOT_INCLUDED
+    INCLUDED
+    IN_PROGRESS
+    REALIZED
+}
+
+class NewsFeed {
+
+}
+
+class Reaction {
+    emoji : Emoji
+}
+
+class Share {
+
+}
+
+enum Emoji {
+    LIKE
+    HEART
+    ROCKET
+    POOP
+    SKELETON
+}
+
+class PageVisit {
+    page : String
+    starttime : DateTime
+    endtime : DateTime
+}
+
+GeneralAdmin --|> Admin
+CouncilAdmin --|> Admin
+Member --|> User
+Admin --|> User
+
+
+CallForIdeas --|> Displayable
+Idea --|> Displayable 
+Idea --* CallForIdeas : ideas
+InformativePage --|> Displayable
+ActionPoint --|> Displayable
+Annoucement --|> Displayable
+
+YouthCouncil "*"--"*" Member : CouncilMembers
+YouthCouncil "*"--"*" Member : BlockedMembers
+YouthCouncil "1"--"*" CouncilAdmin
+
+YouthCouncil "1"--"*" Displayable : displayedModules
+YouthCouncil "1"--"*" Displayable : defaultModules
+
+
+
+Theme --o ActionPoint
+Theme --o Idea
+
+Annoucement --* NewsFeed
+
+Displayable -- Reaction : reactions
+Displayable -- Share : shares
+
+Share "*"--"1" User
+Reaction "*"--"1" User
+
+@enduml
