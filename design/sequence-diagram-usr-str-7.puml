@@ -1,22 +1,22 @@
 @startuml
 
-participant ":DisplayableController" as DisplayableController
-participant ":DisplayableService" as DisplayableService
-participant ":DisplayableRepository" as DisplayableRepository
+participant ":ModuleController" as ModuleController
+participant ":ModuleService" as ModuleService
+participant ":ModuleRepository" as ModuleRepository
 participant ":UserRepository" as UserRepository
 participant ":Reaction" as Reaction
-participant "displayable1:Displayable" as displayable1
+participant "module1:Module" as module1
 participant "user1:User" as user1
 
--> DisplayableController: .react(id, reaction: String, userId)
-DisplayableController-> DisplayableService: .createReactionToPost(id, reaction: String, userID)
-DisplayableService-> DisplayableRepository: .findById(id)
-DisplayableRepository--> DisplayableService: displayable1
-DisplayableService-> UserRepository: .findById(userId)
-UserRepository--> DisplayableService: user1
-DisplayableService-> Reaction : <<create>>(reaction: String)
-DisplayableService-> displayable1 : .addReaction(:Reaction)
-DisplayableService-> user1 : .addReaction(:Reaction)
+-> ModuleController: .react(id, reaction: String, userId)
+ModuleController-> ModuleService: .createReactionToPost(id, reaction: String, userID)
+ModuleService-> ModuleRepository: .findById(id)
+ModuleRepository--> ModuleService: module1
+ModuleService-> UserRepository: .findById(userId)
+UserRepository--> ModuleService: user1
+ModuleService-> Reaction : <<create>>(reaction: String)
+ModuleService-> module1 : .addReaction(:Reaction)
+ModuleService-> user1 : .addReaction(:Reaction)
 
 
 
