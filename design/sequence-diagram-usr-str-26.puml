@@ -1,12 +1,20 @@
 @startuml
 
-participant GeneralAdmin
-participant YouthCouncil
-participant CouncilAdmin
+participant ":YouthCouncilController" as YouthCouncilController
+participant ":YouthCouncilService" as YouthCouncilService
+participant ":ModelMapper" as ModelMapper
+participant ":ModuleRepository" as ModuleRepository
+participant "youthCouncil:YouthCouncil" as youthCouncil
+participant ":YouthCouncilRepository" as YouthCouncilRepository
 
-
-activate
-GeneralAdmin->YouthCouncil : <<create>>
+->YouthCouncilController : .addNewYouthCouncil(YouthCouncilDTO)
+YouthCouncilController->YouthCouncilService : .addNewYouthCouncil(YouthCouncilDTO)
+YouthCouncilService->ModelMapper : .map(YouthCouncilDTO, YouthCouncil.class)
+YouthCouncilService<--ModelMapper : youthCouncil
+YouthCouncilService-> ModuleRepository : .findAll()
+YouthCouncilService<--ModuleRepository : modules
+YouthCouncilService-> youthCouncil: . addDefaultModules(modules)
+YouthCouncilService->YouthCouncilRepository : .save(YouthCouncil)
 
 
 @enduml

@@ -1,0 +1,23 @@
+@startuml
+
+participant ":ModuleController" as ModuleController
+participant ":ModuleService" as ModuleService
+participant ":ModuleRepository" as ModuleRepository
+participant ":UserRepository" as UserRepository
+participant ":Reaction" as Reaction
+participant "module1:Module" as module1
+participant "user1:User" as user1
+
+-> ModuleController: .react(id, reaction: String, userId)
+ModuleController-> ModuleService: .createReactionToPost(id, reaction: String, userID)
+ModuleService-> ModuleRepository: .findById(id)
+ModuleRepository--> ModuleService: module1
+ModuleService-> UserRepository: .findById(userId)
+UserRepository--> ModuleService: user1
+ModuleService-> Reaction : <<create>>(reaction: String)
+ModuleService-> module1 : .addReaction(:Reaction)
+ModuleService-> user1 : .addReaction(:Reaction)
+
+
+
+@enduml

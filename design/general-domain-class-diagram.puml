@@ -35,7 +35,7 @@ class YouthCouncil {
     pathToModulesJson : String
 }
 
-abstract Displayable {
+abstract Module {
     title : String
     description : String
     images : List<String>
@@ -93,11 +93,8 @@ enum Emoji {
     SKELETON
 }
 
-class PageVisit {
-    page : String
-    starttime : DateTime
-    endtime : DateTime
-}
+
+
 
 GeneralAdmin --|> Admin
 CouncilAdmin --|> Admin
@@ -105,31 +102,102 @@ Member --|> User
 Admin --|> User
 
 
-CallForIdeas --|> Displayable
-Idea --|> Displayable 
+CallForIdeas --|> Module
+Idea --|> Module
 Idea --* CallForIdeas : ideas
-InformativePage --|> Displayable
-ActionPoint --|> Displayable
-Annoucement --|> Displayable
+ActionPoint --|> Module
+Annoucement --|> Module
 
 YouthCouncil "*"--"*" Member : CouncilMembers
 YouthCouncil "*"--"*" Member : BlockedMembers
 YouthCouncil "1"--"*" CouncilAdmin
+YouthCouncil "1"--"*" InformativePage
+InformativePage "*" -- "*" Module
 
-YouthCouncil "1"--"*" Displayable : displayedModules
-YouthCouncil "1"--"*" Displayable : defaultModules
+YouthCouncil "1"--"*" Module : displayedModules
+YouthCouncil "1"--"*" Module : defaultModules
+YouthCouncil -- NewsFeed
 
 
 
-Theme --o ActionPoint
-Theme --o Idea
+Theme o-- ActionPoint
+Theme o-- Idea
 
 Annoucement --* NewsFeed
 
-Displayable -- Reaction : reactions
-Displayable -- Share : shares
+Module "1" -- "*" Reaction : reactions
+Module "1" -- "*" Share : shares
 
 Share "*"--"1" User
 Reaction "*"--"1" User
+
+
+' Start design class diagram
+class PageVisit {
+    page : String
+    starttime : DateTime
+    endtime : DateTime
+}
+
+interface UserRepository{
+    save(user : User)
+    delete(user : User)
+    findAll() : List<User>
+    findById(id : Long) : User
+    findByEmail(email : String) : User
+}
+
+
+interface ModuleRepository{
+    save(module : Module)
+    delete(module : Module)
+    findAll() : List<Module>
+    findById(id : Long) : Module
+}
+
+interface YouthCouncilRepository{
+    save(youthCouncil : YouthCouncil)
+    delete(youthCouncil : YouthCouncil)
+    findAll() : List<YouthCouncil>
+    findById(id : Long) : YouthCouncil
+}
+
+interface UserService{
+    getAllUsers() : List<User>
+
+}
+class UserServiceImpl implements UserService{
+    modelMapper : ModelMapper
+}
+interface ModuleService{
+    getAllModules() : List<Module>
+
+}
+class ModuleServiceImpl implements ModuleService{
+    modelMapper : ModelMapper
+}
+interface YouthCouncilService{
+    getAllCouncils() : List<YouthCouncil>
+
+}
+class YouthCouncilServiceImpl implements YouthCouncilService{
+    modelMapper : ModelMapper
+}
+
+class ModuleController{
+
+}
+
+class YouthCouncilController{
+}
+
+UserServiceImpl -- UserRepository
+ModuleServiceImpl -- ModuleRepository
+YouthCouncilServiceImpl -- YouthCouncilRepository
+YouthCouncilServiceImpl -- ModuleRepository
+YouthCouncilController -- YouthCouncilService
+
+ModuleServiceImpl -- UserRepository
+
 
 @enduml
