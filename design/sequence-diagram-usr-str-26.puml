@@ -8,13 +8,25 @@ participant "youthCouncil:YouthCouncil" as youthCouncil
 participant ":YouthCouncilRepository" as YouthCouncilRepository
 
 ->YouthCouncilController : .addNewYouthCouncil(YouthCouncilDTO)
+activate YouthCouncilController
 YouthCouncilController->YouthCouncilService : .addNewYouthCouncil(YouthCouncilDTO)
+activate YouthCouncilService
 YouthCouncilService->ModelMapper : .map(YouthCouncilDTO, YouthCouncil.class)
+Activate ModelMapper
 YouthCouncilService<--ModelMapper : youthCouncil
-YouthCouncilService-> ModuleItemRepository : .findAllDefaultModuleItems()
-YouthCouncilService<--ModuleItemRepository : modulesItems
-YouthCouncilService-> youthCouncil: . addDefaultModuleItems(moduleItems)
+deactivate ModelMapper
+YouthCouncilService-> ModuleItemRepository : .findDefaults()
+activate ModuleItemRepository
+YouthCouncilService<--ModuleItemRepository : moduleItems
+deactivate ModuleItemRepository
+YouthCouncilService-> youthCouncil: . add(moduleItems)
+activate youthCouncil
+deactivate youthCouncil
 YouthCouncilService->YouthCouncilRepository : .save(YouthCouncil)
+activate YouthCouncilRepository
+deactivate YouthCouncilRepository
+deactivate YouthCouncilService
+deactivate YouthCouncilController
 
 
 @enduml

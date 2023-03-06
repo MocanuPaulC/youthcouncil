@@ -1,6 +1,9 @@
 @startuml
 ' tested userstories
 '26 7
+' 11 filter action points quickly find action points based on some options
+'42 take part in the call for ideas
+' add my idea to a call for ideas
 
 class User implements Subscriber{
     firstName : String
@@ -11,16 +14,12 @@ class User implements Subscriber{
     role: Role
     --
     addReaction(reaction)
+    addIdea(newIdea:Idea)
 }
 
 
 skinparam linetype ortho
-'skinparam class {
-'    BackgroundColor FloralWhite
-'    BorderColor Black
-'    ArrowColor Black/
-'    linetype zigzag
-'}
+
 
 enum Role {
     GENERAL_ADMIN
@@ -28,6 +27,7 @@ enum Role {
     MODERATOR
     MEMBER
 }
+
 class YouthCouncil {
     councilName : String
     municipalityName : String
@@ -36,7 +36,8 @@ class YouthCouncil {
     afterElection : boolean
     --
     addDefaultModuleItems(modules)
-
+    getDisplayedModuleItems(): List<ModuleItem>
+    isAfterElection(): boolean
 }
 
 abstract ModuleItem {
@@ -50,7 +51,8 @@ abstract ModuleItem {
 }
 
 class CallForIdeas {
-
+    --
+    addIdea(:Idea)
 }
 
 class Idea {
@@ -67,6 +69,8 @@ class InformativePage {
 class ActionPoint implements Publisher{
     theme : String
     label : Label
+    --
+    getTheme()
 
 }
 
@@ -116,8 +120,8 @@ Idea --* CallForIdeas : ideas
 ActionPoint --|> ModuleItem
 Annoucement --|> ModuleItem
 
-YouthCouncil "*"--"*" User : CouncilMembers
-YouthCouncil "*"--"*" User : BlockedMembers
+YouthCouncil "*"--"*" User : councilMembers
+YouthCouncil "*"--"*" User : blockedMembers
 YouthCouncil "1"--"*" User : councilAdmins
 YouthCouncil "1"--"*" InformativePage
 InformativePage "*" -- "*" ModuleItem
@@ -127,7 +131,7 @@ YouthCouncil "1"--"*" ModuleItem : defaultModuleItems
 YouthCouncil -- NewsFeed
 
 User "1" -- "*" Idea
-Idea "*"-- "1"ActionPoint
+Idea "*"-- "0..1"ActionPoint
 
 
 Theme o-- ActionPoint
@@ -152,14 +156,19 @@ class PageVisit {
 
 interface UserRepository extends JpaRepository{
     findByEmail(email : String) : User
+    getUserById(id : long) : User
 }
 
 
 interface ModuleItemRepository extends JpaRepository{
     findAllDefaultModuleItems(): List<ModuleItem>
+    getModuleItemById(:long): ModuleItem
+    saveModuleItem(:ModuleItem)
 }
 
 interface YouthCouncilRepository extends JpaRepository{
+    --
+    getByName(municipalityName:String): YouthCouncil
 }
 
 interface UserService{
@@ -171,24 +180,29 @@ class UserServiceImpl implements UserService{
 }
 interface ModuleItemService{
     getAllModuleItems() : List<ModuleItem>
+    handleCallForIdeas(idea:String,moduleItemId:long, userId:long, theme: String)
 
 }
 class ModuleItemServiceImpl implements ModuleItemService{
     modelMapper : ModelMapper
 }
 interface YouthCouncilService{
+    --
     getAllCouncils() : List<YouthCouncil>
-
+    getFilteredActionPoints(municipalityName:String, theme: String, label: String)
 }
 class YouthCouncilServiceImpl implements YouthCouncilService{
     modelMapper : ModelMapper
 }
 
 class ModuleItemController{
-
+    --
+    answerCallForIdeas(idea:String, callForIdeaId:long, userId:long, theme: String)
 }
 
 class YouthCouncilController{
+    --
+    getFilteredActionPoints(municipalityName:String, theme: String, label: String)
 }
 
 interface JpaRepository<T, ID>{

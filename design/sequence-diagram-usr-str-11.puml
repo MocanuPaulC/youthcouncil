@@ -1,0 +1,49 @@
+@startuml
+
+
+' 11 filter action points quickly find action points based on some options
+'Retrieve a filtered list of actions of a youth council. (before elections)
+participant ":YouthCouncilController" as YouthCouncilController
+participant ":YouthCouncilService" as YouthCouncilService
+participant ":YouthCouncilRepository" as YouthCouncilRepository
+participant "<<Stream>>\ndisplayedModules:List<ModuleItem>" as displayedModules
+participant ":ModuleItem" as ModuleItem
+participant "youthCouncil:YouthCouncil" as YouthCouncil
+'participant "ModuleItemController" as ModuleController
+
+'participant "User" as user
+
+
+-> YouthCouncilController : getFilteredActionPoints(municipalityName:String, theme: String, label: String)\n root.com/{municipalityName}/actionpoints?theme={theme}&label={label}
+activate YouthCouncilController
+
+YouthCouncilController -> YouthCouncilService : getFilteredActionPoints(municipalityName:String, theme: String, label: String)
+activate YouthCouncilService
+YouthCouncilService -> YouthCouncilRepository : getByName(municipalityName:String)
+activate YouthCouncilRepository
+YouthCouncilRepository --> YouthCouncilService :  youthCouncil:YouthCouncil
+deactivate YouthCouncilRepository
+YouthCouncilService -> YouthCouncil : getDisplayedModuleItems()
+activate YouthCouncil
+YouthCouncilService <-- YouthCouncil : displayedModules:List<ModuleItem>
+deactivate YouthCouncil
+
+YouthCouncilService -> YouthCouncil : isAfterElection()
+activate YouthCouncil
+deactivate YouthCouncil
+alt false
+    YouthCouncilService -> displayedModules : .filter(module -> module typeOf ActionPoint && module.getTheme().toString().equals(theme))
+    activate displayedModules
+    displayedModules -> ModuleItem : getTheme()
+    activate ModuleItem
+    deactivate ModuleItem
+    deactivate displayedModules
+end
+
+YouthCouncilService --> YouthCouncilController : filteredModules:List<ModuleItem>
+deactivate YouthCouncilService
+<-- YouthCouncilController : filteredModules:List<ModuleItem>
+deactivate YouthCouncilController
+
+
+@enduml
