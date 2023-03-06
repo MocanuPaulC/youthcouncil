@@ -2,44 +2,51 @@
 ' tested userstories
 '26 7
 
-abstract User {
+class User implements Subscriber{
     firstName : String
     lastName : String
     email : String
     password : String
     postcode : String
+    role: Role
+    --
+    addReaction(reaction)
 }
 
-abstract Admin {
 
+skinparam linetype ortho
+'skinparam class {
+'    BackgroundColor FloralWhite
+'    BorderColor Black
+'    ArrowColor Black/
+'    linetype zigzag
+'}
+
+enum Role {
+    GENERAL_ADMIN
+    COUNCIL_ADMIN
+    MODERATOR
+    MEMBER
 }
-
-class GeneralAdmin {
-
-}
-
-class CouncilAdmin {
-    
-}
-
-class Member {
-    isModerator : boolean
-}
-
 class YouthCouncil {
     councilName : String
     municipalityName : String
     councilLogo : String
     councilQrCode : String
     afterElection : boolean
-    pathToModulesJson : String
+    --
+    addDefaultModuleItems(modules)
+
 }
 
-abstract Module {
+abstract ModuleItem {
     title : String
     description : String
     images : List<String>
     videos : List<String>
+    isEnabled: boolean
+    --
+    addReaction(reaction)
 }
 
 class CallForIdeas {
@@ -50,12 +57,17 @@ class Idea {
 }
 
 class InformativePage {
-
+    title: String
+    paragraphs: List<String>
+    images: List<String>
+    videos: List<String>
+    isEnabled: boolean
 }
 
-class ActionPoint {
+class ActionPoint implements Publisher{
     theme : String
     label : Label
+
 }
 
 class Annoucement {
@@ -85,6 +97,7 @@ class Share {
 
 }
 
+
 enum Emoji {
     LIKE
     HEART
@@ -94,30 +107,27 @@ enum Emoji {
 }
 
 
+ModuleItem -- ModuleItem : defaultModuleItem
 
 
-GeneralAdmin --|> Admin
-CouncilAdmin --|> Admin
-Member --|> User
-Admin --|> User
-
-
-CallForIdeas --|> Module
-Idea --|> Module
+CallForIdeas --|> ModuleItem
+Idea --|> ModuleItem
 Idea --* CallForIdeas : ideas
-ActionPoint --|> Module
-Annoucement --|> Module
+ActionPoint --|> ModuleItem
+Annoucement --|> ModuleItem
 
-YouthCouncil "*"--"*" Member : CouncilMembers
-YouthCouncil "*"--"*" Member : BlockedMembers
-YouthCouncil "1"--"*" CouncilAdmin
+YouthCouncil "*"--"*" User : CouncilMembers
+YouthCouncil "*"--"*" User : BlockedMembers
+YouthCouncil "1"--"*" User : councilAdmins
 YouthCouncil "1"--"*" InformativePage
-InformativePage "*" -- "*" Module
+InformativePage "*" -- "*" ModuleItem
 
-YouthCouncil "1"--"*" Module : displayedModules
-YouthCouncil "1"--"*" Module : defaultModules
+YouthCouncil "1"--"*" ModuleItem : displayedModuleItems
+YouthCouncil "1"--"*" ModuleItem : defaultModuleItems
 YouthCouncil -- NewsFeed
 
+User "1" -- "*" Idea
+Idea "*"-- "1"ActionPoint
 
 
 Theme o-- ActionPoint
@@ -125,11 +135,12 @@ Theme o-- Idea
 
 Annoucement --* NewsFeed
 
-Module "1" -- "*" Reaction : reactions
-Module "1" -- "*" Share : shares
+ModuleItem "1" -- "*" Reaction : reactions
+ModuleItem "1" -- "*" Share : shares
 
 Share "*"--"1" User
 Reaction "*"--"1" User
+ModuleItemController -- UserService
 
 
 ' Start design class diagram
@@ -139,27 +150,16 @@ class PageVisit {
     endtime : DateTime
 }
 
-interface UserRepository{
-    save(user : User)
-    delete(user : User)
-    findAll() : List<User>
-    findById(id : Long) : User
+interface UserRepository extends JpaRepository{
     findByEmail(email : String) : User
 }
 
 
-interface ModuleRepository{
-    save(module : Module)
-    delete(module : Module)
-    findAll() : List<Module>
-    findById(id : Long) : Module
+interface ModuleItemRepository extends JpaRepository{
+    findAllDefaultModuleItems(): List<ModuleItem>
 }
 
-interface YouthCouncilRepository{
-    save(youthCouncil : YouthCouncil)
-    delete(youthCouncil : YouthCouncil)
-    findAll() : List<YouthCouncil>
-    findById(id : Long) : YouthCouncil
+interface YouthCouncilRepository extends JpaRepository{
 }
 
 interface UserService{
@@ -169,11 +169,11 @@ interface UserService{
 class UserServiceImpl implements UserService{
     modelMapper : ModelMapper
 }
-interface ModuleService{
-    getAllModules() : List<Module>
+interface ModuleItemService{
+    getAllModuleItems() : List<ModuleItem>
 
 }
-class ModuleServiceImpl implements ModuleService{
+class ModuleItemServiceImpl implements ModuleItemService{
     modelMapper : ModelMapper
 }
 interface YouthCouncilService{
@@ -184,20 +184,45 @@ class YouthCouncilServiceImpl implements YouthCouncilService{
     modelMapper : ModelMapper
 }
 
-class ModuleController{
+class ModuleItemController{
 
 }
 
 class YouthCouncilController{
 }
 
+interface JpaRepository<T, ID>{
+    save(entity : T) : T
+    delete(entity : T)
+    findAll() : List<T>
+    findById(id : ID) : T
+}
+
+interface Subscriber{
+    update()
+}
+
+interface Publisher{
+    subscribers : List<Subscriber>
+    notifySubscribers()
+    subscribe(s: Subscriber)
+    unsubscribe(s: Subscriber)
+}
+
 UserServiceImpl -- UserRepository
-ModuleServiceImpl -- ModuleRepository
+ModuleItemServiceImpl -- ModuleItemRepository
 YouthCouncilServiceImpl -- YouthCouncilRepository
-YouthCouncilServiceImpl -- ModuleRepository
+YouthCouncilServiceImpl -- ModuleItemRepository
 YouthCouncilController -- YouthCouncilService
 
-ModuleServiceImpl -- UserRepository
+ModuleItemServiceImpl -- UserRepository
 
+ModuleItemController -- ModuleItemService
+'ModuleItemServiceImpl -- ModuleItemRepository
+'ModuleItemServiceImpl -- UserRepository
+
+'We have a set of default modules
+'When a default module is modified, the changes
+'are saved as a new entry in the database
 
 @enduml

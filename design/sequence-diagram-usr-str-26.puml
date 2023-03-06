@@ -3,7 +3,7 @@
 participant ":YouthCouncilController" as YouthCouncilController
 participant ":YouthCouncilService" as YouthCouncilService
 participant ":ModelMapper" as ModelMapper
-participant ":ModuleRepository" as ModuleRepository
+participant ":ModuleItemRepository" as ModuleItemRepository
 participant "youthCouncil:YouthCouncil" as youthCouncil
 participant ":YouthCouncilRepository" as YouthCouncilRepository
 
@@ -11,9 +11,9 @@ participant ":YouthCouncilRepository" as YouthCouncilRepository
 YouthCouncilController->YouthCouncilService : .addNewYouthCouncil(YouthCouncilDTO)
 YouthCouncilService->ModelMapper : .map(YouthCouncilDTO, YouthCouncil.class)
 YouthCouncilService<--ModelMapper : youthCouncil
-YouthCouncilService-> ModuleRepository : .findAll()
-YouthCouncilService<--ModuleRepository : modules
-YouthCouncilService-> youthCouncil: . addDefaultModules(modules)
+YouthCouncilService-> ModuleItemRepository : .findAllDefaultModuleItems()
+YouthCouncilService<--ModuleItemRepository : modulesItems
+YouthCouncilService-> youthCouncil: . addDefaultModuleItems(moduleItems)
 YouthCouncilService->YouthCouncilRepository : .save(YouthCouncil)
 
 
