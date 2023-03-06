@@ -24,8 +24,9 @@ ModuleItemService -> UserRepository: .getUserById(userId:long)
 activate UserRepository
 ModuleItemService <-- UserRepository : user:User
 deactivate UserRepository
-note right of ModuleItemService : Theme theme = new Theme(theme:String);\nIdea newIdea = new Idea(idea:String, theme:Theme);
-ModuleItemService -> callForIdea : .addIdea(newIdea:Idea)
+note right of ModuleItemService : Theme theme = new Theme(theme:String);\n
+'Idea newIdea = new Idea(idea:String, theme:Theme);
+ModuleItemService -> callForIdea : .createIdea(idea: String, theme: Theme)
 activate callForIdea
 'note right of callForIdea : Idea newIdea = new Idea(idea:String) \n this.ideas.add(newIdea)
 'ModuleItemService  <-- callForIdea  : newIdea:Idea
