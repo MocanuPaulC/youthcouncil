@@ -1,20 +1,9 @@
 spring:
     profiles:
-        active: prod # options: dev, prod
-    mvc:
-        hiddenmethod:
-            filter:
-                enabled: true
+        active: dev # options: dev, prod
     jpa:
-        hibernate:
-            ddl-auto: none
-        database: POSTGRESQL
         show-sql: true
-    datasource:
-        driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/YouthCouncil
-        username: postgres
-        password: ${POSTGRES_PASSWORD}
+        open-in-view: false
     devtools:
         restart:
             enabled: true
@@ -22,13 +11,11 @@ spring:
             additional-exclude: WEB-INF/**
     thymeleaf:
         cache: false
-    messages:
-        basename: templates/messages
     sql:
         init:
             mode: always
 #            data-locations: classpath:data.sql  comment this out once we have a data.sql file
-#      schema-locations: classpath:schema.sql
+#            schema-locations: classpath:schema.sql
 server:
     port: 8081
 logging:
