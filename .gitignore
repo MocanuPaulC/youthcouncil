@@ -8,6 +8,15 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea\codeStyles\codeStyleConfig.xml
+.idea\dataSources.xml
+.idea\git_toolbox_prj.xml
+.idea\jpa-buddy.xml
+.idea\misc.xml
+.idea\codeStyles\Project.xml
+.idea\.name
+.idea\modules\youthcouncil.iml
+.idea\modules\youthcouncil.test.iml
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -196,3 +205,6 @@ hs_err_pid*
 replay_pid*
 /.idea/discord.xml
 /.env
+/.idea/.name
+/.idea/modules/youthcouncil.iml
+/.idea/modules/youthcouncil.test.iml
