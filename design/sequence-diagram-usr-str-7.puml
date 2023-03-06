@@ -7,16 +7,33 @@ participant ":UserRepository" as UserRepository
 participant ":Reaction" as Reaction
 participant "moduleItem1:ModuleItem" as moduleItem1
 participant "user1:User" as user1
+participant ":ReactionRepository" as ReactionRepository
+-> ModuleItemController: .react(id, reaction: String, userId)\n root.com/ModuleItem/{id}/react/{reaction}/{userId}
 
--> ModuleItemController: .react(id, reaction: String, userId)
+activate ModuleItemController
 ModuleItemController-> ModuleItemService: .createReactionToPost(id, reaction: String, userID)
+activate ModuleItemService
 ModuleItemService-> ModuleItemRepository: .findById(id)
-ModuleItemRepository--> ModuleItemService: moduleItem1
+activate ModuleItemRepository
+ModuleItemService <-- ModuleItemRepository: moduleItem1
+deactivate ModuleItemRepository
 ModuleItemService-> UserRepository: .findById(userId)
-UserRepository--> ModuleItemService: user1
+activate UserRepository
+ModuleItemService <-- UserRepository: user1
+deactivate UserRepository
+create Reaction
 ModuleItemService-> Reaction : <<create>>(reaction: String)
 ModuleItemService-> moduleItem1 : .addReaction(:Reaction)
+activate moduleItem1
+deactivate moduleItem1
 ModuleItemService-> user1 : .addReaction(:Reaction)
+activate user1
+deactivate user1
+ModuleItemService-> ReactionRepository: .save(:Reaction)
+activate ReactionRepository
+deactivate ReactionRepository
+deactivate ModuleItemService
+deactivate ModuleItemController
 
 
 

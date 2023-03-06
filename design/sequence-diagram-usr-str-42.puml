@@ -1,0 +1,41 @@
+@startuml
+
+'42 take part in the call for ideas
+' add my idea to a call for ideas
+
+participant ":ModuleItemController" as ModuleItemController
+participant ":ModuleItemService" as ModuleItemService
+participant ":ModuleItemRepository" as ModuleItemRepository
+participant ":UserRepository" as UserRepository
+participant "callforIdea:ModuleItem" as callForIdea
+participant "user:User" as user
+participant "idea:ModuleItem" as idea
+
+-> ModuleItemController: .answerCallForIdeas(idea:String, callForIdeaId:long, userId:long, theme: String)\n root.com/callForIdea/{callForIdeaId}?idea={idea}&userId={userId}&theme={theme}
+activate ModuleItemController
+ModuleItemController -> ModuleItemService: .handleCallForIdeas(idea:String,moduleItemId:long, userId:long, theme: String)
+activate ModuleItemService
+ModuleItemService -> ModuleItemRepository: .getModuleItemById(callForIdeaId:long)
+activate ModuleItemRepository
+ModuleItemService <-- ModuleItemRepository : callForIdea:ModuleItem
+deactivate ModuleItemRepository
+
+ModuleItemService -> UserRepository: .getUserById(userId:long)
+activate UserRepository
+ModuleItemService <-- UserRepository : user:User
+deactivate UserRepository
+note right of ModuleItemService : Theme theme = new Theme(theme:String);\nIdea newIdea = new Idea(idea:String, theme:Theme);
+ModuleItemService -> callForIdea : .addIdea(newIdea:Idea)
+activate callForIdea
+'note right of callForIdea : Idea newIdea = new Idea(idea:String) \n this.ideas.add(newIdea)
+'ModuleItemService  <-- callForIdea  : newIdea:Idea
+deactivate callForIdea
+
+ModuleItemService -> user : .addIdea(newIdea:Idea)
+activate user
+deactivate user
+note right of ModuleItemService : ModuleItem idea = (ModuleItem) newIdea;\nModule Items get Ids from the database?
+ModuleItemService -> ModuleItemRepository: .saveModuleItem(idea:ModuleItem)
+activate ModuleItemRepository
+
+@enduml
