@@ -9,10 +9,7 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
@@ -27,6 +24,20 @@ public class CallForIdea extends ModuleItem {
 
     @OneToMany
     private List<Idea> ideas;
+
+    @ElementCollection
+    private List<String> images;
+
+
+    public void addImage(String image) {
+        logger.debug("Adding image " + image + " to call for idea " + super.getId());
+        images.add(image);
+    }
+
+    public void removeImage(String image) {
+        logger.debug("Removing image " + image + " from call for idea " + super.getId());
+        images.remove(image);
+    }
 
 
     public Idea createIdea(String idea, SubTheme subTheme) {

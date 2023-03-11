@@ -1,4 +1,4 @@
-package be.kdg.youthcouncil.domain.YouthCouncil;
+package be.kdg.youthcouncil.domain.youthCouncil;
 
 import be.kdg.youthcouncil.domain.InformativePage;
 import be.kdg.youthcouncil.domain.ModuleItem;
