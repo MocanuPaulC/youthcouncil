@@ -2,7 +2,7 @@ package be.kdg.youthcouncil.domain.youthCouncil;
 
 import be.kdg.youthcouncil.domain.InformativePage;
 import be.kdg.youthcouncil.domain.ModuleItem;
-import be.kdg.youthcouncil.domain.User;
+import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.domain.moduleItems.NewsFeed;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
