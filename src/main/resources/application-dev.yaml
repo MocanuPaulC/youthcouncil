@@ -8,3 +8,11 @@ spring:
         hibernate:
             ddl-auto: create-drop
         database: HSQL
+    security:
+        user:
+            name: admin
+            password: admin
+            roles: MEMBER
+#logging:
+#    level:
+#        root: debug

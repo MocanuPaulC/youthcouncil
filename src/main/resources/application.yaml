@@ -1,9 +1,10 @@
 spring:
     profiles:
-        active: dev # options: dev, prod
+        active: prod # options: dev, prod
     jpa:
         show-sql: true
         open-in-view: false
+        defer-datasource-initialization: true
     devtools:
         restart:
             enabled: true
@@ -22,3 +23,5 @@ logging:
     level:
         #    web: debug
         be.kdg.youthcouncil: debug
+#        root: debug
+        sql: debug

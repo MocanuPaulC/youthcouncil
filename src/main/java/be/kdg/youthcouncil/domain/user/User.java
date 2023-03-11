@@ -1,4 +1,4 @@
-package be.kdg.youthcouncil.domain;
+package be.kdg.youthcouncil.domain.user;
 
 import be.kdg.youthcouncil.domain.interactions.Reaction;
 import be.kdg.youthcouncil.domain.interactions.Share;
@@ -29,6 +29,8 @@ public class User implements Subscriber {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private long id;
+
+    private String username;
     private String firstName;
     private String lastName;
     private String email;
