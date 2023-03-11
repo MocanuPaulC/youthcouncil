@@ -34,10 +34,6 @@ public abstract class ModuleItem {
     private long id;
     private String title;
     private String description;
-    @ElementCollection
-    private List<String> images;
-    @ElementCollection
-    private List<String> videos;
     private boolean isEnabled;
     @JoinColumn(name = "defaultModuleItem")
     @OneToOne
@@ -49,25 +45,6 @@ public abstract class ModuleItem {
     @OneToMany
     private List<Share> shares;
 
-    public void addImage(String image) {
-        logger.debug("Adding image " + image + " to moduleItem " + title);
-        images.add(image);
-    }
-
-    public void removeImage(String image) {
-        logger.debug("Removing image " + image + " from moduleItem " + title);
-        images.remove(image);
-    }
-
-    public void addVideo(String video) {
-        logger.debug("Adding video " + video + " to moduleItem " + title);
-        videos.add(video);
-    }
-
-    public void removeVideo(String video) {
-        logger.debug("Removing video " + video + " from moduleItem " + title);
-        videos.remove(video);
-    }
 
     public void addReaction(Reaction reaction) {
         logger.debug("Adding reaction " + reaction.getEmoji() + " to moduleItem " + title);

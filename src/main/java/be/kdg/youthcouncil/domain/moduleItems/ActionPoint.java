@@ -32,6 +32,32 @@ public class ActionPoint extends ModuleItem implements Publisher {
     @OneToMany
     private List<Idea> ideaList;
 
+    @ElementCollection
+    private List<String> images;
+    @ElementCollection
+    private List<String> videos;
+
+
+    public void addImage(String image) {
+        logger.debug("Adding image " + image + " to action point" + super.getId());
+        images.add(image);
+    }
+
+    public void removeImage(String image) {
+        logger.debug("Removing image " + image + " from action point" + super.getId());
+        images.remove(image);
+    }
+
+    public void addVideo(String video) {
+        logger.debug("Adding video " + video + " to action point" + super.getId());
+        videos.add(video);
+    }
+
+    public void removeVideo(String video) {
+        logger.debug("Removing video " + video + " from action point" + super.getId());
+        videos.remove(video);
+    }
+
     public void addIdea(Idea idea) {
         logger.debug("Adding idea " + idea.getId() + idea.getTitle() + " to actionpoint" + this.getId());
         ideaList.add(idea);
