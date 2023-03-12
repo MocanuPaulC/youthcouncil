@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.service.moduleItemService;
 
-import be.kdg.youthcouncil.domain.ModuleItem;
+import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 
 import java.util.List;
 

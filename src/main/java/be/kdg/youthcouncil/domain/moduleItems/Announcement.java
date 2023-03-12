@@ -1,6 +1,5 @@
 package be.kdg.youthcouncil.domain.moduleItems;
 
-import be.kdg.youthcouncil.domain.ModuleItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,25 +9,23 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @ToString
-@DiscriminatorValue("announcement")
+@DiscriminatorValue ("announcement")
 @Entity
-@Table(name = "Announcements")
 public class Announcement extends ModuleItem {
-    @Transient
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Transient
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public Announcement(String title, String description) {
-        logger.debug("Creating announcement " + title + " with description " + description);
-        this.setTitle(title);
-        this.setDescription(description);
-    }
+	public Announcement(String title, String description) {
+		logger.debug("Creating announcement " + title + " with description " + description);
+		this.setTitle(title);
+		this.setDescription(description);
+	}
 
 }

@@ -40,6 +40,6 @@ dependencies {
     runtimeOnly 'org.hsqldb:hsqldb:2.7.1'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }

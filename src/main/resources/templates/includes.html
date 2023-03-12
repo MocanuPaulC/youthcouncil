@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
-  <thymeleaf-meta th:fragment="head_fragment" th:remove="tag">
-    <meta charset="UTF-8"/>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
-  </thymeleaf-meta>
-    <meta>
-    <meta charset="UTF-8">
+	<thymeleaf-meta th:fragment="head_fragment" th:remove="tag">
+		<meta charset="UTF-8"/>
+		<script defer th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+		<link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css} ">
+		<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+	</thymeleaf-meta>
+	<meta>
+	<meta charset="UTF-8">
 </head>
 <body>
 
 <header th:fragment="header">
-  <div class="container">
-  <nav class="navbar-dark">
-    <a th:href="@{/}">Youth Council</a>
-    <a type="button" th:href="@{/login}" class="btn btn-dark" sec:authorize="!isAuthenticated()">Log in</a>
-    <a type="button" th:href="@{/register}" class="btn btn-dark" sec:authorize="!isAuthenticated()">Register</a>
-    <form th:action="@{/logout}" th:method="post" sec:authorize="isAuthenticated()">
-      <button type="submit" class="btn btn-secondary">Log out</button>
-    </form>
-  </nav>
-  </div>
+	<div class="container">
+		<nav class="navbar-dark">
+			<a th:href="@{/}">Youth Council</a>
+			<a class="btn btn-dark" sec:authorize="!isAuthenticated()" th:href="@{/login}" type="button">Log in</a>
+			<a class="btn btn-dark" sec:authorize="!isAuthenticated()" th:href="@{/register}" type="button">Register</a>
+			<form sec:authorize="isAuthenticated()" th:action="@{/logout}" th:method="post">
+				<button class="btn btn-secondary" type="submit">Log out</button>
+			</form>
+		</nav>
+	</div>
 </header>
 
 </body>
