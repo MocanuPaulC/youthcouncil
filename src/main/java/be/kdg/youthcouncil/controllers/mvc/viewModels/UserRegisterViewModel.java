@@ -1,10 +1,9 @@
 package be.kdg.youthcouncil.controllers.mvc.viewModels;
 
 
-import be.kdg.youthcouncil.utility.Role;
+import be.kdg.youthcouncil.domain.user.Role;
 import lombok.*;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

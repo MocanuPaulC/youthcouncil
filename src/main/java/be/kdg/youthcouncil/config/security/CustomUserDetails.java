@@ -1,4 +1,4 @@
-package be.kdg.youthcouncil.domain.user;
+package be.kdg.youthcouncil.config.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -22,4 +22,3 @@ public class CustomUserDetails extends User{
 
 
 }
-

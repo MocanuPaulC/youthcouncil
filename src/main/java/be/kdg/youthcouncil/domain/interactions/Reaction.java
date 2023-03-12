@@ -1,9 +1,7 @@
 package be.kdg.youthcouncil.domain.interactions;
 
-import be.kdg.youthcouncil.utility.Emoji;
 import javax.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -20,7 +18,7 @@ public class Reaction{
     public Reaction(Emoji emoji) {
         this.emoji = emoji;
     }
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Emoji emoji;
 
     public Reaction() {

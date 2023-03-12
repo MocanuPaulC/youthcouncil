@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.service.moduleItemService;
 
-import be.kdg.youthcouncil.domain.ModuleItem;
+import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import be.kdg.youthcouncil.persistence.ModuleItemRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.persistence;
 
-import be.kdg.youthcouncil.domain.ModuleItem;
+import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package be.kdg.youthcouncil.utility;
+package be.kdg.youthcouncil.domain.moduleItems;
 
 import lombok.*;
 import org.slf4j.Logger;
@@ -23,6 +23,7 @@ public class SuperTheme {
     private long id;
 
     @OneToMany
+    @ToString.Exclude
     private List<SubTheme> subThemes;
 
     private String theme;

@@ -1,4 +1,4 @@
-package be.kdg.youthcouncil.utility;
+package be.kdg.youthcouncil.domain.interactions;
 
 
 public enum Emoji {
