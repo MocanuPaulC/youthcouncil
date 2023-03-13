@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(UserRegisterViewModel userViewModel) {
+    public void create(UserRegisterViewModel userViewModel) {
         logger.debug("Saving user");
         userViewModel.setPassword(passwordEncoder.encode(userViewModel.getPassword()));
         userRepository.save(modelMapper.map(userViewModel, User.class));

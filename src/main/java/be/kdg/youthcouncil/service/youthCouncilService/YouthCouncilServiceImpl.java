@@ -1,5 +1,6 @@
 package be.kdg.youthcouncil.service.youthCouncilService;
 
+import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
 import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 import be.kdg.youthcouncil.persistence.YouthCouncilRepository;
@@ -19,6 +20,12 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
     public YouthCouncilServiceImpl(ModelMapper modelMapper, YouthCouncilRepository youthCouncilRepository) {
         this.modelMapper = modelMapper;
         this.youthCouncilRepository = youthCouncilRepository;
+    }
+
+    @Override
+    public void create(NewYouthCouncilViewModel councilCreateModel) {
+        logger.debug("Saving youth council");
+        youthCouncilRepository.save(modelMapper.map(councilCreateModel, YouthCouncil.class));
     }
 
     @Override

@@ -41,7 +41,6 @@ public class UserController {
     public String register(Model model) {
         logger.debug("in getMapping of register");
         model.addAttribute("user", new UserRegisterViewModel());
-        model.addAttribute("roles", Role.values());
         return "register";
     }
 
@@ -51,7 +50,7 @@ public class UserController {
         if(errors.hasErrors()) {
             return "register";
         }
-        userService.saveUser(viewModel);
+        userService.create(viewModel);
         return "redirect:/";
     }
 
