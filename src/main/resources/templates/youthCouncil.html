@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${council.getCouncilName()}"></title>
+    <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+
+</head>
+
+<body>
+<section class="container">
+    <div class="row">
+        <header th:insert="includes::header"></header>
+
+        <a th:href="@{/youthcouncils/{id}/createCouncilAdmin(id=${council.id})}"
+           th:text="|Create Council Admin|"></a>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h1 th:text="${council.getCouncilName()}"></h1>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

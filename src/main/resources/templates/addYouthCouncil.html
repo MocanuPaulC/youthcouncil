@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Youth Platform</title>
-        <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
-    </head>
-    <body>
-        <section class="container">
-            <div class="row">
-                <header th:insert="includes::header"></header>
-            </div>
+<head>
+    <title>Youth Platform</title>
+    <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+</head>
+<body>
+<section class="container">
+    <div class="row">
+        <header th:insert="includes::header"></header>
+    </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <h1>Adding YC</h1>
-                </div>
-                <form  method="post" class="col-12 form-control form" th:object="${youthCouncil}" th:action="@{/youthcouncils/add}">
-                    <label for="councilName">Youth Council Name</label>
-                    <input type="text" id="councilName" name="councilName" class="form-control" th:field="*{councilName}"/>
-                    <label for="municipalityName">Municipality Name</label>
-                    <input type="text" id="municipalityName" name="municipalityName" class="form-control" th:field="*{municipalityName}"/>
-                    <input type="submit" class="btn btn-primary" value="Submit"/>
-                </form>
-            </div>
-        </section>
-    </body>
+    <div class="row">
+        <div class="col-12">
+            <h1>Adding YC</h1>
+        </div>
+        <form class="col-12 form-control form" method="post" th:action="@{/youthcouncils/add}"
+              th:object="${youthCouncil}">
+            <label for="councilName">Youth Council Name</label>
+            <input class="form-control" id="councilName" name="councilName" required th:field="*{councilName}"
+                   type="text"/>
+            <label for="municipalityName">Municipality Name</label>
+            <input class="form-control" id="municipalityName" name="municipalityName" required
+                   th:field="*{municipalityName}" type="text"/>
+            <input class="btn btn-primary" type="submit" value="Submit"/>
+        </form>
+    </div>
+</section>
+</body>
 </html>

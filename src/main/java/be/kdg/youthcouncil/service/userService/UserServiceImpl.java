@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepository) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
-        passwordEncoder=new BCryptPasswordEncoder();
+        passwordEncoder = new BCryptPasswordEncoder();
 
 
     }
@@ -44,4 +44,9 @@ public class UserServiceImpl implements UserService {
         logger.debug("Getting all users");
         return userRepository.findAll();
     }
+
+    public void save(UserRegisterViewModel user) {
+        userRepository.save(modelMapper.map(user, User.class));
+    }
+
 }
