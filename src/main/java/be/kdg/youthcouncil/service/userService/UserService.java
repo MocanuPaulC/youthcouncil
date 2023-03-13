@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserService {
     List<User> getAllUsers();
 
-    void saveUser(UserRegisterViewModel userViewModel);
+    void create(UserRegisterViewModel userViewModel);
 
     User findUserByUsername(String username);
 }

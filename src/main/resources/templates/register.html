@@ -1,41 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <title>Register</title>
-    <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
-</head>
-<body>
-
-<header th:replace="includes :: header"></header>
-
-<div class="container">
-  <div class="container-fluid">
-    <form  method="post" class="form-control form" th:object="${user}" th:action="@{/register}">
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" class="form-control" th:field="*{username}"/>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" class="form-control" th:field="*{password}"/>
-    <label for="confirmPassword">Confirm Password</label>
-    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" th:field="*{passwordConfirm}"/>
-    <label for="email">Email</label>1
-    <input type="email" id="email" name="email" class="form-control" th:field="*{email}"/>
-    <label for="firstName">First Name</label>
-    <input type="text" id="firstName" name="firstName" class="form-control" th:field="*{firstName}"/>
-    <label for="lastName">Last Name</label>
-    <input type="text" id="lastName" name="lastName" class="form-control" th:field="*{lastName}"/>
-    <label for="postcode">Postcode</label>
-    <input type="text" id="postcode" name="postcode" class="form-control" th:field="*{postcode}"/>
-    <div sec:authorize="hasRole('ROLE_GENERAL_ADMIN')">
-    <label for="role">Role</label>
-    <select id="role" name="role" class="form-control" th:field="*{role}">
-      <option th:each="role : ${roles}" th:value="${role}" th:text="${role}"></option>
-    </select>
-    </div>
-    <input type="submit" class="btn btn-primary" value="Submit"/>
-    </form>
-  </div>
-</div>
-
-</body>
+    <head>
+        <title>Register</title>
+        <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <header th:replace="includes :: header"></header>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h1>Register</h1>
+                </div>
+                <form  method="post" class="col-12 form-control form" th:object="${user}" th:action="@{/register}">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" th:field="*{username}"/>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" th:field="*{password}"/>
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" th:field="*{passwordConfirm}"/>
+                    <label for="email">Email</label>1
+                    <input type="email" id="email" name="email" class="form-control" th:field="*{email}"/>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" class="form-control" th:field="*{firstName}"/>
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" class="form-control" th:field="*{lastName}"/>
+                    <label for="postcode">Postcode</label>
+                    <input type="text" id="postcode" name="postcode" class="form-control" th:field="*{postcode}"/>
+                    <input type="submit" class="btn btn-primary" value="Submit"/>
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

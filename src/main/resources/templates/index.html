@@ -5,18 +5,16 @@
 		<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
 	</head>
 	<body>
-	<div class="container">
-		<div class="container-fluid">
-			<div th:insert="includes::header"></div>
-		</div>
+		<section class="container">
+			<div class="row">
+				<header th:insert="includes::header"></header>
+			</div>
 
-		<div>
 			<div class="row">
 				<div class="col-12">
 					<h1>Home</h1>
 				</div>
 			</div>
-		</div>
-	</div>
+		</section>
 	</body>
 </html>
