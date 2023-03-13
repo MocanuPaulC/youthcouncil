@@ -4,10 +4,7 @@ import be.kdg.youthcouncil.domain.interactions.Reaction;
 import be.kdg.youthcouncil.domain.interactions.Share;
 import be.kdg.youthcouncil.domain.moduleItems.Idea;
 import be.kdg.youthcouncil.utility.Subscriber;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +20,8 @@ import java.util.List;
 public class User implements Subscriber {
 
 	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)

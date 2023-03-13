@@ -1,10 +1,7 @@
 package be.kdg.youthcouncil.domain.youthCouncil;
 
 import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +16,9 @@ import java.util.List;
 @Table (name = "informative_pages")
 public class InformativePage {
 	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Id

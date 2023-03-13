@@ -1,9 +1,6 @@
 package be.kdg.youthcouncil.domain.moduleItems;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +16,9 @@ import javax.persistence.Transient;
 @Entity
 public class Announcement extends ModuleItem {
 	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 

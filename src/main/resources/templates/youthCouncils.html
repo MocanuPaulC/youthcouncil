@@ -17,7 +17,8 @@
         <div class="col-12">
             <ul>
                 <li th:each="council : ${councils}">
-                    <a th:href="@{/youthcouncils/{id}(id=${council.id})}" th:text="|${council.getCouncilName()}|"></a>
+                    <a th:href="@{/youthcouncils/{municipality}(municipality=${council.municipalityName})}"
+                       th:text="|${council.getCouncilName()}|"></a>
                 </li>
             </ul>
         </div>

@@ -13,18 +13,21 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "themes")
+@Table (name = "themes")
 public class SuperTheme {
-    @Transient
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "theme_id")
-    private long id;
+	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@Column (name = "theme_id")
+	private long id;
 
-    @OneToMany
-    @ToString.Exclude
-    private List<SubTheme> subThemes;
+	@OneToMany
+	@ToString.Exclude
+	private List<SubTheme> subThemes;
 
-    private String theme;
+	private String theme;
 }

@@ -3,10 +3,7 @@ package be.kdg.youthcouncil.domain.youthCouncil;
 import be.kdg.youthcouncil.domain.moduleItems.Announcement;
 import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import be.kdg.youthcouncil.domain.user.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +18,9 @@ import java.util.List;
 @Table (name = "youthcouncil")
 public class YouthCouncil {
 	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -41,7 +41,7 @@ public class YouthCouncil {
 	@ManyToMany
 	@ToString.Exclude
 	private List<User> blockedMembers;
-	@ManyToMany
+	@ManyToMany (fetch = FetchType.EAGER)
 	@ToString.Exclude
 	private List<ModuleItem> moduleItems;
 

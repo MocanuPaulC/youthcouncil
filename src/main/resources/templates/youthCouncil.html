@@ -1,27 +1,38 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${council.getCouncilName()}"></title>
+    <meta charset="UTF-8">
+    <title th:text="${youthCouncil.getCouncilName()}"></title>
     <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
-
 </head>
+<body class="m-3">
 
-<body>
-<section class="container">
-    <div class="row">
-        <header th:insert="includes::header"></header>
-
-        <a th:href="@{/youthcouncils/{id}/createCouncilAdmin(id=${council.id})}"
-           th:text="|Create Council Admin|"></a>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <h1 th:text="${council.getCouncilName()}"></h1>
+<h1 th:text="${youthCouncil.getCouncilName()}"></h1>
+<p th:text="${youthCouncil.getDescription()}"></p>
+<a th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipalityName()})}">Create
+    council admin</a>
+<div class="d-flex gap-2">
+    <div class="card mb-3" style="max-width: 540px;" th:each="moduleItem: ${youthCouncil.getModuleItems()}">
+        <div class="card-header">Module Item</div>
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img class="img-fluid placeholder h-100 rounded-start" th:alt="${moduleItem.getTitle()}">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${moduleItem.getTitle()}">Card title</h5>
+                    <p class="card-text" th:text="${moduleItem.getDescription()}">
+                        Some quick example text to build on the card title and make up the bulk of the card's
+                        content.
+                    </p>
+                    <a class="card-link"
+                       th:href="@{/youthcouncils/{municipality}/call-for-ideas/{id}(municipality=${youthCouncil.getMunicipalityName()}, id=${moduleItem.getId()})}">
+                        Go somewhere
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-
-</section>
-
+</div>
 </body>
 </html>

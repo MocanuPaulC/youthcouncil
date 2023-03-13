@@ -17,7 +17,8 @@
         </div>
         <form class="col-12 form-control form"
               method="post"
-              th:action="@{/youthcouncils/{id}/createCouncilAdmin(id=${council.id})}"
+
+              th:action="@{/youthcouncils/{municipality}/create-council-admin(municipality=${council.getMunicipalityName()})}"
               th:object="${councilAdmin}">
             <label for="email">Username</label>
             <input class="form-control" id="email" name="email" required th:field="*{email}" type="email"/>

@@ -19,6 +19,9 @@ import java.util.List;
 public class ActionPoint extends ModuleItem implements Publisher {
 
 	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@OneToOne

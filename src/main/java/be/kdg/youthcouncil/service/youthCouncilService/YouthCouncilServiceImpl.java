@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class YouthCouncilServiceImpl implements YouthCouncilService {
@@ -23,13 +24,11 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
         this.youthCouncilRepository = youthCouncilRepository;
     }
 
-
-    @Override
-    public void create(NewYouthCouncilViewModel councilCreateModel) {
-        logger.debug("Saving youth council");
-        youthCouncilRepository.save(modelMapper.map(councilCreateModel, YouthCouncil.class));
-
-    }
+	@Override
+	public void create(NewYouthCouncilViewModel councilCreateModel) {
+		logger.debug("Saving youth council");
+		youthCouncilRepository.save(modelMapper.map(councilCreateModel, YouthCouncil.class));
+	}
 
     @Override
     public YouthCouncil getYouthCouncil(long id) {
@@ -42,10 +41,15 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
         return youthCouncilRepository.findAll();
     }
 
-    @Override
-    public List<ActionPoint> getFilteredActionPoints(String municipalityName, String theme, String label) {
-        logger.debug("Getting filtered action points");
-        //TODO: implement
-        return null;
-    }
+	@Override
+	public List<ActionPoint> getFilteredActionPoints(String municipalityName, String theme, String label) {
+		logger.debug("Getting filtered action points");
+		//TODO: implement
+		return null;
+	}
+
+	@Override
+	public Optional<YouthCouncil> findByMunicipality(String municipality) {
+		return Optional.of(youthCouncilRepository.findByMunicipalityName(municipality));
+	}
 }
