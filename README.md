@@ -17,9 +17,13 @@
 
 ### Seeded users
 
-| Username | Password | Role          |
-|----------|----------|---------------|
-| admin    | admin    | GENERAL_ADMIN |
+| Username  | Password  | Role          |
+|-----------|-----------|---------------|
+| gadmin    | gadmin    | GENERAL_ADMIN |
+| cadmin    | cadmin    | COUNCIL_ADMIN |
+| moderator | moderator | MODERATOR     |
+| member1   | member1   | MEMBER        |
+| member2   | member2   | MEMBER        |
 
 ### How to run
 
