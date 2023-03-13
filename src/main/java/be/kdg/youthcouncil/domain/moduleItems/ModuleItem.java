@@ -2,10 +2,7 @@ package be.kdg.youthcouncil.domain.moduleItems;
 
 import be.kdg.youthcouncil.domain.interactions.Reaction;
 import be.kdg.youthcouncil.domain.interactions.Share;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +24,9 @@ import static javax.persistence.DiscriminatorType.STRING;
 @DiscriminatorValue ("module_item")
 public abstract class ModuleItem {
 	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 

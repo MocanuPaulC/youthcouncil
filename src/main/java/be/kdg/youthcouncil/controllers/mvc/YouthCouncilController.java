@@ -1,6 +1,7 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
 
+import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.CouncilAdminViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
@@ -19,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/youthcouncils")
 @AllArgsConstructor
+@RequestMapping("/youthcouncils")
 public class YouthCouncilController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -36,12 +37,14 @@ public class YouthCouncilController {
         return "youthCouncils";
     }
 
+    @GAOnly
     @GetMapping("/add")
     public String getAddYouthCouncil(Model model) {
         model.addAttribute("youthCouncil", new NewYouthCouncilViewModel());
         return "addYouthCouncil";
     }
 
+    @GAOnly
     @PostMapping("/add")
     public String addYouthCouncil(@Valid @ModelAttribute("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors, HttpServletRequest request) {
         logger.debug(viewModel.toString() + " in postMapping of addYouthCouncil");
@@ -52,32 +55,28 @@ public class YouthCouncilController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}")
-    public String getYouthCouncil(@PathVariable long id, Model model) {
-        model.addAttribute("council", youthCouncilService.getYouthCouncil(id));
-        logger.debug(youthCouncilService.getYouthCouncil(id).toString());
-
+    @GetMapping("/{municipality}")
+    public String youthCouncil(Model model, @PathVariable String municipality) {
+        model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality).orElse(null));
         return "youthCouncil";
     }
 
-    @GetMapping("/{id}/create-council-admin")
-    public String getCreateCouncilAdmin(@PathVariable long id, Model model) {
-        model.addAttribute("council", youthCouncilService.getYouthCouncil(id));
-        logger.debug(youthCouncilService.getYouthCouncil(id).toString());
+    @GetMapping("/{municipality}/create-council-admin")
+    public String getCreateCouncilAdmin(@PathVariable String municipality, Model model) {
+
+        model.addAttribute("council", youthCouncilService.findByMunicipality(municipality).orElse(null));
         model.addAttribute("councilAdmin", new CouncilAdminViewModel());
         return "createCouncilAdmin";
     }
 
-    @PostMapping("/{id}/createCouncilAdmin")
+    @PostMapping("/{municipality}/create-council-admin")
     public String createCouncilAdmin(
-            @PathVariable long id,
+            @PathVariable String municipality,
             Model model,
             @Valid @ModelAttribute("councilAdmin") CouncilAdminViewModel viewModel,
             BindingResult errors,
             HttpServletRequest request) {
 
-        logger.debug(viewModel.toString() + " in postMapping of createCouncilAdmin");
-        logger.debug(errors.toString());
         if (errors.hasErrors()) {
 
             return "createCouncilAdmin";
@@ -88,6 +87,7 @@ public class YouthCouncilController {
             userRegisterViewModel.setPassword(viewModel.getPassword());
             userService.save(userRegisterViewModel);
         }
+
         return "redirect:/";
     }
 

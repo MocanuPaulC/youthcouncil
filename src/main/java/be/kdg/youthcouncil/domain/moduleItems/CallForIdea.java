@@ -1,9 +1,6 @@
 package be.kdg.youthcouncil.domain.moduleItems;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +18,9 @@ import java.util.List;
 @DiscriminatorValue ("call-for-idea")
 public class CallForIdea extends ModuleItem {
 	@Transient
+	@Getter (AccessLevel.NONE)
+	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@OneToMany
