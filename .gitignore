@@ -323,5 +323,6 @@ gradle-app.setting
 /.idea/jpa-buddy.xml
 /gradle/wrapper/gradle-wrapper.jar
 
-.idea
+.idea/*
 /db
+!.idea/codeStyles
