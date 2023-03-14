@@ -14,12 +14,11 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CouncilAdminViewModel {
-
-    @NotBlank(message = "Username is required")
-    @Size(min = 8, max = 100, message = "Username should have length between 8 and 100")
-    private String email;
-    private String password = "password";
-    private Role role = Role.COUNCIL_ADMIN;
+	@NotBlank (message = "Username is required")
+	@Size (min = 3, max = 100, message = "Username should have length between 8 and 100")
+	private String email;
+	private String password = "password";
+	private Role role = Role.COUNCIL_ADMIN;
 
 
 }

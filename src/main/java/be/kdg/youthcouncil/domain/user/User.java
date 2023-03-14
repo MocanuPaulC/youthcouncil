@@ -44,6 +44,8 @@ public class User implements Subscriber {
 	@ToString.Exclude
 	private List<Idea> ideas;
 
+	@Enumerated (EnumType.STRING)
+	private Provider provider;
 	@OneToMany
 	@ToString.Exclude
 	private List<Reaction> reactions;
@@ -51,6 +53,13 @@ public class User implements Subscriber {
 	@ToString.Exclude
 	private List<Share> shares;
 
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
 
 	public void addIdea(Idea idea) {
 		logger.debug("Adding idea " + idea.getDescription() + " to user" + this.getId() + this.getFirstName());

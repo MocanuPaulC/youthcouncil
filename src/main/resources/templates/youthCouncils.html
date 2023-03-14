@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Youth Platform</title>
-    <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+	<title>Youth Platform</title>
+	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
 </head>
 <body>
 <section class="container">
-    <div class="row">
-        <header th:insert="includes::header"></header>
-    </div>
+	<div class="row">
+		<header th:insert="includes::header"></header>
+	</div>
 
-    <div class="row">
-        <div class="col-12">
-            <h1>Youth Councils</h1>
-        </div>
-        <div class="col-12">
-            <ul>
-                <li th:each="council : ${councils}">
-                    <a th:href="@{/youthcouncils/{municipality}(municipality=${council.municipalityName})}"
-                       th:text="|${council.getCouncilName()}|"></a>
-                </li>
-            </ul>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-12">
+			<h1>Youth Councils</h1>
+		</div>
+		<div class="col-12">
+			<ul>
+				<li th:each="council : ${councils}">
+					<a th:href="@{/youthcouncils/{municipality}(municipality=${council.municipalityName})}"
+					   th:text="|${council.getCouncilName()}|"></a>
+				</li>
+			</ul>
+		</div>
+	</div>
 </section>
 </body>
 </html>

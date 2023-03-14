@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface Publisher {
-    List<Subscriber> subscribers = new ArrayList<>();
+	List<Subscriber> subscribers = new ArrayList<>();
 
-    void notifySubscribers();
+	void notifySubscribers();
 
-    void subscribe(Subscriber subscriber);
+	void subscribe(Subscriber subscriber);
 
-    void unsubscriber(Subscriber subscriber);
+	void unsubscriber(Subscriber subscriber);
 }

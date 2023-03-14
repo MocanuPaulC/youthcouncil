@@ -1,6 +1,16 @@
 spring:
+    security:
+        oauth2:
+            client:
+                registration:
+                    google:
+                        clientId: 4924686869-6lfnouaqdaed7tn3lvcpqrddjn5slime.apps.googleusercontent.com
+                        clientSecret: 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
+                        scope:
+                            - email
+                            - profile
     profiles:
-        active: dev # options: dev, prod
+        active: prod # options: dev, prod
     jpa:
         show-sql: true
         open-in-view: false
@@ -23,5 +33,5 @@ logging:
     level:
         #    web: debug
         be.kdg.youthcouncil: debug
-#        root: debug
+        #        root: debug
         sql: debug

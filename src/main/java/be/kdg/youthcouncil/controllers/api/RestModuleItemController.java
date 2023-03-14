@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RestModuleItemController {
-    private final ModuleItemService moduleItemService;
-    private final UserService userService;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final ModuleItemService moduleItemService;
+	private final UserService userService;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public RestModuleItemController(ModuleItemService moduleItemService, UserService userService) {
-        this.moduleItemService = moduleItemService;
-        this.userService = userService;
-    }
+	public RestModuleItemController(ModuleItemService moduleItemService, UserService userService) {
+		this.moduleItemService = moduleItemService;
+		this.userService = userService;
+	}
 
-    //TODO: implement
-    //    @PostMapping
-    //    public ResponseEntity<IdeaDTO> answerCallForIdeas(){
-    //        return null;
-    //    }
+	//TODO: implement
+	//    @PostMapping
+	//    public ResponseEntity<IdeaDTO> answerCallForIdeas(){
+	//        return null;
+	//    }
 
 }

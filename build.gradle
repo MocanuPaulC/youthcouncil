@@ -30,6 +30,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.4'
     implementation 'org.webjars:bootstrap:5.2.3'
     implementation 'org.webjars:webjars-locator:0.46'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
