@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
+	  xmlns:th="http://www.thymeleaf.org"
 >
 <head>
-    <title>Add Council Admin</title>
-    <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+	<title>Add Council Admin</title>
+	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
 </head>
 <body>
 <div class="container">
-    <div class="row">
-        <header th:replace="includes :: header"></header>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <h1 th:text="'Add Council Admin to '+ ${council.getCouncilName()}"></h1>
-        </div>
-        <form class="col-12 form-control form"
-              method="post"
+	<div class="row">
+		<header th:replace="includes :: header"></header>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<h1 th:text="'Add Council Admin to '+ ${council.getCouncilName()}"></h1>
+		</div>
+		<form class="col-12 form-control form"
+			  method="post"
 
-              th:action="@{/youthcouncils/{municipality}/create-council-admin(municipality=${council.getMunicipalityName()})}"
-              th:object="${councilAdmin}">
-            <label for="email">Username</label>
-            <input class="form-control" id="email" name="email" required th:field="*{email}" type="email"/>
-            <input class="btn btn-primary" type="submit" value="Submit"/>
-        </form>
-    </div>
+			  th:action="@{/youthcouncils/{municipality}/create-council-admin(municipality=${council.getMunicipalityName()})}"
+			  th:object="${councilAdmin}">
+			<label for="email">Username</label>
+			<input class="form-control" id="email" name="email" required th:field="*{email}" type="email"/>
+			<input class="btn btn-primary" type="submit" value="Submit"/>
+		</form>
+	</div>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@ import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import java.util.List;
 
 public interface ModuleItemService {
-    List<ModuleItem> getAllModuleItems();
+	List<ModuleItem> getAllModuleItems();
 
-    void handleCallForIdeas(String idea, long moduleItemId, long userId, String theme);
+	void handleCallForIdeas(String idea, long moduleItemId, long userId, String theme);
 }

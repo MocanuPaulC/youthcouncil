@@ -7,17 +7,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RestYouthCouncilController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final YouthCouncilService youthCouncilService;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final YouthCouncilService youthCouncilService;
+ 
+	public RestYouthCouncilController(YouthCouncilService youthCouncilService) {
+		this.youthCouncilService = youthCouncilService;
+	}
 
-    public RestYouthCouncilController(YouthCouncilService youthCouncilService) {
-        this.youthCouncilService = youthCouncilService;
-    }
-
-    //TODO: implement
-    //    @GetMapping
-    //    public ResponseEntity<ActionPointDTO> getFilteredActionPoints(){
-    //        return null;
-    //    }
+	//TODO: implement
+	//    @GetMapping
+	//    public ResponseEntity<ActionPointDTO> getFilteredActionPoints(){
+	//        return null;
+	//    }
 
 }

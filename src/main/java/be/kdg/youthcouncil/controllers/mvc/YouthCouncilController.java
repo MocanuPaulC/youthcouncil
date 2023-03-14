@@ -21,74 +21,74 @@ import javax.validation.Valid;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/youthcouncils")
+@RequestMapping ("/youthcouncils")
 public class YouthCouncilController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 
-    private final YouthCouncilService youthCouncilService;
-    private final UserService userService;
+	private final YouthCouncilService youthCouncilService;
+	private final UserService userService;
 
-    @GetMapping()
-    public String youthCouncils(Model model) {
-        model.addAttribute("councils", youthCouncilService.getAllYouthCouncils());
-        return "youthCouncils";
-    }
+	@GetMapping ()
+	public String youthCouncils(Model model) {
+		model.addAttribute("councils", youthCouncilService.getAllYouthCouncils());
+		return "youthCouncils";
+	}
 
-    @GAOnly
-    @GetMapping("/add")
-    public String getAddYouthCouncil(Model model) {
-        model.addAttribute("youthCouncil", new NewYouthCouncilViewModel());
-        return "addYouthCouncil";
-    }
+	@GAOnly
+	@GetMapping ("/add")
+	public String getAddYouthCouncil(Model model) {
+		model.addAttribute("youthCouncil", new NewYouthCouncilViewModel());
+		return "addYouthCouncil";
+	}
+ 
+	@GAOnly
+	@PostMapping ("/add")
+	public String addYouthCouncil(@Valid @ModelAttribute ("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors, HttpServletRequest request) {
+		logger.debug(viewModel.toString() + " in postMapping of addYouthCouncil");
+		if (errors.hasErrors()) {
+			return "addYouthCouncil";
+		}
+		youthCouncilService.create(viewModel);
+		return "redirect:/";
+	}
 
-    @GAOnly
-    @PostMapping("/add")
-    public String addYouthCouncil(@Valid @ModelAttribute("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors, HttpServletRequest request) {
-        logger.debug(viewModel.toString() + " in postMapping of addYouthCouncil");
-        if (errors.hasErrors()) {
-            return "addYouthCouncil";
-        }
-        youthCouncilService.create(viewModel);
-        return "redirect:/";
-    }
+	@GetMapping ("/{municipality}")
+	public String youthCouncil(Model model, @PathVariable String municipality) {
+		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality).orElse(null));
+		return "youthCouncil";
+	}
 
-    @GetMapping("/{municipality}")
-    public String youthCouncil(Model model, @PathVariable String municipality) {
-        model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality).orElse(null));
-        return "youthCouncil";
-    }
+	@GetMapping ("/{municipality}/create-council-admin")
+	public String getCreateCouncilAdmin(@PathVariable String municipality, Model model) {
 
-    @GetMapping("/{municipality}/create-council-admin")
-    public String getCreateCouncilAdmin(@PathVariable String municipality, Model model) {
+		model.addAttribute("council", youthCouncilService.findByMunicipality(municipality).orElse(null));
+		model.addAttribute("councilAdmin", new CouncilAdminViewModel());
+		return "createCouncilAdmin";
+	}
 
-        model.addAttribute("council", youthCouncilService.findByMunicipality(municipality).orElse(null));
-        model.addAttribute("councilAdmin", new CouncilAdminViewModel());
-        return "createCouncilAdmin";
-    }
+	@PostMapping ("/{municipality}/create-council-admin")
+	public String createCouncilAdmin(
+			@PathVariable String municipality,
+			Model model,
+			@Valid @ModelAttribute ("councilAdmin") CouncilAdminViewModel viewModel,
+			BindingResult errors,
+			HttpServletRequest request) {
 
-    @PostMapping("/{municipality}/create-council-admin")
-    public String createCouncilAdmin(
-            @PathVariable String municipality,
-            Model model,
-            @Valid @ModelAttribute("councilAdmin") CouncilAdminViewModel viewModel,
-            BindingResult errors,
-            HttpServletRequest request) {
+		if (errors.hasErrors()) {
 
-        if (errors.hasErrors()) {
+			return "createCouncilAdmin";
+		} else {
+			UserRegisterViewModel userRegisterViewModel = new UserRegisterViewModel();
+			userRegisterViewModel.setEmail(viewModel.getEmail());
+			userRegisterViewModel.setUsername(viewModel.getEmail());
+			userRegisterViewModel.setPassword(viewModel.getPassword());
+			userService.save(userRegisterViewModel);
+		}
 
-            return "createCouncilAdmin";
-        } else {
-            UserRegisterViewModel userRegisterViewModel = new UserRegisterViewModel();
-            userRegisterViewModel.setEmail(viewModel.getEmail());
-            userRegisterViewModel.setUsername(viewModel.getEmail());
-            userRegisterViewModel.setPassword(viewModel.getPassword());
-            userService.save(userRegisterViewModel);
-        }
-
-        return "redirect:/";
-    }
+		return "redirect:/";
+	}
 
 }

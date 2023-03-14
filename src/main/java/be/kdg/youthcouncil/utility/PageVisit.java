@@ -10,19 +10,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class PageVisit {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private String page;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private String page;
+	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 
-    public PageVisit(String page, LocalDateTime startTime, LocalDateTime endTime) {
-        logger.debug("Creating pagevisit for page " + page + " from " + startTime + " to " + endTime);
-        this.page = page;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
+	public PageVisit(String page, LocalDateTime startTime, LocalDateTime endTime) {
+		logger.debug("Creating pagevisit for page " + page + " from " + startTime + " to " + endTime);
+		this.page = page;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
 
-    public PageVisit() {
-        logger.debug("Creating empty pagevisit");
-    }
+	public PageVisit() {
+		logger.debug("Creating empty pagevisit");
+	}
 }

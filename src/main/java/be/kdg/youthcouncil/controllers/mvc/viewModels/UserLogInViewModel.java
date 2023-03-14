@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @Getter
@@ -14,11 +13,11 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class UserLogInViewModel {
 
-    @NotBlank(message = "Username is required")
-    private String username;
+	@NotBlank (message = "Username is required")
+	private String username;
 
-    @NotBlank(message = "Password is required")
-    private String password;
+	@NotBlank (message = "Password is required")
+	private String password;
 
 
 }

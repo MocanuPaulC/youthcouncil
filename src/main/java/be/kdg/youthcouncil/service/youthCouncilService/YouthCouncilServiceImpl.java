@@ -1,6 +1,5 @@
 package be.kdg.youthcouncil.service.youthCouncilService;
 
-import be.kdg.youthcouncil.controllers.mvc.viewModels.YouthCouncilCreateModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
 import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
@@ -15,14 +14,14 @@ import java.util.Optional;
 
 @Service
 public class YouthCouncilServiceImpl implements YouthCouncilService {
-    private final ModelMapper modelMapper;
-    private final YouthCouncilRepository youthCouncilRepository;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final ModelMapper modelMapper;
+	private final YouthCouncilRepository youthCouncilRepository;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public YouthCouncilServiceImpl(ModelMapper modelMapper, YouthCouncilRepository youthCouncilRepository) {
-        this.modelMapper = modelMapper;
-        this.youthCouncilRepository = youthCouncilRepository;
-    }
+	public YouthCouncilServiceImpl(ModelMapper modelMapper, YouthCouncilRepository youthCouncilRepository) {
+		this.modelMapper = modelMapper;
+		this.youthCouncilRepository = youthCouncilRepository;
+	}
 
 	@Override
 	public void create(NewYouthCouncilViewModel councilCreateModel) {
@@ -30,16 +29,16 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 		youthCouncilRepository.save(modelMapper.map(councilCreateModel, YouthCouncil.class));
 	}
 
-    @Override
-    public YouthCouncil getYouthCouncil(long id) {
-        return youthCouncilRepository.findById(id).orElse(null);
-    }
+	@Override
+	public YouthCouncil getYouthCouncil(long id) {
+		return youthCouncilRepository.findById(id).orElse(null);
+	}
 
-    @Override
-    public List<YouthCouncil> getAllYouthCouncils() {
-        logger.debug("Getting all youth councils");
-        return youthCouncilRepository.findAll();
-    }
+	@Override
+	public List<YouthCouncil> getAllYouthCouncils() {
+		logger.debug("Getting all youth councils");
+		return youthCouncilRepository.findAll();
+	}
 
 	@Override
 	public List<ActionPoint> getFilteredActionPoints(String municipalityName, String theme, String label) {

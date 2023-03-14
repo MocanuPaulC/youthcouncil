@@ -1,6 +1,8 @@
 package be.kdg.youthcouncil.service.userService;
 
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
+import be.kdg.youthcouncil.domain.user.Provider;
+import be.kdg.youthcouncil.domain.user.Role;
 import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.persistence.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -10,43 +12,63 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final ModelMapper modelMapper;
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final ModelMapper modelMapper;
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder passwordEncoder;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepository) {
-        this.modelMapper = modelMapper;
-        this.userRepository = userRepository;
-        passwordEncoder = new BCryptPasswordEncoder();
+	public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepository) {
+		this.modelMapper = modelMapper;
+		this.userRepository = userRepository;
+		passwordEncoder = new BCryptPasswordEncoder();
 
 
-    }
+	}
 
-    @Override
-    public void create(UserRegisterViewModel userViewModel) {
-        logger.debug("Saving user");
-        userViewModel.setPassword(passwordEncoder.encode(userViewModel.getPassword()));
-        userRepository.save(modelMapper.map(userViewModel, User.class));
-    }
+	@Override
+	public void processOAuthPostLogin(String username, Map<String, Object> attributes) {
 
-    @Override
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
+		logger.debug("Processing OAuth post login for user: " + username);
+		User existUser = userRepository.findByUsername(username);
 
-    @Override
-    public List<User> getAllUsers() {
-        logger.debug("Getting all users");
-        return userRepository.findAll();
-    }
+		if (existUser == null) {
+			User newUser = new User();
+			newUser.setUsername(username);
+			newUser.setEmail(username);
+			newUser.setLastName((String) attributes.get("family_name"));
+			newUser.setFirstName((String) attributes.get("given_name"));
+			newUser.setProvider(Provider.GOOGLE);
+			newUser.setRole(Role.MEMBER);
+			userRepository.save(newUser);
+		}
 
-    public void save(UserRegisterViewModel user) {
-        userRepository.save(modelMapper.map(user, User.class));
-    }
+	}
+
+	@Override
+	public void create(UserRegisterViewModel userViewModel) {
+		logger.debug("Saving user");
+		userViewModel.setPassword(passwordEncoder.encode(userViewModel.getPassword()));
+		userRepository.save(modelMapper.map(userViewModel, User.class));
+	}
+
+	@Override
+	public User findUserByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		logger.debug("Getting all users");
+		return userRepository.findAll();
+	}
+
+	public void save(UserRegisterViewModel user) {
+		userRepository.save(modelMapper.map(user, User.class));
+	}
 
 }

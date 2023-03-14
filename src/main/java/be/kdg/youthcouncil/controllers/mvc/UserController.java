@@ -19,40 +19,40 @@ import javax.validation.Valid;
 
 @Controller
 public class UserController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final ModelMapper modelMapper;
-    private final UserService userService;
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final ModelMapper modelMapper;
+	private final UserService userService;
 
-    public UserController(UserService userService, ModelMapper modelMapper) {
-        this.userService = userService;
-        this.modelMapper = modelMapper;
-    }
+	public UserController(UserService userService, ModelMapper modelMapper) {
+		this.userService = userService;
+		this.modelMapper = modelMapper;
+	}
 
-    @GetMapping("/login")
-    public ModelAndView logIn(HttpServletRequest request, ModelAndView mav) {
-        String referrer = request.getHeader("Referer");
-        request.getSession().setAttribute("url_prior_login", referrer);
-        mav.addObject("user", new UserLogInViewModel());
-        mav.setViewName("login");
-        return mav;
-    }
+	@GetMapping ("/login")
+	public ModelAndView logIn(HttpServletRequest request, ModelAndView mav) {
+		String referrer = request.getHeader("Referer");
+		request.getSession().setAttribute("url_prior_login", referrer);
+		mav.addObject("user", new UserLogInViewModel());
+		mav.setViewName("login");
+		return mav;
+	}
 
-    @GetMapping("/register")
-    public String register(Model model) {
-        logger.debug("in getMapping of register");
-        model.addAttribute("user", new UserRegisterViewModel());
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String confirmRegister(@Valid @ModelAttribute("user") UserRegisterViewModel viewModel, BindingResult errors, HttpServletRequest request) {
-        logger.debug(viewModel.toString() + " in postMapping of register");
-        logger.debug(errors.toString());
-        if (errors.hasErrors()) {
-            return "register";
-        }
-        userService.create(viewModel);
-        return "redirect:/";
-    }
+	@GetMapping ("/register")
+	public String register(Model model) {
+		logger.debug("in getMapping of register");
+		model.addAttribute("user", new UserRegisterViewModel());
+		return "register";
+	}
+ 
+	@PostMapping ("/register")
+	public String confirmRegister(@Valid @ModelAttribute ("user") UserRegisterViewModel viewModel, BindingResult errors, HttpServletRequest request) {
+		logger.debug(viewModel.toString() + " in postMapping of register");
+		logger.debug(errors.toString());
+		if (errors.hasErrors()) {
+			return "register";
+		}
+		userService.create(viewModel);
+		return "redirect:/";
+	}
 
 }

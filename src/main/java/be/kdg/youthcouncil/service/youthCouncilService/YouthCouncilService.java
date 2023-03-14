@@ -13,9 +13,9 @@ public interface YouthCouncilService {
 
 	List<YouthCouncil> getAllYouthCouncils();
 
-    List<ActionPoint> getFilteredActionPoints(String municipalityName, String theme, String label);
+	List<ActionPoint> getFilteredActionPoints(String municipalityName, String theme, String label);
 
-    YouthCouncil getYouthCouncil(long id);
+	YouthCouncil getYouthCouncil(long id);
 
 	Optional<YouthCouncil> findByMunicipality(String municipality);
 }
