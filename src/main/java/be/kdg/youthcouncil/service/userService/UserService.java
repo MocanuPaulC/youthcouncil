@@ -13,7 +13,7 @@ public interface UserService {
 
 	User findUserByUsername(String username);
 
-	public void processOAuthPostLogin(String username, Map<String, Object> attributes);
+	public void processOAuthPostLogin(String username, Map<String, Object> attributes, String clientName);
 
 	void save(UserRegisterViewModel userViewModel);
 }

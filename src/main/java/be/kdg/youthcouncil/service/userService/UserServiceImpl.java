@@ -1,7 +1,7 @@
 package be.kdg.youthcouncil.service.userService;
 
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
-import be.kdg.youthcouncil.domain.user.Provider;
+import be.kdg.youthcouncil.domain.user.AuthenticationType;
 import be.kdg.youthcouncil.domain.user.Role;
 import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.persistence.UserRepository;
@@ -30,19 +30,27 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+
 	@Override
-	public void processOAuthPostLogin(String username, Map<String, Object> attributes) {
+	public void processOAuthPostLogin(String username, Map<String, Object> attributes, String clientName) {
 
 		logger.debug("Processing OAuth post login for user: " + username);
 		User existUser = userRepository.findByUsername(username);
+		attributes.forEach((key, value) -> logger.debug("Key = " + key + ", Value = " + value));
 
 		if (existUser == null) {
 			User newUser = new User();
 			newUser.setUsername(username);
 			newUser.setEmail(username);
-			newUser.setLastName((String) attributes.get("family_name"));
-			newUser.setFirstName((String) attributes.get("given_name"));
-			newUser.setProvider(Provider.GOOGLE);
+			if (clientName.equalsIgnoreCase("FACEBOOK")) {
+				String[] names = ((String) attributes.get("name")).split(" ");
+				newUser.setFirstName(names[0]);
+				newUser.setLastName(names[1]);
+			} else {
+				newUser.setLastName((String) attributes.get("family_name"));
+				newUser.setFirstName((String) attributes.get("given_name"));
+			}
+			newUser.setAuthType(AuthenticationType.valueOf(clientName.toUpperCase()));
 			newUser.setRole(Role.MEMBER);
 			userRepository.save(newUser);
 		}
