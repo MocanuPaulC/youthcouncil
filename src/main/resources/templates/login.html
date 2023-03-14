@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
 	<title>Login</title>
 	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
@@ -24,6 +24,8 @@
 				<button class="btn btn-primary btn-block" type="submit">Submit</button>
 			</form>
 			<h1> OR </h1>
+			<a th:href="@{/oauth2/authorization/facebook}">Login with Facebook</a>
+			<h1> OR</h1>
 			<a th:href="@{/oauth2/authorization/google}">Login with Google</a>
 		</div>
 	</div>

@@ -9,6 +9,12 @@ spring:
                         scope:
                             - email
                             - profile
+                    facebook:
+                        clientId: 230883409507790
+                        clientSecret: 3e320334c91d91dbb1c3c71afddc38b1
+                        scope:
+                            - email
+                            - public_profile
     profiles:
         active: prod # options: dev, prod
     jpa:
