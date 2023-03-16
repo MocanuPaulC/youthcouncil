@@ -43,7 +43,7 @@ public class UserController {
 		model.addAttribute("user", new UserRegisterViewModel());
 		return "register";
 	}
- 
+
 	@PostMapping ("/register")
 	public String confirmRegister(@Valid @ModelAttribute ("user") UserRegisterViewModel viewModel, BindingResult errors, HttpServletRequest request) {
 		logger.debug(viewModel.toString() + " in postMapping of register");
@@ -54,5 +54,4 @@ public class UserController {
 		userService.create(viewModel);
 		return "redirect:/";
 	}
-
 }

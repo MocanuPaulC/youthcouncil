@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestYouthCouncilController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final YouthCouncilService youthCouncilService;
- 
+
 	public RestYouthCouncilController(YouthCouncilService youthCouncilService) {
 		this.youthCouncilService = youthCouncilService;
 	}

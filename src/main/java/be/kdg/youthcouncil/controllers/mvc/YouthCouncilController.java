@@ -1,10 +1,13 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
 
+import be.kdg.youthcouncil.config.security.annotations.CAOnly;
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.CouncilAdminViewModel;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
+import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
 import be.kdg.youthcouncil.service.userService.UserService;
 import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
 import lombok.AllArgsConstructor;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -43,16 +47,16 @@ public class YouthCouncilController {
 		model.addAttribute("youthCouncil", new NewYouthCouncilViewModel());
 		return "addYouthCouncil";
 	}
- 
+
 	@GAOnly
 	@PostMapping ("/add")
-	public String addYouthCouncil(@Valid @ModelAttribute ("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors, HttpServletRequest request) {
+	public String addYouthCouncil(@Valid @ModelAttribute ("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors) {
 		logger.debug(viewModel.toString() + " in postMapping of addYouthCouncil");
 		if (errors.hasErrors()) {
 			return "addYouthCouncil";
 		}
 		youthCouncilService.create(viewModel);
-		return "redirect:/";
+		return "redirect:/youthcouncils";
 	}
 
 	@GetMapping ("/{municipality}")
@@ -91,4 +95,31 @@ public class YouthCouncilController {
 		return "redirect:/";
 	}
 
+
+	@CAOnly
+	@GetMapping ("/{municipality}/informativepages")
+	public String informativePages(Model model, @PathVariable String municipality) {
+		List<InformativePage> pages = youthCouncilService.getAllInformativePages(municipality);
+		model.addAttribute("informativePages", pages);
+		return "informativePages";
+	}
+
+	@CAOnly
+	@GetMapping ("/{municipality}/informativepages/add")
+	public String getAddInformativePage(Model model, @PathVariable String municipality) {
+		model.addAttribute("informativePage", new NewInformativePageViewModel());
+		model.addAttribute("youthCouncilId", municipality);
+		return "addInformativePage";
+	}
+
+	@CAOnly
+	@PostMapping ("/{municipality}/informativepages/add")
+	public String addInformativePage(@PathVariable String municipality, @Valid @ModelAttribute ("informativePage") NewInformativePageViewModel viewModel, BindingResult errors) {
+		logger.debug(viewModel.toString() + " in postMapping of addInformationalPage");
+		if (errors.hasErrors()) {
+			return "addInformativePage";
+		}
+		youthCouncilService.save(municipality, viewModel);
+		return "redirect:/youthcouncils/" + municipality + "/informativepages";
+	}
 }
