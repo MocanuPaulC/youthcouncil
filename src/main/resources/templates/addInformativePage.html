@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Youth Platform</title>
+	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+</head>
+<body>
+<section class="container">
+	<div class="row">
+		<header th:insert="includes::header"></header>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<h1>Adding new Informative Page</h1>
+		</div>
+		<form  method="post" class="col-12 form-control form" th:object="${informativePage}" th:action="@{'/youthcouncils/' + ${youthCouncilId} + '/informativepages/add'}">
+			<label for="title">Informative Page Title</label>
+			<input type="text" id="title" name="title" class="form-control" th:field="*{title}"/>
+			<label for="paragraphs">Informative Page description</label>
+			<input type="text" id="paragraphs" name="paragraphs" class="form-control" th:field="*{paragraphs}"/>
+			<input type="submit" class="btn btn-primary" value="Submit"/>
+		</form>
+	</div>
+</section>
+</body>
+</html>

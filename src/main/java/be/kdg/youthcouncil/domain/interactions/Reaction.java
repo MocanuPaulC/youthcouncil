@@ -17,7 +17,7 @@ public class Reaction {
 	private long id;
 	@Enumerated (EnumType.STRING)
 	private Emoji emoji;
- 
+
 	public Reaction(Emoji emoji) {
 		this.emoji = emoji;
 	}

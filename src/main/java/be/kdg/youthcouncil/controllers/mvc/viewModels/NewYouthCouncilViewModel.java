@@ -18,7 +18,7 @@ public class NewYouthCouncilViewModel {
 	private String councilName;
 	@NotBlank (message = "Municipality name is required")
 	@Size (min = 3, max = 100, message = "Municipality name should have length between 8 and 100")
-	private String municipalityName;
+	private String municipality;
 
 	//TODO add default description
 	private String description = "";

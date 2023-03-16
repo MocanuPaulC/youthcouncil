@@ -11,7 +11,7 @@ VALUES ( 'gadmin@localhost', 'gadmin', 'gadmin', '$2a$10$p3Q7uAuj6J.wM15xVL/QAeV
        ( 'member2@localhost', 'member2', 'member2', '$2a$10$0SEX6x9MVC24UkyFSgMmJeRvNXlXgBH.vmiBvRPOpNBExurHyzCuS',
          '89876', 'MEMBER', 'member2' );
 
-INSERT INTO youthcouncil ( council_logo, council_name, description, is_after_election, municipality_name )
+INSERT INTO youthcouncil ( council_logo, council_name, description, is_after_election, municipality )
 VALUES ( 'my/youth/council/logo', 'my_youthcouncil', 'my youthcouncil description', 'false', 'my_municipality' );
 
 INSERT INTO youthcouncil_council_admins

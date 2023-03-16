@@ -2,6 +2,8 @@ package be.kdg.youthcouncil.domain.youthCouncil;
 
 import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +28,14 @@ public class InformativePage {
 	@Column (name = "informative_page_id")
 	private long id;
 	private String title;
-	@ElementCollection
+	@ElementCollection()
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> paragraphs;
-	@ElementCollection
+	@ElementCollection()
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> images;
-	@ElementCollection
+	@ElementCollection()
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> videos;
 
 	@OneToOne

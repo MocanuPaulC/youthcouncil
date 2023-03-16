@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+<body>
+	<div th:each="iP : ${informativePages}" th:text="${iP.title}"></div>
+</body>
+</html>

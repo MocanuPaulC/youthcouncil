@@ -8,11 +8,13 @@ import be.kdg.youthcouncil.persistence.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,30 +32,29 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-
 	@Override
 	public void processOAuthPostLogin(String username, Map<String, Object> attributes, String clientName) {
 
 		logger.debug("Processing OAuth post login for user: " + username);
-		User existUser = userRepository.findByUsername(username);
+		User newUser = userRepository.findByUsername(username)
+		                             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+
 		attributes.forEach((key, value) -> logger.debug("Key = " + key + ", Value = " + value));
 
-		if (existUser == null) {
-			User newUser = new User();
-			newUser.setUsername(username);
-			newUser.setEmail(username);
-			if (clientName.equalsIgnoreCase("FACEBOOK")) {
-				String[] names = ((String) attributes.get("name")).split(" ");
-				newUser.setFirstName(names[0]);
-				newUser.setLastName(names[1]);
-			} else {
-				newUser.setLastName((String) attributes.get("family_name"));
-				newUser.setFirstName((String) attributes.get("given_name"));
-			}
-			newUser.setAuthType(AuthenticationType.valueOf(clientName.toUpperCase()));
-			newUser.setRole(Role.MEMBER);
-			userRepository.save(newUser);
+		newUser.setUsername(username);
+		newUser.setEmail(username);
+		if (clientName.equalsIgnoreCase("FACEBOOK")) {
+			String[] names = ((String) attributes.get("name")).split(" ");
+			newUser.setFirstName(names[0]);
+			newUser.setLastName(names[1]);
+		} else {
+			newUser.setLastName((String) attributes.get("family_name"));
+			newUser.setFirstName((String) attributes.get("given_name"));
 		}
+		newUser.setAuthType(AuthenticationType.valueOf(clientName.toUpperCase()));
+		newUser.setRole(Role.MEMBER);
+		userRepository.save(newUser);
 
 	}
 
@@ -64,10 +65,6 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(modelMapper.map(userViewModel, User.class));
 	}
 
-	@Override
-	public User findUserByUsername(String username) {
-		return userRepository.findByUsername(username);
-	}
 
 	@Override
 	public List<User> getAllUsers() {
@@ -77,6 +74,11 @@ public class UserServiceImpl implements UserService {
 
 	public void save(UserRegisterViewModel user) {
 		userRepository.save(modelMapper.map(user, User.class));
+	}
+
+	@Override
+	public Optional<User> findUserByUsername(String username) {
+		return userRepository.findByUsername(username);
 	}
 
 }
