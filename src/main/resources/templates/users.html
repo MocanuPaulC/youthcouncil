@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Youth Platform</title>
+	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+</head>
+<body>
+<section class="container">
+	<div class="row">
+		<header th:insert="includes::header"></header>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<h1>Users</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12 row">
+			<h3 class="col-2">Id</h3>
+			<h3 class="col-2">First Name</h3>
+			<h3 class="col-2">Last Name</h3>
+			<h3 class="col-4">Email</h3>
+			<h3 class="col-2">Postcode</h3>
+		</div>
+		<div class="col-12 row" th:each="user : ${users}">
+			<div class="col-2" th:text="${user.id}"></div>
+			<div class="col-2" th:text="${user.firstName}"></div>
+			<div class="col-2" th:text="${user.lastName}"></div>
+			<div class="col-4" th:text="${user.email}"></div>
+			<div class="col-2" th:text="${user.postcode}"></div>
+		</div>
+	</div>
+</section>
+</body>
+</html>
