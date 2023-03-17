@@ -62,13 +62,13 @@ public class UserController {
 	@GAOnly
 	@GetMapping ("/users")
 	public String users(Model model) {
-		model.addAttribute("users", userService.getAllUsers());
+		model.addAttribute("users", userService.findAllUsers());
 		return "users";
 	}
 
 	@GetMapping ("/profile")
 	public String profile(Model model, Principal principal) {
-		User user = userService.findUserByUsername(principal.getName())
+		User user = userService.findByUsername(principal.getName())
 		                       .orElseThrow(() -> new UsernameNotFoundException("This User could not be found"));
 		model.addAttribute("user", user);
 		return "profile";

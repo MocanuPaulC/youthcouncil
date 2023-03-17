@@ -3,6 +3,7 @@ package be.kdg.youthcouncil.service.youthCouncilService;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
+import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
 import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 
@@ -16,6 +17,10 @@ public interface YouthCouncilService {
 	List<YouthCouncil> getAllYouthCouncils();
 
 	List<ActionPoint> getFilteredActionPoints(String municipality, String theme, String label);
+
+
+	List<User> getMembers(String municipality);
+
 
 	YouthCouncil getYouthCouncil(long id);
 

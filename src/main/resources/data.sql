@@ -9,7 +9,10 @@ VALUES ( 'gadmin@localhost', 'gadmin', 'gadmin', '$2a$10$p3Q7uAuj6J.wM15xVL/QAeV
        ( 'member1@localhost', 'member1', 'member1', '$2a$10$TeFgOrKh3heqFwXOcFZ82OdQ8asTAr8krJydjgsAXvJc6kcYvFHZK',
          '23425', 'MEMBER', 'member1' ),
        ( 'member2@localhost', 'member2', 'member2', '$2a$10$0SEX6x9MVC24UkyFSgMmJeRvNXlXgBH.vmiBvRPOpNBExurHyzCuS',
-         '89876', 'MEMBER', 'member2' );
+         '89876', 'MEMBER', 'member2' ),
+       ( 'moderator1@localhost', 'moderator1', 'moderator1',
+         '$2a$12$fqJRfbx7TOIIPoyERKII4OTkuz1Wf3ZDCOyHZc3CVPGpkP601Pnv.',
+         '123123', 'MODERATOR', 'moderator1' );
 
 INSERT INTO youthcouncil ( council_logo, council_name, description, is_after_election, municipality )
 VALUES ( 'my/youth/council/logo', 'my_youthcouncil', 'my youthcouncil description', 'false', 'my_municipality' );
@@ -17,7 +20,7 @@ VALUES ( 'my/youth/council/logo', 'my_youthcouncil', 'my youthcouncil descriptio
 INSERT INTO youthcouncil_council_admins
 VALUES ( 1, 2 );
 INSERT INTO youthcouncil_council_members
-VALUES ( 1, 4 );
+VALUES ( 1, 4 ), ( 1, 6 );
 
 -- INFORMATIVE PAGES
 INSERT INTO informative_pages ( is_enabled, title )

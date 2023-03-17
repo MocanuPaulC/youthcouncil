@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
-	List<User> getAllUsers();
+	List<User> findAllUsers();
 
 	void create(UserRegisterViewModel userViewModel);
 
@@ -17,7 +17,12 @@ public interface UserService {
 
 	void save(UserRegisterViewModel userViewModel);
 
+
+	boolean updateRole(long id, String role);
+
+
 	void save(User user);
 
-	Optional<User> findUserByUsername(String username);
+
+	Optional<User> findByUsername(String username);
 }

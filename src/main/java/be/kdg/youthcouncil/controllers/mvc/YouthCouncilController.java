@@ -8,6 +8,7 @@ import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewMode
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
+import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
 import be.kdg.youthcouncil.service.userService.UserService;
 import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,7 @@ public class YouthCouncilController {
 
 	@GAOnly
 	@PostMapping ("/add")
-	public String addYouthCouncil(@Valid @ModelAttribute ("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors) {
+	public String addYouthCouncil(@Valid @ModelAttribute ("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors, HttpServletRequest request) {
 		logger.debug(viewModel.toString() + " in postMapping of addYouthCouncil");
 		if (errors.hasErrors()) {
 			return "addYouthCouncil";
@@ -63,6 +64,18 @@ public class YouthCouncilController {
 	public String youthCouncil(Model model, @PathVariable String municipality) {
 		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality).orElse(null));
 		return "youthCouncil";
+	}
+
+	@GetMapping ("/{municipality}/statistics")
+	public String youthCouncilStatistics(Model model, @PathVariable String municipality) {
+		var possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
+		if (possibleYouthCouncil.isEmpty()) {
+			throw new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found.");
+		}
+		model.addAttribute("youthCouncil", possibleYouthCouncil.get());
+		model.addAttribute("users", youthCouncilService.getMembers(municipality));
+
+		return "statistics";
 	}
 
 	@GetMapping ("/{municipality}/create-council-admin")

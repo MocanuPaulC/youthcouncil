@@ -31,6 +31,9 @@
 			<a class="btn btn-light" sec:authorize="hasRole('ROLE_GENERAL_ADMIN')" th:href="@{/users}"
 			   type="button">all Users
 			</a>
+			<a class="btn btn-dark" sec:authorize="hasRole('ROLE_GENERAL_ADMIN')" th:href="@{/statistics}">General
+																										   Statistics
+			</a>
 			<form sec:authorize="isAuthenticated()" th:action="@{/logout}" th:method="post">
 				<button class="btn btn-light" type="submit">Log out</button>
 			</form>

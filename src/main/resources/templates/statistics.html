@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+	<title>Statistics</title>
+	<script src="/js/statistics.js" type="module"></script>
+</head>
+<body>
+
+<div class="container">
+	<div class="container-fluid">
+		<header th:replace="includes :: header"></header>
+		<span th:text="'Numer of users: ' + ${users.size()}"></span>
+		<table class="table table-hover table-bordered" th:for="users">
+			<thead>
+			<tr>
+				<th scope="col">Username</th>
+				<th scope="col">Email</th>
+				<th scope="col">First Name</th>
+				<th scope="col">Last Name</th>
+				<th scope="col">Role</th>
+				<th scope="col">Idea count</th>
+
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="user: ${users}" th:id="'user_' + ${user.id}">
+				<td th:text="${user.username}"></td>
+				<td th:text="${user.email}"></td>
+				<td th:text="${user.firstName}"></td>
+				<td th:text="${user.lastName}"></td>
+				<td class="role" th:text="${user.role}"></td>
+				<td th:text="${user.getIdeas().size()}"></td>
+				<td sec:authorize="hasRole('ROLE_COUNCIL_ADMIN')"
+					th:if="${user.role.toString()=='MEMBER' || user.role.toString()=='MODERATOR'}">
+					<button class="btn btn-primary promote"
+							th:if="${user.getRole().toString()=='MEMBER'}"
+							type="button">Promote
+					</button>
+					<button class="btn btn-danger demote" th:if="${user.role.toString()=='MODERATOR'}" type="button">
+						Demote
+					</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>

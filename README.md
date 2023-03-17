@@ -17,13 +17,14 @@
 
 ### Seeded users
 
-| Username  | Password  | Role          |
-|-----------|-----------|---------------|
-| gadmin    | gadmin    | GENERAL_ADMIN |
-| cadmin    | cadmin    | COUNCIL_ADMIN |
-| moderator | moderator | MODERATOR     |
-| member1   | member1   | MEMBER        |
-| member2   | member2   | MEMBER        |
+| Username   | Password   | Role          |
+|------------|------------|---------------|
+| gadmin     | gadmin     | GENERAL_ADMIN |
+| cadmin     | cadmin     | COUNCIL_ADMIN |
+| moderator  | moderator  | MODERATOR     |
+| member1    | member1    | MEMBER        |
+| member2    | member2    | MEMBER        |
+| moderator1 | moderator1 | MODERATOR     |
 
 ### How to run
 

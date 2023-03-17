@@ -20,4 +20,19 @@ public interface YouthCouncilRepository extends JpaRepository<YouthCouncil, Long
 					"WHERE yc.municipality = (:municipality)"
 	)
 	Optional<YouthCouncil> getYouthCouncilWithInformativePages(@Param ("municipality") String municipality);
+
+	@Query (
+			"SELECT y FROM YouthCouncil y " +
+					"JOIN FETCH y.councilMembers " +
+					"WHERE y.municipality = (:municipality)"
+	)
+	YouthCouncil findByMunicipalityNameWithCouncilMembers(@Param ("municipality") String municipality);
+
+	@Query (
+			"SELECT y FROM YouthCouncil y " +
+					"JOIN FETCH y.councilAdmins " +
+					"WHERE y.municipality = (:municipality)"
+	)
+	YouthCouncil findByMunicipalityNameWithCouncilAdmins(@Param ("municipality") String municipality);
+
 }
