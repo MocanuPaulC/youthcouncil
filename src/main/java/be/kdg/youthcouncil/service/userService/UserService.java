@@ -16,5 +16,8 @@ public interface UserService {
 	public void processOAuthPostLogin(String username, Map<String, Object> attributes, String clientName);
 
 	void save(UserRegisterViewModel userViewModel);
-    Optional<User> findUserByUsername(String username);
+
+	void save(User user);
+
+	Optional<User> findUserByUsername(String username);
 }
