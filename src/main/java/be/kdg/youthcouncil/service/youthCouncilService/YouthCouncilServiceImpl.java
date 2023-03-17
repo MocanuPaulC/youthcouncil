@@ -3,6 +3,7 @@ package be.kdg.youthcouncil.service.youthCouncilService;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
+import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
 import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
@@ -13,16 +14,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class YouthCouncilServiceImpl implements YouthCouncilService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final ModelMapper modelMapper;
 	private final YouthCouncilRepository youthCouncilRepository;
+
+
+	@Override
+	public List<User> getMembers(String municipality) {
+		List<User> councilMembers = new ArrayList<>();
+		try {
+			councilMembers.addAll(
+					youthCouncilRepository.
+							findByMunicipalityNameWithCouncilMembers(municipality).
+							getCouncilMembers());
+			councilMembers.addAll(youthCouncilRepository.findByMunicipalityNameWithCouncilAdmins(municipality)
+			                                            .getCouncilAdmins());
+		} catch (NullPointerException e) {
+			logger.debug("No members found for youth council of municipality: " + municipality);
+		}
+		return councilMembers;
+
+	}
 
 	@Override
 	public void create(NewYouthCouncilViewModel councilCreateModel) {

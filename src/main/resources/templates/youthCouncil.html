@@ -1,18 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<title th:text="${youthCouncil.getCouncilName()}"></title>
+	<title th:text="${youthCouncil.getMunicipality()}"></title>
 	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
 </head>
 <body class="m-3">
 
 <h1 th:text="${youthCouncil.getCouncilName()}"></h1>
 <p th:text="${youthCouncil.getDescription()}"></p>
-<a th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipalityName()})}">
+<a th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipality()})}">
 	Create
 	council admin
 </a>
+<!-- Maybe add Moderator to list of authorized users to see the stats? -->
+<a class="btn btn-dark"
+   sec:authorize="hasAnyRole('ROLE_GENERAL_ADMIN','ROLE_COUNCIL_ADMIN')"
+   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${youthCouncil.getMunicipality()})}">Statistics
+</a>
+
 <div class="d-flex gap-2">
 	<div class="card mb-3" style="max-width: 540px;" th:each="moduleItem: ${youthCouncil.getModuleItems()}">
 		<div class="card-header">Module Item</div>
@@ -28,7 +36,7 @@
 						content.
 					</p>
 					<a class="card-link"
-					   th:href="@{/youthcouncils/{municipality}/call-for-ideas/{id}(municipality=${youthCouncil.getMunicipalityName()}, id=${moduleItem.getId()})}">
+					   th:href="@{/youthcouncils/{municipality}/call-for-ideas/{id}(municipality=${youthCouncil.getMunicipality}, id=${moduleItem.getId()})}">
 						Go somewhere
 					</a>
 				</div>

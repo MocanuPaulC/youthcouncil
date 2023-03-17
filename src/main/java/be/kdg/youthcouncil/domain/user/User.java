@@ -40,7 +40,7 @@ public class User implements Subscriber {
 	@Column (name = "user_role")
 	private Role role;
 
-	@OneToMany
+	@OneToMany (fetch = FetchType.EAGER)
 	@ToString.Exclude
 	private List<Idea> ideas;
 
