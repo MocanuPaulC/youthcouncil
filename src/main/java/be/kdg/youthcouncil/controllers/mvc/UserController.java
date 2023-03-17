@@ -3,10 +3,12 @@ package be.kdg.youthcouncil.controllers.mvc;
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserLogInViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
+import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.service.userService.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -61,6 +64,14 @@ public class UserController {
 	public String users(Model model) {
 		model.addAttribute("users", userService.getAllUsers());
 		return "users";
+	}
+
+	@GetMapping ("/profile")
+	public String profile(Model model, Principal principal) {
+		User user = userService.findUserByUsername(principal.getName())
+		                       .orElseThrow(() -> new UsernameNotFoundException("This User could not be found"));
+		model.addAttribute("user", user);
+		return "profile";
 	}
 
 }
