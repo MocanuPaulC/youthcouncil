@@ -1,6 +1,5 @@
 package be.kdg.youthcouncil.service.youthCouncilService;
 
-import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
 import be.kdg.youthcouncil.domain.user.User;
@@ -73,16 +72,6 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 		return Optional.of(youthCouncilRepository.findByMunicipalityName(municipality));
 	}
 
-	@Override
-	public void save(String municipality, NewInformativePageViewModel informativePageViewModel) {
-		Optional<YouthCouncil> possibleYouthCouncil = youthCouncilRepository.getYouthCouncilWithInformativePages(municipality);
-		if (possibleYouthCouncil.isEmpty())
-			throw new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found.");
-
-		YouthCouncil youthCouncil = possibleYouthCouncil.get();
-		youthCouncil.getInformativePages().add(modelMapper.map(informativePageViewModel, InformativePage.class));
-		youthCouncilRepository.save(youthCouncil);
-	}
 
 	@Override
 	public List<InformativePage> getAllInformativePages(String municipality) {

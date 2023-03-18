@@ -16,17 +16,16 @@ import java.util.List;
 @ToString
 public class NewInformativePageViewModel {
 
-    @NotBlank(message = "Title is required")
-    @Size(min=8, max=100, message = "Title should have length between 8 and 100")
-    private String title;
+	@NotBlank (message = "Title is required")
+	@Size (min = 8, max = 100, message = "Title should have length between 8 and 100")
+	private String title;
 
-    //TODO this does not check correctly
-    @NotNull(message = "Description is required")
-    private List<String> paragraphs;
+	//TODO this does not check correctly
+	@NotNull (message = "Description is required")
+	private List<String> paragraphs;
 
+	private List<String> images = new ArrayList<>();
 
-    private List<String> images = new ArrayList<>();
-
-    private List<String> videos = new ArrayList<>();
+	private List<String> videos = new ArrayList<>();
 
 }

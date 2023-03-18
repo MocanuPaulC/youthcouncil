@@ -1,10 +1,9 @@
 package be.kdg.youthcouncil.service.informativePageService;
 
-import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
-
-import java.util.List;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 
 public interface InformativePageService {
-    List<InformativePage> getAll();
+
+	void save(String municipality, NewInformativePageViewModel informativePage);
 
 }

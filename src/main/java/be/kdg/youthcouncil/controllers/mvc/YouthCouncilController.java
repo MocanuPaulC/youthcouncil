@@ -9,6 +9,7 @@ import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
+import be.kdg.youthcouncil.service.informativePageService.InformativePageService;
 import be.kdg.youthcouncil.service.userService.UserService;
 import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ public class YouthCouncilController {
 
 	private final YouthCouncilService youthCouncilService;
 	private final UserService userService;
+
+	private final InformativePageService informativePageService;
 
 	@GetMapping ()
 	public String youthCouncils(Model model) {
@@ -132,7 +135,7 @@ public class YouthCouncilController {
 		if (errors.hasErrors()) {
 			return "addInformativePage";
 		}
-		youthCouncilService.save(municipality, viewModel);
+		informativePageService.save(municipality, viewModel);
 		return "redirect:/youthcouncils/" + municipality + "/informativepages";
 	}
 }
