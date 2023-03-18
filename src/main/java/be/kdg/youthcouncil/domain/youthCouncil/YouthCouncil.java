@@ -4,8 +4,6 @@ import be.kdg.youthcouncil.domain.moduleItems.Announcement;
 import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import be.kdg.youthcouncil.domain.user.User;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +47,6 @@ public class YouthCouncil {
 
 	@OneToMany
 	@ToString.Exclude
-	@Cascade (CascadeType.MERGE)
 	private List<InformativePage> informativePages;
 
 	@OneToMany

@@ -1,6 +1,5 @@
 package be.kdg.youthcouncil.service.youthCouncilService;
 
-import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
 import be.kdg.youthcouncil.domain.user.User;
@@ -25,8 +24,6 @@ public interface YouthCouncilService {
 	YouthCouncil getYouthCouncil(long id);
 
 	Optional<YouthCouncil> findByMunicipality(String municipality);
-
-	void save(String municipality, NewInformativePageViewModel informativePage);
 
 
 	List<InformativePage> getAllInformativePages(String municipality);

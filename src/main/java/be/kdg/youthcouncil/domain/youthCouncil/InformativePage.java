@@ -28,14 +28,17 @@ public class InformativePage {
 	@Column (name = "informative_page_id")
 	private long id;
 	private String title;
-	@ElementCollection()
-	@LazyCollection(LazyCollectionOption.FALSE)
+
+	@ManyToOne
+	private YouthCouncil owningYouthCouncil;
+	@ElementCollection ()
+	@LazyCollection (LazyCollectionOption.FALSE)
 	private List<String> paragraphs;
-	@ElementCollection()
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@ElementCollection ()
+	@LazyCollection (LazyCollectionOption.FALSE)
 	private List<String> images;
-	@ElementCollection()
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@ElementCollection ()
+	@LazyCollection (LazyCollectionOption.FALSE)
 	private List<String> videos;
 
 	@OneToOne
