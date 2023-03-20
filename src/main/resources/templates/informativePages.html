@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
-<body>
-	<div th:each="iP : ${informativePages}" th:text="${iP.title}"></div>
+<head>
+	<title>Informative Pages</title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+</head>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, 'informative-pages')}"></th:block>
+<div th:each="iP : ${informativePages}" th:text="${iP.title}"></div>
 </body>
 </html>

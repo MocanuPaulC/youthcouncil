@@ -3,22 +3,21 @@
 	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
 	<title th:text="${youthCouncil.getMunicipality()}"></title>
-	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
 </head>
 <body class="m-3">
-
+<th:block th:insert="~{includes::navbar(${authUser}, 'youthcouncil')}"></th:block>
 <h1 th:text="${youthCouncil.getCouncilName()}"></h1>
 <p th:text="${youthCouncil.getDescription()}"></p>
 <a th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipality()})}">
-	Create
-	council admin
+	Create council admin
 </a>
 <!-- Maybe add Moderator to list of authorized users to see the stats? -->
 <a class="btn btn-dark"
    sec:authorize="hasAnyRole('ROLE_GENERAL_ADMIN','ROLE_COUNCIL_ADMIN')"
-   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${youthCouncil.getMunicipality()})}">Statistics
+   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${youthCouncil.getMunicipality()})}">
+	Statistics
 </a>
 
 <div class="d-flex gap-2">

@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,8 +47,7 @@ public class RestUserController {
 
 	@PostMapping ("{userId}/resetpassword")
 	public ResponseEntity<UserResponseDto> resetPassword(@PathVariable long userId, @Valid @RequestBody RequestResetPasswordDto requestResetPasswordDto, Principal principal) {
-		User user = userService.findByUsername(principal.getName())
-		                       .orElseThrow(() -> new UsernameNotFoundException("User could not be found!"));
+		User user = userService.findByUsername(principal.getName());
 
 		if (userId != user.getId()) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 

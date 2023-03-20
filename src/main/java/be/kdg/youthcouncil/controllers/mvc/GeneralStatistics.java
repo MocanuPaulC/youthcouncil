@@ -20,10 +20,9 @@ public class GeneralStatistics {
 	@GAOnly
 	@GetMapping
 	public String youthCouncilStatistics(Model model) {
-		model.addAttribute("users", userService.findAllUsers());
+		model.addAttribute("users", userService.findAllWithIdeas());
 
 		return "statistics";
 	}
 
 }
-

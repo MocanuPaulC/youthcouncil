@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Youth Platform</title>
-	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
 </head>
-<body>
-<header th:insert="includes::header"></header>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, 'home')}"></th:block>
 <section class="container">
-
+	<div class="row">
+	</div>
 
 	<div class="row">
 		<div class="col-12">
