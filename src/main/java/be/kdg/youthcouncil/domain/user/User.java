@@ -3,6 +3,7 @@ package be.kdg.youthcouncil.domain.user;
 import be.kdg.youthcouncil.domain.interactions.Reaction;
 import be.kdg.youthcouncil.domain.interactions.Share;
 import be.kdg.youthcouncil.domain.moduleItems.Idea;
+import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 import be.kdg.youthcouncil.utility.Subscriber;
 import lombok.*;
 import org.slf4j.Logger;
@@ -18,38 +19,36 @@ import java.util.List;
 @Entity
 @Table (name = "users")
 public class User implements Subscriber {
-
 	@Transient
 	@Getter (AccessLevel.NONE)
 	@Setter (AccessLevel.NONE)
+	@ToString.Exclude
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column (name = "user_id")
 	private long id;
-
 	private String username;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String password;
-
 	private String postcode;
-
 	@Enumerated (EnumType.STRING)
 	@Column (name = "user_role")
 	private Role role;
-
-	@OneToMany (fetch = FetchType.EAGER)
+	@OneToMany (fetch = FetchType.LAZY)
 	@ToString.Exclude
 	private List<Idea> ideas;
-
 	@OneToMany
 	@ToString.Exclude
 	private List<Reaction> reactions;
 	@OneToMany
 	@ToString.Exclude
 	private List<Share> shares;
+	@ManyToMany (targetEntity = YouthCouncil.class, mappedBy = "councilMembers", fetch = FetchType.EAGER)
+	@ToString.Exclude
+	private List<YouthCouncil> youthCouncils;
 
 	@Enumerated (EnumType.STRING)
 	@Column (name = "auth_type")

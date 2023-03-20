@@ -8,7 +8,6 @@ import be.kdg.youthcouncil.service.userService.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
@@ -49,13 +49,14 @@ public class UserController {
 	}
 
 	@PostMapping ("/register")
-	public String confirmRegister(@Valid @ModelAttribute ("user") UserRegisterViewModel viewModel, BindingResult errors, HttpServletRequest request) {
+	public String confirmRegister(@Valid @ModelAttribute ("user") UserRegisterViewModel viewModel, BindingResult errors, HttpServletRequest request) throws ServletException {
 		logger.debug(viewModel.toString() + " in postMapping of register");
 		logger.debug(errors.toString());
 		if (errors.hasErrors()) {
 			return "register";
 		}
 		userService.create(viewModel);
+		request.login(viewModel.getUsername(), viewModel.getPassword());
 		return "redirect:/";
 	}
 
@@ -68,8 +69,7 @@ public class UserController {
 
 	@GetMapping ("/profile")
 	public String profile(Model model, Principal principal) {
-		User user = userService.findByUsername(principal.getName())
-		                       .orElseThrow(() -> new UsernameNotFoundException("This User could not be found"));
+		User user = userService.findByUsername(principal.getName());
 		model.addAttribute("user", user);
 		return "profile";
 	}

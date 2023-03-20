@@ -35,7 +35,7 @@ public class YouthCouncil {
 	@ManyToMany
 	@ToString.Exclude
 	private List<User> councilAdmins;
-	@ManyToMany
+	@ManyToMany (targetEntity = User.class)
 	@ToString.Exclude
 	private List<User> councilMembers;
 	@ManyToMany

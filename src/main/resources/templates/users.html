@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Youth Platform</title>
-	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+	<title>Users</title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
 </head>
-<body>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, 'all-users')}"></th:block>
 <section class="container">
-	<div class="row">
-		<header th:insert="includes::header"></header>
-	</div>
-
 	<div class="row">
 		<div class="col-12">
 			<h1>Users</h1>

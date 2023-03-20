@@ -36,12 +36,12 @@ public class WebSecurityConfig {
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 				.authorizeRequests(auths -> auths
-						.antMatchers("/").permitAll()
-						.antMatchers("/login").permitAll()
-						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico").permitAll()
-						.antMatchers("/register").permitAll()
-						.antMatchers("/oauth/**").permitAll()
-						.anyRequest().authenticated())
+						.antMatchers("/", "/logout", "/login", "/register", "/oauth/**")
+						.permitAll()
+						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico")
+						.permitAll()
+						.anyRequest()
+						.authenticated())
 				.formLogin()
 				.loginPage("/login")
 				.permitAll()
@@ -57,5 +57,4 @@ public class WebSecurityConfig {
 				.successHandler(oauthLoginSuccessHandler);
 		return http.build();
 	}
-
 }
