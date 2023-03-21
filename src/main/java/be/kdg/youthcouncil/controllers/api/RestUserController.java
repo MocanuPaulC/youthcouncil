@@ -1,9 +1,9 @@
 package be.kdg.youthcouncil.controllers.api;
 
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
-import be.kdg.youthcouncil.controllers.api.DTOs.UpdateUserRoleDTO;
-import be.kdg.youthcouncil.controllers.api.DTOs.UserDTO;
 import be.kdg.youthcouncil.controllers.api.dto.RequestResetPasswordDto;
+import be.kdg.youthcouncil.controllers.api.dto.UpdateUserRoleDTO;
+import be.kdg.youthcouncil.controllers.api.dto.UserDTO;
 import be.kdg.youthcouncil.controllers.api.dto.UserResponseDto;
 import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.service.userService.UserService;

@@ -24,6 +24,7 @@ public class WebSecurityConfig {
 	private CustomOAuth2UserService oauthUserService;
 	private UserService userService;
 	private OAuthLoginSuccessHandler oauthLoginSuccessHandler;
+	private CustomLoginSuccessHandler loginSuccessHandler;
 
 
 	@Bean
@@ -51,10 +52,12 @@ public class WebSecurityConfig {
 				.and()
 				.oauth2Login()
 				.loginPage("/login")
+				.successHandler(loginSuccessHandler)
 				.userInfoEndpoint()
 				.userService(oauthUserService)
 				.and()
 				.successHandler(oauthLoginSuccessHandler);
+
 		return http.build();
 	}
 }

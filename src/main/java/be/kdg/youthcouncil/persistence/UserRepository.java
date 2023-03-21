@@ -16,6 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByUsername(String username);
 
+
 	@Query ("""
 			select u from User u
 			join fetch u.ideas
@@ -26,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			select u from User u
 			left join fetch u.ideas""")
 	List<User> findAllWithIdeas();
+
 }

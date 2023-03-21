@@ -4,12 +4,12 @@ import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
 import be.kdg.youthcouncil.domain.user.AuthenticationType;
 import be.kdg.youthcouncil.domain.user.Role;
 import be.kdg.youthcouncil.domain.user.User;
+import be.kdg.youthcouncil.exceptions.UserNotFound;
 import be.kdg.youthcouncil.persistence.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -54,6 +54,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User findById(long id) {
+		return userRepository.findById(id).orElseThrow(() -> new UserNotFound(id));
+	}
+
+	@Override
 	public boolean updateRole(long userId, String role) {
 		try {
 			userRepository.findById(userId).ifPresent(user -> {
@@ -86,7 +91,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username)
-		                     .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username)));
+		                     .orElseThrow(() -> new UserNotFound(username));
 	}
 
 	@Override

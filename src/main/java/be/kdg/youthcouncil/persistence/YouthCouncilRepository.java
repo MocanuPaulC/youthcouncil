@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface YouthCouncilRepository extends JpaRepository<YouthCouncil, Long> {
 
 	@Query ("select yc from YouthCouncil yc where yc.municipality = (:municipality)")
-	YouthCouncil findByMunicipalityName(String municipality);
+	Optional<YouthCouncil> findByMunicipalityName(String municipality);
 
 	@Query (
 			"SELECT yc FROM YouthCouncil yc " +
@@ -26,13 +26,20 @@ public interface YouthCouncilRepository extends JpaRepository<YouthCouncil, Long
 					"JOIN FETCH y.councilMembers " +
 					"WHERE y.municipality = (:municipality)"
 	)
-	YouthCouncil findByMunicipalityNameWithCouncilMembers(@Param ("municipality") String municipality);
+	Optional<YouthCouncil> findByMunicipalityNameWithCouncilMembers(@Param ("municipality") String municipality);
+
+	@Query (
+			"SELECT y FROM YouthCouncil y " +
+					"JOIN FETCH y.councilMembers " +
+					"WHERE y.id = (:youthCouncilId)"
+	)
+	Optional<YouthCouncil> findByIdWithCouncilMembers(@Param ("youthCouncilId") long youthCouncilId);
 
 	@Query (
 			"SELECT y FROM YouthCouncil y " +
 					"JOIN FETCH y.councilAdmins " +
 					"WHERE y.municipality = (:municipality)"
 	)
-	YouthCouncil findByMunicipalityNameWithCouncilAdmins(@Param ("municipality") String municipality);
+	Optional<YouthCouncil> findByMunicipalityNameWithCouncilAdmins(@Param ("municipality") String municipality);
 
 }

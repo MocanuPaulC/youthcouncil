@@ -8,7 +8,6 @@ import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewMode
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
-import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
 import be.kdg.youthcouncil.service.informativePageService.InformativePageService;
 import be.kdg.youthcouncil.service.userService.UserService;
 import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
@@ -41,7 +40,7 @@ public class YouthCouncilController {
 
 	@GetMapping ()
 	public String youthCouncils(Model model) {
-		model.addAttribute("councils", youthCouncilService.getAllYouthCouncils());
+		model.addAttribute("councils", youthCouncilService.findAllYouthCouncils());
 		return "youthCouncils";
 	}
 
@@ -65,18 +64,15 @@ public class YouthCouncilController {
 
 	@GetMapping ("/{municipality}")
 	public String youthCouncil(Model model, @PathVariable String municipality) {
-		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality).orElse(null));
+		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality));
 		return "youthCouncil";
 	}
 
 	@GetMapping ("/{municipality}/statistics")
 	public String youthCouncilStatistics(Model model, @PathVariable String municipality) {
 		var possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
-		if (possibleYouthCouncil.isEmpty()) {
-			throw new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found.");
-		}
-		model.addAttribute("youthCouncil", possibleYouthCouncil.get());
-		model.addAttribute("users", youthCouncilService.getMembers(municipality));
+		model.addAttribute("youthCouncil", possibleYouthCouncil);
+		model.addAttribute("users", youthCouncilService.getAllMembers(municipality));
 
 		return "statistics";
 	}
@@ -84,7 +80,7 @@ public class YouthCouncilController {
 	@GetMapping ("/{municipality}/create-council-admin")
 	public String getCreateCouncilAdmin(@PathVariable String municipality, Model model) {
 
-		model.addAttribute("council", youthCouncilService.findByMunicipality(municipality).orElse(null));
+		model.addAttribute("council", youthCouncilService.findByMunicipality(municipality));
 		model.addAttribute("councilAdmin", new CouncilAdminViewModel());
 		return "createCouncilAdmin";
 	}

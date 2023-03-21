@@ -7,23 +7,28 @@ import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
 import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface YouthCouncilService {
 
 	void create(NewYouthCouncilViewModel councilCreateModel);
 
-	List<YouthCouncil> getAllYouthCouncils();
+	List<YouthCouncil> findAllYouthCouncils();
 
 	List<ActionPoint> getFilteredActionPoints(String municipality, String theme, String label);
 
 
-	List<User> getMembers(String municipality);
+	List<User> getAllMembers(String municipality);
+
+	void save(YouthCouncil youthCouncil);
+
+	YouthCouncil findByIdWithMembers(long id);
+
+	YouthCouncil findById(long id);
 
 
 	YouthCouncil getYouthCouncil(long id);
 
-	Optional<YouthCouncil> findByMunicipality(String municipality);
+	YouthCouncil findByMunicipality(String municipality);
 
 
 	List<InformativePage> getAllInformativePages(String municipality);

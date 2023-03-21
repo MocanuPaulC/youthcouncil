@@ -3,8 +3,11 @@
 	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
+
 	<title th:text="${youthCouncil.getMunicipality()}"></title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
+	<script defer src="/js/youthCouncil.js" type="module"></script>
+
 </head>
 <body class="m-3">
 <th:block th:insert="~{includes::navbar(${authUser}, 'youthcouncil')}"></th:block>
@@ -13,6 +16,12 @@
 <a th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipality()})}">
 	Create council admin
 </a>
+
+<button class="join-council btn btn-primary" sec:authorize="hasAnyRole('ROLE_MEMBER','ROLE_MODERATOR')"
+		th:text="'Join '+${youthCouncil.getCouncilName()} +'!'"
+		type="button"></button>
+<input id="authUserId" th:value="${authUser.id}" type="hidden"/>
+<input id="youthCouncilId" th:value="${youthCouncil.getId()}" type="hidden">
 <!-- Maybe add Moderator to list of authorized users to see the stats? -->
 <a class="btn btn-dark"
    sec:authorize="hasAnyRole('ROLE_GENERAL_ADMIN','ROLE_COUNCIL_ADMIN')"
