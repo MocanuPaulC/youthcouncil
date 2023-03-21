@@ -1,4 +1,4 @@
-package be.kdg.youthcouncil.controllers.api.DTOs;
+package be.kdg.youthcouncil.controllers.api.dto;
 
 import lombok.*;
 

@@ -11,12 +11,14 @@ public interface UserService {
 
 	void create(UserRegisterViewModel userViewModel);
 
+	User findById(long id);
+
 	public void processOAuthPostLogin(String username, Map<String, Object> attributes, String clientName);
 
 	void save(UserRegisterViewModel userViewModel);
 
 	boolean updateRole(long id, String role);
-
+	
 	void save(User user);
 
 	User findByUsername(String username);
