@@ -1,7 +1,7 @@
 package be.kdg.youthcouncil.controllers.api;
 
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
-import be.kdg.youthcouncil.controllers.api.dto.RequestResetPasswordDto;
+import be.kdg.youthcouncil.controllers.api.dto.RequestResetPasswordDTO;
 import be.kdg.youthcouncil.controllers.api.dto.UpdateUserRoleDTO;
 import be.kdg.youthcouncil.controllers.api.dto.UserDTO;
 import be.kdg.youthcouncil.controllers.api.dto.UserResponseDto;
@@ -46,7 +46,7 @@ public class RestUserController {
 	}
 
 	@PostMapping ("{userId}/resetpassword")
-	public ResponseEntity<UserResponseDto> resetPassword(@PathVariable long userId, @Valid @RequestBody RequestResetPasswordDto requestResetPasswordDto, Principal principal) {
+	public ResponseEntity<UserResponseDto> resetPassword(@PathVariable long userId, @Valid @RequestBody RequestResetPasswordDTO requestResetPasswordDto, Principal principal) {
 		User user = userService.findByUsername(principal.getName());
 
 		if (userId != user.getId()) return new ResponseEntity<>(HttpStatus.FORBIDDEN);

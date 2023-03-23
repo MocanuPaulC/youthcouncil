@@ -1,6 +1,7 @@
 package be.kdg.youthcouncil.domain.youthCouncil;
 
 import be.kdg.youthcouncil.domain.moduleItems.Announcement;
+import be.kdg.youthcouncil.domain.moduleItems.CallForIdea;
 import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import be.kdg.youthcouncil.domain.user.User;
 import lombok.*;
@@ -44,6 +45,10 @@ public class YouthCouncil {
 	@ManyToMany (fetch = FetchType.EAGER)
 	@ToString.Exclude
 	private List<ModuleItem> moduleItems;
+
+	@OneToMany
+	@ToString.Exclude
+	private List<CallForIdea> callForIdeas;
 
 	@OneToMany
 	@ToString.Exclude

@@ -3,17 +3,18 @@
 	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-
 	<title th:text="${youthCouncil.getMunicipality()}"></title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
-	<script defer src="/js/youthCouncil.js" type="module"></script>
-
+	<script defer th:src="@{/js/launchCallForIdeas.js}" type="module"></script>
+	<script defer th:src="@{/js/youthCouncil.js}" type="module"></script>
 </head>
-<body class="m-3">
+<body class="m-3" th:attr="data-youthcouncil_id=${youthCouncil.getId()}">
 <th:block th:insert="~{includes::navbar(${authUser}, 'youthcouncil')}"></th:block>
 <h1 th:text="${youthCouncil.getCouncilName()}"></h1>
 <p th:text="${youthCouncil.getDescription()}"></p>
-<a th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipality()})}">
+<a class="btn btn-dark"
+   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+   th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipality()})}">
 	Create council admin
 </a>
 
@@ -22,7 +23,43 @@
 		type="button"></button>
 <input id="authUserId" th:value="${authUser.id}" type="hidden"/>
 <input id="youthCouncilId" th:value="${youthCouncil.getId()}" type="hidden">
-<!-- Maybe add Moderator to list of authorized users to see the stats? -->
+
+
+<button class="btn btn-primary"
+		data-bs-target="#launch-call-for-ideas-modal"
+		data-bs-toggle="modal"
+		sec:authorize="hasRole('ROLE_COUNCIL_ADMIN')"
+		type="button">
+	Launch call for ideas
+</button>
+
+<div aria-hidden="true"
+	 aria-labelledby="launch-call-for-ideas-modalLabel"
+	 class="modal fade"
+	 id="launch-call-for-ideas-modal"
+	 tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">New Call for Ideas</h1>
+				<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="mb-3">
+						<label class="col-form-label" for="c4i-title">Title:</label>
+						<textarea class="form-control" id="c4i-title"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+				<button class="btn btn-primary" id="launch-call-for-ideas" type="button">Launch</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <a class="btn btn-dark"
    sec:authorize="hasAnyRole('ROLE_GENERAL_ADMIN','ROLE_COUNCIL_ADMIN')"
    th:href="@{/youthcouncils/{municipality}/statistics(municipality=${youthCouncil.getMunicipality()})}">
