@@ -37,17 +37,17 @@ INSERT INTO youthcouncil_module_items
 VALUES ( 1, 1 );
 
 -- CALL FOR IDEA
-INSERT INTO module_items( module_item_type, description, is_default, is_enabled, title, image )
-VALUES ( 'call-for-idea', 'my call for idea description', 'false', 'true', 'my_call_for_idea',
-         'my/call/for/idea/image ' );
-INSERT INTO youthcouncil_module_items
-VALUES ( 1, 2 );
+INSERT INTO call_for_idea( title )
+VALUES ( 'my call for idea description' );
+
+INSERT INTO youthcouncil_call_for_ideas
+VALUES ( 1, 1 );
 
 -- NEWSFEED
 INSERT INTO module_items( module_item_type, description, is_default, is_enabled, title, image )
 VALUES ( 'announcement', 'my announcement description', 'false', 'true', 'my_announcement', 'my/announcement/image ' );
 INSERT INTO youthcouncil_module_items
-VALUES ( 1, 3 );
+VALUES ( 1, 2 );
 
 
 -- THEMES

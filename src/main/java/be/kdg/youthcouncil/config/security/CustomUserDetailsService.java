@@ -1,7 +1,7 @@
-package be.kdg.youthcouncil.service.userService;
+package be.kdg.youthcouncil.config.security;
 
-import be.kdg.youthcouncil.config.security.CustomUserDetails;
 import be.kdg.youthcouncil.domain.user.User;
+import be.kdg.youthcouncil.service.userService.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;

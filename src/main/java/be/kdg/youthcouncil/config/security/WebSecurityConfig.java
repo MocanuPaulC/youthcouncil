@@ -1,7 +1,7 @@
 package be.kdg.youthcouncil.config.security;
 
+import be.kdg.youthcouncil.config.security.Oauth.CustomOAuth2UserService;
 import be.kdg.youthcouncil.config.security.Oauth.OAuthLoginSuccessHandler;
-import be.kdg.youthcouncil.service.userService.CustomOAuth2UserService;
 import be.kdg.youthcouncil.service.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
