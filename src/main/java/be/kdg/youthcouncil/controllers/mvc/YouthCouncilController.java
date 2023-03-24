@@ -9,6 +9,7 @@ import be.kdg.youthcouncil.domain.moduleItems.Label;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
 import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 import be.kdg.youthcouncil.service.callForIdeaService.CallForIdeaService;
+import be.kdg.youthcouncil.service.announcementService.AnnouncementService;
 import be.kdg.youthcouncil.service.informativePageService.InformativePageService;
 import be.kdg.youthcouncil.service.moduleItemService.ModuleItemService;
 import be.kdg.youthcouncil.service.userService.UserService;
@@ -42,6 +43,8 @@ public class YouthCouncilController {
 	private final CallForIdeaService callForIdeaService;
 	private final InformativePageService informativePageService;
 
+	private final AnnouncementService announcementService;
+
 	@GetMapping ()
 	public String youthCouncils(Model model) {
 		model.addAttribute("councils", youthCouncilService.findAllYouthCouncils());
@@ -74,7 +77,7 @@ public class YouthCouncilController {
 
 	@GetMapping ("/{municipality}/statistics")
 	public String youthCouncilStatistics(Model model, @PathVariable String municipality) {
-		var possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
+		YouthCouncil possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
 		model.addAttribute("youthCouncil", possibleYouthCouncil);
 		model.addAttribute("users", youthCouncilService.getAllMembers(municipality));
 
@@ -137,7 +140,7 @@ public class YouthCouncilController {
 	@GetMapping ("/{municipality}/informativepages/add")
 	public String getAddInformativePage(Model model, @PathVariable String municipality) {
 		model.addAttribute("informativePage", new NewInformativePageViewModel());
-		model.addAttribute("youthCouncilId", municipality);
+		model.addAttribute("municipality", municipality);
 		return "addInformativePage";
 	}
 
@@ -164,12 +167,41 @@ public class YouthCouncilController {
 
 	@CAOnly
 	@PostMapping ("/{municipality}/informativepages/add")
-	public String addInformativePage(@PathVariable String municipality, @Valid @ModelAttribute ("informativePage") NewInformativePageViewModel viewModel, BindingResult errors) {
-		logger.debug(viewModel.toString() + " in postMapping of addInformationalPage");
+	public String addInformativePage(@PathVariable String municipality, @Valid @ModelAttribute ("informativePage") NewInformativePageViewModel viewModel, BindingResult errors, Model model) {
 		if (errors.hasErrors()) {
+			model.addAttribute("youthCouncilId", municipality);
+			model.addAttribute("informativePage", viewModel);
 			return "addInformativePage";
 		}
 		informativePageService.save(municipality, viewModel);
 		return "redirect:/youthcouncils/" + municipality + "/informativepages";
 	}
+
+	@GetMapping ("/{municipality}/announcements")
+	public String getAnnouncements(Model model, @PathVariable String municipality) {
+		model.addAttribute("announcements", announcementService.findAll(municipality));
+		return "announcements";
+	}
+
+	@CAOnly
+	@GetMapping ("/{municipality}/announcements/add")
+	public String getAddAnnouncements(Model model, @PathVariable String municipality) {
+		model.addAttribute("announcement", new NewAnnoucementViewModel());
+		model.addAttribute("municipality", municipality);
+		return "addAnnouncement";
+	}
+
+	@CAOnly
+	@PostMapping ("/{municipality}/announcements/add")
+	public String addAnnouncement(@PathVariable String municipality, @Valid @ModelAttribute ("announcement") NewAnnoucementViewModel viewModel, BindingResult errors, Model model) {
+		if (errors.hasErrors()) {
+			model.addAttribute("municipality", municipality);
+			model.addAttribute("announcement", viewModel);
+			return "addAnnouncement";
+		}
+		announcementService.save(municipality, viewModel);
+		return "redirect:/youthcouncils/" + municipality;
+	}
+
+
 }

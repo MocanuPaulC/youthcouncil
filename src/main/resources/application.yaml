@@ -16,7 +16,7 @@ spring:
                             - email
                             - public_profile
     profiles:
-        active: prod # options: dev, prod
+        active: dev # options: dev, prod
     jpa:
         show-sql: true
         open-in-view: false

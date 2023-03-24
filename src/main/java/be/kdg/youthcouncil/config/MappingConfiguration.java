@@ -12,5 +12,5 @@ public class MappingConfiguration {
 		return new ModelMapper();
 	}
 
-
+	
 }

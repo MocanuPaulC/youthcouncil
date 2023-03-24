@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Youth Platform</title>
+	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+</head>
+<body>
+<th:block th:insert="~{includes::navbar(${authUser}, 'home')}"></th:block>
+<section class="container">
+
+
+	<div class="row">
+		<div class="col-12">
+			<h1>Adding new Informative Page</h1>
+		</div>
+		<form class="col-12 form-control form"
+			  method="post"
+			  th:action="@{'/youthcouncils/' + ${municipality} + '/announcements/add'}"
+			  th:object="${announcement}">
+			<label for="title">Announcement Title</label>
+			<input class="form-control" id="title" name="title" th:field="*{title}" type="text"/>
+			<p th:if="${#fields.hasErrors('title')}" th:text="${#fields.errors('title').get(0)}"></p>
+			<label for="description">Announcement description</label>
+			<input class="form-control" id="description" name="description" th:field="*{description}" type="text"/>
+			<p th:if="${#fields.hasErrors('description')}" th:text="${#fields.errors('description').get(0)}"></p>
+			<input class="btn btn-primary" type="submit" value="Submit"/>
+		</form>
+	</div>
+</section>
+</body>
+</html>
