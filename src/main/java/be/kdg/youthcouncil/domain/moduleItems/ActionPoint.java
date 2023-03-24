@@ -86,4 +86,17 @@ public class ActionPoint extends ModuleItem implements Publisher {
 		logger.debug("Unsubscribing " + subscriber.toString() + " from actionpoint" + this.getId());
 
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ActionPoint that)) return false;
+
+		return super.equals(((ModuleItem) o)) && label == that.label;
+	}
+
+	@Override
+	public int hashCode() {
+		return label != null ? label.hashCode() : 0;
+	}
 }

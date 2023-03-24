@@ -24,6 +24,7 @@ public class RestYouthCouncilController {
 
 	private final UserService userService;
 
+
 	@PatchMapping ("/{youthCouncilId}/{userId}")
 	public void addMemberToYouthCouncil(Model model, @PathVariable long youthCouncilId, @PathVariable long userId) {
 
