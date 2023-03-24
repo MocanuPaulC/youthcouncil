@@ -5,11 +5,13 @@ import be.kdg.youthcouncil.domain.user.AuthenticationType;
 import be.kdg.youthcouncil.domain.user.Role;
 import be.kdg.youthcouncil.domain.user.User;
 import be.kdg.youthcouncil.exceptions.UserNotFound;
+import be.kdg.youthcouncil.exceptions.UsernameAlreadyExistsException;
 import be.kdg.youthcouncil.persistence.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -72,6 +74,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void updateUsername(String oldUsername, String newUsername) {
+		if (exists(newUsername)) throw new UsernameAlreadyExistsException(newUsername);
+		User user = userRepository.findByUsername(oldUsername).orElseThrow(() -> new UsernameNotFoundException(oldUsername));
+		user.setUsername(newUsername);
+		userRepository.save(user);
+	}
+
+	@Override
 	public void create(UserRegisterViewModel userViewModel) {
 		logger.debug("Saving user");
 		userViewModel.setPassword(passwordEncoder.encode(userViewModel.getPassword()));
@@ -97,5 +107,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findAllWithIdeas() {
 		return userRepository.findAllWithIdeas();
+	}
+
+	@Override
+	public boolean exists(String username) {
+		return userRepository.findByUsername(username).isPresent();
 	}
 }

@@ -4,13 +4,21 @@
 	<title>Profile</title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer src="/js/changePassword.js" type="module"></script>
+	<script defer src="/js/editUsername.js" type="module"></script>
 </head>
 <body class="m-3">
 <header th:insert="~{includes::navbar(${authUser}, 'profile')}"></header>
 <section class="container">
 	<div class="row">
 		<div class="col-12">
-			<h1 th:text="${'username: ' + user.username}"></h1>
+			<h1>
+				username:
+				<span th:text="${user.username}" id="username-display"></span>
+				<input id="username-submit" th:user-id="${user.id}" type="hidden">
+				<button class="edit btn btn-primary" id="username-edit-button" type="button">Edit</button>
+				<button class="save btn btn-primary d-none" id="username-cancel-button">Cancel</button>
+				<button class="save btn btn-primary d-none" id="username-save-button">Save</button>
+			</h1>
 		</div>
 		<div>
 			<h2>
