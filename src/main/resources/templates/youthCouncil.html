@@ -3,6 +3,7 @@
 	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
+
 	<title th:text="${youthCouncil.getMunicipality()}"></title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer th:src="@{/js/launchCallForIdeas.js}" type="module"></script>
@@ -75,7 +76,16 @@
 			</div>
 			<div class="col-md-8">
 				<div class="card-body">
-					<h5 class="card-title" th:text="${moduleItem.getTitle()}">Card title</h5>
+					<h5>
+						<!--I'm gonna assume that most of this will also be modified
+						since we're refactoring and we won't have the module item anymore
+						At the moment it breaks for other items other than Action points
+						-->
+						<a class="card-title"
+						   th:href="@{/youthcouncils/{municipality}/actionpoints/{actionpointid}(municipality=${youthCouncil.getMunicipality()}, actionpointid=${moduleItem.getId()})}"
+						   th:text="${moduleItem.getTitle()}">Card title
+						</a>
+					</h5>
 					<p class="card-text" th:text="${moduleItem.getDescription()}">
 						Some quick example text to build on the card title and make up the bulk of the card's
 						content.

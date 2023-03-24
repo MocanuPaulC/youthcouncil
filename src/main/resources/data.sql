@@ -31,7 +31,7 @@ VALUES ( 1, 1 );
 
 -- ACTION POINTS
 INSERT INTO module_items( module_item_type, description, is_default, is_enabled, title, label, image )
-VALUES ( 'actionpoint', 'my action point description', 'false', 'true', 'my_action_point', 'NEW',
+VALUES ( 'actionpoint', 'my action point description', 'true', 'true', 'my_action_point', 'NEW',
          'my/action/point/image ' );
 INSERT INTO youthcouncil_module_items
 VALUES ( 1, 1 );

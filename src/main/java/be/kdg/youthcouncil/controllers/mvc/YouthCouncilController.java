@@ -3,11 +3,11 @@ package be.kdg.youthcouncil.controllers.mvc;
 
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
-import be.kdg.youthcouncil.controllers.mvc.viewModels.CouncilAdminViewModel;
-import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
-import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
-import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
+import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
+import be.kdg.youthcouncil.domain.moduleItems.Label;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
+import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 import be.kdg.youthcouncil.service.informativePageService.InformativePageService;
 import be.kdg.youthcouncil.service.userService.UserService;
 import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
@@ -122,6 +122,27 @@ public class YouthCouncilController {
 		model.addAttribute("informativePage", new NewInformativePageViewModel());
 		model.addAttribute("youthCouncilId", municipality);
 		return "addInformativePage";
+	}
+
+
+	@GetMapping ("/{municipality}/actionpoints/{actionpointid}")
+	public String getActionPointsOfYouthCouncil(@PathVariable String municipality, @PathVariable long actionpointid, Model model) {
+
+		YouthCouncil youthCouncil = youthCouncilService.findByMunicipality(municipality);
+		try {
+			model.addAttribute("actionPoint", youthCouncil.getActionPoint(actionpointid, ActionPoint.class));
+			model.addAttribute("labels", Label.values());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			//			model.addAttribute("youthCouncil", youthCouncil);
+			return "redirect:/";
+		}
+		model.addAttribute("youthCouncil", youthCouncil);
+		model.addAttribute("actionPointModelView", new EditActionPointModelView());
+
+		return "actionPoint";
+
+
 	}
 
 	@CAOnly

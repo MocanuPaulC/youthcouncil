@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.DiscriminatorType.STRING;
 
@@ -44,9 +45,9 @@ public abstract class ModuleItem {
 	@ColumnDefault ("false")
 	private boolean isDefault;
 
-	@JoinColumn (name = "default_module_item")
-	@OneToOne
-	private ModuleItem defaultModuleItem;
+	//	@JoinColumn (name = "default_module_item")
+	//	@OneToOne
+	//	private ModuleItem defaultModuleItem;
 
 	@OneToMany
 	@ToString.Exclude
@@ -77,5 +78,21 @@ public abstract class ModuleItem {
 		shares.remove(share);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
+		ModuleItem that = (ModuleItem) o;
+
+		if (!Objects.equals(title, that.title)) return false;
+		return Objects.equals(description, that.description);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = title != null ? title.hashCode() : 0;
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		return result;
+	}
 }

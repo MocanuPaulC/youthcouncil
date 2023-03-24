@@ -58,6 +58,15 @@ public class YouthCouncil {
 	@ToString.Exclude
 	private List<Announcement> announcements;
 
+
+	public <T extends ModuleItem> T getActionPoint(long id, Class<T> itemClass) {
+		return moduleItems.stream()
+		                  .filter(item -> item.getId() == id && itemClass.isInstance(item))
+		                  .map(itemClass::cast)
+		                  .findFirst()
+		                  .orElseThrow(() -> {throw new RuntimeException("To make proper exception");});
+	}
+
 	public void addCouncilAdmin(User user) {
 		logger.debug("Adding council admin " + user.getFirstName() + " " + user.getLastName() + " to council " + councilName);
 		councilAdmins.add(user);

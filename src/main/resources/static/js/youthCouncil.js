@@ -4,7 +4,7 @@ const {name, value} = csrfHeader();
 
 const button = document.querySelector(".join-council");
 
-button?.addEventListener("click", addUserToCouncil);
+button.addEventListener("click", addUserToCouncil);
 
 
 function addUserToCouncil() {
