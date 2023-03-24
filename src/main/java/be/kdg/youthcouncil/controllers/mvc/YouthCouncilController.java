@@ -127,8 +127,6 @@ public class YouthCouncilController {
 		return "redirect:/";
 	}
 
-
-	@CAOnly
 	@GetMapping ("/{municipality}/informativepages")
 	public String informativePages(Model model, @PathVariable String municipality) {
 		List<InformativePage> pages = youthCouncilService.getAllInformativePages(municipality);
