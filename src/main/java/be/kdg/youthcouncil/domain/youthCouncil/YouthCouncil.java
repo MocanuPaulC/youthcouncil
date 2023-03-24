@@ -1,9 +1,11 @@
 package be.kdg.youthcouncil.domain.youthCouncil;
 
+import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
 import be.kdg.youthcouncil.domain.moduleItems.Announcement;
 import be.kdg.youthcouncil.domain.moduleItems.CallForIdea;
 import be.kdg.youthcouncil.domain.moduleItems.ModuleItem;
 import be.kdg.youthcouncil.domain.user.User;
+import be.kdg.youthcouncil.exceptions.ActionPointNotFound;
 import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,12 +61,12 @@ public class YouthCouncil {
 	private List<Announcement> announcements;
 
 
-	public <T extends ModuleItem> T getActionPoint(long id, Class<T> itemClass) {
+	public ActionPoint getActionPoint(long id) {
 		return moduleItems.stream()
-		                  .filter(item -> item.getId() == id && itemClass.isInstance(item))
-		                  .map(itemClass::cast)
+		                  .filter(item -> item.getId() == id)
+		                  .map(ActionPoint.class::cast)
 		                  .findFirst()
-		                  .orElseThrow(() -> {throw new RuntimeException("To make proper exception");});
+		                  .orElseThrow(() -> {throw new ActionPointNotFound(id);});
 	}
 
 	public void addCouncilAdmin(User user) {

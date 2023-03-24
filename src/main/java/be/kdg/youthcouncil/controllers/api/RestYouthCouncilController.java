@@ -26,7 +26,7 @@ public class RestYouthCouncilController {
 
 
 	@PatchMapping ("/{youthCouncilId}/{userId}")
-	public void addMemberToYouthCouncil(Model model, @PathVariable long youthCouncilId, @PathVariable long userId) {
+	public void addMemeberToYouthCouncil(Model model, @PathVariable long youthCouncilId, @PathVariable long userId) {
 
 		logger.debug("Adding user +" + model.getAttribute("authUser") + " to youth council " + youthCouncilId);
 		YouthCouncil youthCouncil = youthCouncilService.findByIdWithMembers(youthCouncilId);

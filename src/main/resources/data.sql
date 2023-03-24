@@ -49,6 +49,21 @@ VALUES ( 'announcement', 'my announcement description', 'false', 'true', 'my_ann
 INSERT INTO youthcouncil_module_items
 VALUES ( 1, 2 );
 
+--3
+INSERT INTO module_items( module_item_type, description, is_default, is_enabled, title, image )
+VALUES ( 'idea', 'my idea description', 'false', 'true', 'my_idea', 'my/idea/image ' );
+INSERT INTO call_for_idea_ideas
+VALUES ( 1, 3 );
+
+INSERT INTO module_items( module_item_type, description, is_default, is_enabled, title, image )
+VALUES ( 'idea', 'my idea2 description', 'false', 'true', 'my_2nd_idea', 'my/idea/image ' );
+INSERT INTO call_for_idea_ideas
+VALUES ( 1, 4 );
+
+INSERT INTO module_items( module_item_type, description, is_default, is_enabled, title, image )
+VALUES ( 'idea', 'my idea3 description', 'false', 'true', 'my_3rd_idea', 'my/idea/image ' );
+INSERT INTO call_for_idea_ideas
+VALUES ( 1, 5 );
 
 -- THEMES
 INSERT INTO themes( theme )

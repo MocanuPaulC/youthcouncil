@@ -11,9 +11,16 @@ import javax.persistence.*;
 @Table (name = "subthemes")
 public class SubTheme {
 	private String subTheme;
-
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	@Column (name = "subtheme_id")
 	private long id;
+
+	public SubTheme(String subTheme) {
+		this.subTheme = subTheme;
+	}
+
+	public SubTheme() {
+
+	}
 }

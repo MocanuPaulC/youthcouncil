@@ -27,7 +27,7 @@ public class RestActionPointController {
 	private final ModuleItemService moduleItemService;
 
 	@PutMapping ("/{youthCouncilId}/{actionPointId}")
-	public ResponseEntity<EditActionPointDto> updateActionPoint(@PathVariable long youthCouncilId, @PathVariable long actionPointId, @Valid @RequestBody EditActionPointDto editActionPointDto) {
+	public ResponseEntity<EditActionPointDto> replaceActionPoint(@PathVariable long youthCouncilId, @PathVariable long actionPointId, @Valid @RequestBody EditActionPointDto editActionPointDto) {
 		logger.debug("in updateActionPoint");
 		logger.debug("actionPointId: " + actionPointId);
 		logger.debug("youthCouncil: " + youthCouncilId);
