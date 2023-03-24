@@ -1,11 +1,9 @@
 package be.kdg.youthcouncil.controllers.api;
 
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
-import be.kdg.youthcouncil.controllers.api.dto.RequestResetPasswordDTO;
-import be.kdg.youthcouncil.controllers.api.dto.UpdateUserRoleDTO;
-import be.kdg.youthcouncil.controllers.api.dto.UserDTO;
-import be.kdg.youthcouncil.controllers.api.dto.UserResponseDto;
+import be.kdg.youthcouncil.controllers.api.dto.*;
 import be.kdg.youthcouncil.domain.user.User;
+import be.kdg.youthcouncil.exceptions.UsernameAlreadyExistsException;
 import be.kdg.youthcouncil.service.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -33,7 +31,7 @@ public class RestUserController {
 
 
 	@CAOnly
-	@PatchMapping ("/{userId}")
+	@PatchMapping ("/{userId}/role")
 	public ResponseEntity<UserDTO> updateUser(@PathVariable long userId,
 			@Valid @RequestBody UpdateUserRoleDTO updateUserRoleDTO) {
 
@@ -45,7 +43,7 @@ public class RestUserController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@PostMapping ("{userId}/resetpassword")
+	@PostMapping ("{userId}/password")
 	public ResponseEntity<UserResponseDto> resetPassword(@PathVariable long userId, @Valid @RequestBody RequestResetPasswordDTO requestResetPasswordDto, Principal principal) {
 		User user = userService.findByUsername(principal.getName());
 
@@ -60,4 +58,19 @@ public class RestUserController {
 
 		return ResponseEntity.ok(modelMapper.map(user, UserResponseDto.class));
 	}
+
+	@PatchMapping("/{userId}/username")
+	public ResponseEntity<ChangeUsernameDTO> changeUsername(@PathVariable long userId, @Valid @RequestBody RequestChangeUsernameDTO requestChangeUsernameDTO, Principal principal) {
+		User user = userService.findByUsername(principal.getName());
+
+		if (userId != user.getId()) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+		try {
+			userService.updateUsername(user.getUsername(), requestChangeUsernameDTO.getNewUsername());
+		} catch (UsernameAlreadyExistsException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return ResponseEntity.ok(new ChangeUsernameDTO(requestChangeUsernameDTO.getNewUsername()));
+	}
+
 }

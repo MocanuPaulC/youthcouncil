@@ -18,10 +18,14 @@ public interface UserService {
 	void save(UserRegisterViewModel userViewModel);
 
 	boolean updateRole(long id, String role);
+
+	void updateUsername(String oldUsername, String newUsername);
 	
 	void save(User user);
 
 	User findByUsername(String username);
 
 	List<User> findAllWithIdeas();
+
+	boolean exists(String username);
 }

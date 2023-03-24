@@ -25,7 +25,7 @@ function updateUser() {
 		roleToSet = roles.MEMBER;
 	}
 
-	fetch(`/api/users/${userId}`, {
+	fetch(`/api/users/${userId}/role`, {
 		method: "PATCH",
 		headers: {
 			"Content-Type": "application/json",
