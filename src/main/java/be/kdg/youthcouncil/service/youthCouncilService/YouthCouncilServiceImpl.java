@@ -97,7 +97,6 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 	public YouthCouncil findByMunicipality(String municipality) {
 		return youthCouncilRepository.findByMunicipalityName(municipality)
 		                             .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
-
 	}
 
 	@Override

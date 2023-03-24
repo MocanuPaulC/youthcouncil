@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+<body>
+<th:block th:insert="~{includes::navbar(${authUser}, 'home')}"></th:block>
+<div th:each="a : ${announcements}" th:text="${a.title}"></div>
+</body>
+</html>

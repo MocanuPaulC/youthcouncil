@@ -67,6 +67,12 @@
 	Statistics
 </a>
 
+<a class="btn btn-dark"
+   sec:authorize="hasAnyRole('ROLE_COUNCIL_ADMIN')"
+   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${youthCouncil.getMunicipality()})}">add
+																												announcement
+</a>
+
 <div class="d-flex gap-2">
 	<div class="card mb-3" style="max-width: 540px;" th:each="moduleItem: ${youthCouncil.getModuleItems()}">
 		<div class="card-header">Module Item</div>
@@ -90,9 +96,16 @@
 						Some quick example text to build on the card title and make up the bulk of the card's
 						content.
 					</p>
+					<a th:if="${moduleItem instanceof T(be.kdg.youthcouncil.domain.moduleItems.ActionPoint)}">action
+																											  point
+					</a>
 					<a class="card-link"
-					   th:href="@{/youthcouncils/{municipality}/call-for-ideas/{id}(municipality=${youthCouncil.getMunicipality}, id=${moduleItem.getId()})}">
+					   th:href="@{/youthcouncils/{municipality}/call-for-ideas/{id}(municipality=${youthCouncil.getMunicipality}, id=${moduleItem.getId()})}"
+					   th:if="${moduleItem instanceof T(be.kdg.youthcouncil.domain.moduleItems.CallForIdea)}">
 						Go somewhere
+					</a>
+					<a th:if="${moduleItem instanceof T(be.kdg.youthcouncil.domain.moduleItems.Announcement)}">
+						annoucement
 					</a>
 				</div>
 			</div>

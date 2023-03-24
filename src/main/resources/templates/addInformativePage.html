@@ -9,16 +9,18 @@
 <section class="container">
 	<div class="row">
 		<div class="col-12">
-			<h1>Adding new Informative Page</h1>
+			<h1>Adding new Announcement</h1>
 		</div>
 		<form class="col-12 form-control form"
 			  method="post"
-			  th:action="@{'/youthcouncils/' + ${youthCouncilId} + '/informativepages/add'}"
+			  th:action="@{'/youthcouncils/' + ${municipality} + '/informativepages/add'}"
 			  th:object="${informativePage}">
 			<label for="title">Informative Page Title</label>
 			<input class="form-control" id="title" name="title" th:field="*{title}" type="text"/>
+			<p th:if="${#fields.hasErrors('title')}" th:text="${#fields.errors('title').get(0)}"></p>
 			<label for="paragraphs">Informative Page description</label>
 			<input class="form-control" id="paragraphs" name="paragraphs" th:field="*{paragraphs}" type="text"/>
+			<p th:if="${#fields.hasErrors('paragraphs')}" th:text="${#fields.errors('paragraphs').get(0)}"></p>
 			<input class="btn btn-primary" type="submit" value="Submit"/>
 		</form>
 	</div>

@@ -2,6 +2,7 @@ package be.kdg.youthcouncil.domain.moduleItems;
 
 import be.kdg.youthcouncil.domain.interactions.Reaction;
 import be.kdg.youthcouncil.domain.interactions.Share;
+import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.slf4j.Logger;
@@ -56,6 +57,9 @@ public abstract class ModuleItem {
 	@OneToMany
 	@ToString.Exclude
 	private List<Share> shares;
+
+	@ManyToOne
+	private YouthCouncil owningYouthCouncil;
 
 
 	public void addReaction(Reaction reaction) {
