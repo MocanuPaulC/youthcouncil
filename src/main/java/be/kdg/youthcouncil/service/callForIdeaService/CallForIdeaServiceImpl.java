@@ -2,6 +2,7 @@ package be.kdg.youthcouncil.service.callForIdeaService;
 
 import be.kdg.youthcouncil.controllers.api.dto.CallForIdeasDTO;
 import be.kdg.youthcouncil.domain.moduleItems.CallForIdea;
+import be.kdg.youthcouncil.exceptions.CallForIdeaNotFound;
 import be.kdg.youthcouncil.persistence.CallForIdeaRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,11 +26,12 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 
 	@Override
 	public CallForIdea find(long id) {
-		return null;
+		return callForIdeaRepository.findById(id)
+		                            .orElseThrow(() -> {throw new CallForIdeaNotFound(id);});
 	}
 
 	@Override
 	public CallForIdea save(CallForIdea callForIdea) {
-		return null;
+		return callForIdeaRepository.save(callForIdea);
 	}
 }

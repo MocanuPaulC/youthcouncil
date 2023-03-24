@@ -4,11 +4,13 @@ package be.kdg.youthcouncil.controllers.mvc;
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
-import be.kdg.youthcouncil.domain.moduleItems.ActionPoint;
+import be.kdg.youthcouncil.domain.moduleItems.Idea;
 import be.kdg.youthcouncil.domain.moduleItems.Label;
 import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
 import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
+import be.kdg.youthcouncil.service.callForIdeaService.CallForIdeaService;
 import be.kdg.youthcouncil.service.informativePageService.InformativePageService;
+import be.kdg.youthcouncil.service.moduleItemService.ModuleItemService;
 import be.kdg.youthcouncil.service.userService.UserService;
 import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
 import lombok.AllArgsConstructor;
@@ -32,10 +34,12 @@ public class YouthCouncilController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final ModelMapper modelMapper;
+	private final ModuleItemService moduleItemService;
 
 	private final YouthCouncilService youthCouncilService;
 	private final UserService userService;
 
+	private final CallForIdeaService callForIdeaService;
 	private final InformativePageService informativePageService;
 
 	@GetMapping ()
@@ -76,6 +80,19 @@ public class YouthCouncilController {
 
 		return "statistics";
 	}
+
+	@GetMapping ("/{municipality}/callforideas/{callForIdeaId}")
+	public String youthCouncilCallForAction(Model model, @PathVariable String municipality, @PathVariable long callForIdeaId) {
+		var possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
+		model.addAttribute("youthCouncil", possibleYouthCouncil);
+
+		List<Idea> callForIdeaIdeas = callForIdeaService.find(callForIdeaId).getIdeas();
+
+		model.addAttribute("ideas", callForIdeaIdeas);
+		model.addAttribute("callForIdea", callForIdeaService.find(callForIdeaId));
+		return "callForIdea";
+	}
+
 
 	@GetMapping ("/{municipality}/create-council-admin")
 	public String getCreateCouncilAdmin(@PathVariable String municipality, Model model) {
@@ -130,7 +147,7 @@ public class YouthCouncilController {
 
 		YouthCouncil youthCouncil = youthCouncilService.findByMunicipality(municipality);
 		try {
-			model.addAttribute("actionPoint", youthCouncil.getActionPoint(actionpointid, ActionPoint.class));
+			model.addAttribute("actionPoint", youthCouncil.getActionPoint(actionpointid));
 			model.addAttribute("labels", Label.values());
 		} catch (RuntimeException e) {
 			e.printStackTrace();

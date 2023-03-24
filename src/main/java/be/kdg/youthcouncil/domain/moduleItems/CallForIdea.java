@@ -27,7 +27,10 @@ public class CallForIdea {
 	@Column (name = "callforidea_id")
 	private long id;
 
-	@OneToMany
+	//Rather confident that when you get the call for ideas,
+	// in 90% of cases,
+	// you'll need the ideas too, so it's ok like this
+	@OneToMany (fetch = FetchType.EAGER)
 	@ToString.Exclude
 	private List<Idea> ideas;
 	@Column
@@ -46,14 +49,15 @@ public class CallForIdea {
 
 	public Idea createIdea(String idea, SubTheme subTheme) {
 		logger.debug("Creating idea " + idea + " with theme " + subTheme.getSubTheme());
-		Idea newIdea = new Idea(idea, subTheme);
+		Idea newIdea = new Idea(idea);
 		ideas.add(newIdea);
 		return newIdea;
 	}
 
 	public void addIdea(Idea idea) {
-		logger.debug("Adding idea " + idea.getDescription() + " to callforidea" + this.getId() + this.getTitle());
-		logger.debug("WIP");
+		logger.debug("Adding idea " + idea.getTitle() + " to callforidea " + this.getId() + this.getTitle());
+		ideas.add(idea);
+		//		logger.debug("WIP?");
 	}
 
 	public void removeIdea(Idea idea) {

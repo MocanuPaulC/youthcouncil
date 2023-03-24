@@ -4,15 +4,11 @@ import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Entity
 @DiscriminatorValue ("idea")
 public class Idea extends ModuleItem {
@@ -24,13 +20,22 @@ public class Idea extends ModuleItem {
 
 	@ManyToOne
 	private SubTheme subTheme;
+	@Column (columnDefinition = "boolean default false")
+	private boolean toModerate = true;
 
 	private String image;
 
-	public Idea(String description, SubTheme superTheme) {
-		logger.debug("Creating idea " + description + " with theme " + superTheme.getSubTheme());
-		this.setDescription(description);
-		this.subTheme = superTheme;
+	public Idea(String title) {
+		logger.debug("Creating idea " + title + " with no theme ");
+		// will change this later
+		this.setDescription(title);
+		this.setTitle(title);
+		this.toModerate = true;
+	}
+
+	@Override
+	public String toString() {
+		return "Idea{} " + super.toString();
 	}
 
 	public void setImage(String image) {
