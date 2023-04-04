@@ -18,7 +18,7 @@ spring:
     profiles:
         active: dev # options: dev, prod
     jpa:
-        show-sql: true
+        show-sql: false
         open-in-view: false
         defer-datasource-initialization: true
     devtools:
@@ -30,7 +30,7 @@ spring:
         cache: false
     sql:
         init:
-            mode: always
+            mode: never
 #            data-locations: classpath:data.sql  comment this out once we have a data.sql file
 #            schema-locations: classpath:schema.sql
 server:
@@ -40,4 +40,5 @@ logging:
         #    web: debug
         be.kdg.youthcouncil: debug
         #        root: debug
-        sql: debug
+        #sql: debug
+        org.springframework.security: DEBUG

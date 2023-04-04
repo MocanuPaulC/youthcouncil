@@ -9,9 +9,11 @@ import java.util.Collection;
 @Getter
 public class CustomUserDetails extends User {
 	private final long userId;
+	private final boolean isGa;
 
-	public CustomUserDetails(long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+	public CustomUserDetails(long id, String username, String password, boolean isGa, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
 		this.userId = id;
+		this.isGa = isGa;
 	}
 }

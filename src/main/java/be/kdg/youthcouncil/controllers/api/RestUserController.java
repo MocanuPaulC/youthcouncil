@@ -1,10 +1,11 @@
 package be.kdg.youthcouncil.controllers.api;
 
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
-import be.kdg.youthcouncil.controllers.api.dto.*;
-import be.kdg.youthcouncil.domain.user.User;
+import be.kdg.youthcouncil.controllers.api.dto.users.*;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.UpdateUserRoleDTO;
+import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.exceptions.UsernameAlreadyExistsException;
-import be.kdg.youthcouncil.service.userService.UserService;
+import be.kdg.youthcouncil.service.users.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class RestUserController {
 	@CAOnly
 	@PatchMapping ("/{userId}/role")
 	public ResponseEntity<UserDTO> updateUser(@PathVariable long userId,
-			@Valid @RequestBody UpdateUserRoleDTO updateUserRoleDTO) {
+											  @Valid @RequestBody UpdateUserRoleDTO updateUserRoleDTO) {
 
 		if (userService.updateRole(userId, updateUserRoleDTO.getRole())) {
 			UserDTO userDTO = new UserDTO();
@@ -45,7 +46,7 @@ public class RestUserController {
 
 	@PostMapping ("{userId}/password")
 	public ResponseEntity<UserResponseDto> resetPassword(@PathVariable long userId, @Valid @RequestBody RequestResetPasswordDTO requestResetPasswordDto, Principal principal) {
-		User user = userService.findByUsername(principal.getName());
+		PlatformUser user = userService.findUserByUsername(principal.getName());
 
 		if (userId != user.getId()) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
@@ -59,9 +60,9 @@ public class RestUserController {
 		return ResponseEntity.ok(modelMapper.map(user, UserResponseDto.class));
 	}
 
-	@PatchMapping("/{userId}/username")
+	@PatchMapping ("/{userId}/username")
 	public ResponseEntity<ChangeUsernameDTO> changeUsername(@PathVariable long userId, @Valid @RequestBody RequestChangeUsernameDTO requestChangeUsernameDTO, Principal principal) {
-		User user = userService.findByUsername(principal.getName());
+		PlatformUser user = userService.findUserByUsername(principal.getName());
 
 		if (userId != user.getId()) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 

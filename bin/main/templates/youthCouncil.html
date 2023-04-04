@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${youthCouncil.getMunicipality()}"></title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+</head>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'youthcouncil')}"></th:block>
+<h1 th:text="${youthCouncil.getCouncilName()}"></h1>
+<p th:text="${youthCouncil.getDescription()}"></p>
+<a th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipality()})}">
+	Create council admin
+</a>
+<!-- Maybe add Moderator to list of authorized users to see the stats? -->
+<a class="btn btn-dark"
+   sec:authorize="hasAnyRole('ROLE_GENERAL_ADMIN','ROLE_COUNCIL_ADMIN')"
+   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${youthCouncil.getMunicipality()})}">
+	Statistics
+</a>
+
+<div class="d-flex gap-2">
+	<div class="card mb-3" style="max-width: 540px;" th:each="moduleItem: ${youthCouncil.getModuleItems()}">
+		<div class="card-header">Module Item</div>
+		<div class="row g-0">
+			<div class="col-md-4">
+				<img class="img-fluid placeholder h-100 rounded-start" th:alt="${moduleItem.getTitle()}">
+			</div>
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title" th:text="${moduleItem.getTitle()}">Card title</h5>
+					<p class="card-text" th:text="${moduleItem.getDescription()}">
+						Some quick example text to build on the card title and make up the bulk of the card's
+						content.
+					</p>
+					<a class="card-link"
+					   th:href="@{/youthcouncils/{municipality}/call-for-ideas/{id}(municipality=${youthCouncil.getMunicipality}, id=${moduleItem.getId()})}">
+						Go somewhere
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

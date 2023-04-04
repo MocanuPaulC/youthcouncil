@@ -1,7 +1,8 @@
-package be.kdg.youthcouncil.config.security;
+package be.kdg.youthcouncil.service.userService;
 
-import be.kdg.youthcouncil.domain.user.User;
-import be.kdg.youthcouncil.service.userService.UserService;
+import be.kdg.youthcouncil.config.security.CustomUserDetails;
+import be.kdg.youthcouncil.domain.users.Authenticable;
+import be.kdg.youthcouncil.service.users.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,13 +26,19 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public CustomUserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 		logger.debug("Loading user by username " + s);
-		User user = userService.findByUsername(s);
+		Authenticable user = userService.findAuthenticableByUsername(s);
 
 
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(user.getRole().getCode()));
+		//TODO implement multi tenent system
+		if (user.isGA()) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_GENERAL_ADMIN"));
+		} else {
+			//FIXME how do we implement roles here
+			authorities.add(new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"));
+		}
 		logger.debug("User found");
 		logger.debug("User: " + user.getUsername() + " " + user.getPassword());
-		return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), authorities);
+		return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), user.isGA(),authorities);
 	}
 }

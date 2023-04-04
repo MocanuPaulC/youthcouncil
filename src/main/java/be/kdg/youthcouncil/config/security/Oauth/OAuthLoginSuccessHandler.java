@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.config.security.Oauth;
 
-import be.kdg.youthcouncil.service.userService.UserService;
+import be.kdg.youthcouncil.service.users.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;

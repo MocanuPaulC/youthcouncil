@@ -1,8 +1,8 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
-import be.kdg.youthcouncil.service.userService.UserService;
-import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
+import be.kdg.youthcouncil.service.users.UserService;
+import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

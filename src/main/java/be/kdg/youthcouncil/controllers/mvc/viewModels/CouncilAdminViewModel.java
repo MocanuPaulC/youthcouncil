@@ -1,6 +1,5 @@
 package be.kdg.youthcouncil.controllers.mvc.viewModels;
 
-import be.kdg.youthcouncil.domain.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,6 @@ public class CouncilAdminViewModel {
 	@Email (message = "Should be an email")
 	private String email;
 	private String password = "password";
-	private Role role = Role.COUNCIL_ADMIN;
 
 
 }

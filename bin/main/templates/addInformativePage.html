@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Adding informative page</title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+</head>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'adding-informative-page')}"></th:block>
+<section class="container">
+	<div class="row">
+		<div class="col-12">
+			<h1>Adding new Informative Page</h1>
+		</div>
+		<form class="col-12 form-control form"
+			  method="post"
+			  th:action="@{'/youthcouncils/' + ${youthCouncilId} + '/informativepages/add'}"
+			  th:object="${informativePage}">
+			<label for="title">Informative Page Title</label>
+			<input class="form-control" id="title" name="title" th:field="*{title}" type="text"/>
+			<label for="paragraphs">Informative Page description</label>
+			<input class="form-control" id="paragraphs" name="paragraphs" th:field="*{paragraphs}" type="text"/>
+			<input class="btn btn-primary" type="submit" value="Submit"/>
+		</form>
+	</div>
+</section>
+</body>
+</html>

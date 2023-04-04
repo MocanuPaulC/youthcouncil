@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Profile</title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+	<script defer src="/js/changePassword.js" type="module"></script>
+</head>
+<body class="m-3">
+<header th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'profile')}"></header>
+<section class="container">
+	<div class="row">
+		<div class="col-12">
+			<h1 th:text="${'username: ' + user.username}"></h1>
+		</div>
+		<div>
+			<h2>
+				firstname and lastname:
+				<span th:text="${user.firstName}"></span>
+				<span th:text="${user.lastName}"></span>
+			</h2>
+			<h4 th:text="${'email: ' + user.email}"></h4>
+			<h4 th:text="${'postcode: ' + user.postcode}"></h4>
+		</div>
+		<div>
+			<div class="form-group">
+				<label for="password">Password:</label>
+				<input class="form-control" id="password" name="password" required type="password">
+			</div>
+			<div class="form-group">
+				<label for="confirm-password">Confirm Password:</label>
+				<input class="form-control" id="confirm-password" name="confirm-password" required type="password">
+			</div>
+			<button class="btn btn-primary btn-block" id="resetpassword-submit" th:user-id="${user.id}" type="submit">
+				change password
+			</button>
+		</div>
+	</div>
+</section>
+</body>
+</html>

@@ -4,16 +4,15 @@ package be.kdg.youthcouncil.controllers.mvc;
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
-import be.kdg.youthcouncil.domain.moduleItems.Idea;
-import be.kdg.youthcouncil.domain.moduleItems.Label;
-import be.kdg.youthcouncil.domain.youthCouncil.InformativePage;
-import be.kdg.youthcouncil.domain.youthCouncil.YouthCouncil;
-import be.kdg.youthcouncil.service.callForIdeaService.CallForIdeaService;
-import be.kdg.youthcouncil.service.announcementService.AnnouncementService;
-import be.kdg.youthcouncil.service.informativePageService.InformativePageService;
-import be.kdg.youthcouncil.service.moduleItemService.ModuleItemService;
-import be.kdg.youthcouncil.service.userService.UserService;
-import be.kdg.youthcouncil.service.youthCouncilService.YouthCouncilService;
+import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
+import be.kdg.youthcouncil.service.users.UserService;
+import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
+import be.kdg.youthcouncil.service.youthcouncil.modules.AnnouncementService;
+import be.kdg.youthcouncil.service.youthcouncil.modules.CallForIdeaService;
+import be.kdg.youthcouncil.service.youthcouncil.modules.InformativePageService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -35,7 +34,6 @@ public class YouthCouncilController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final ModelMapper modelMapper;
-	private final ModuleItemService moduleItemService;
 
 	private final YouthCouncilService youthCouncilService;
 	private final UserService userService;
@@ -71,7 +69,9 @@ public class YouthCouncilController {
 
 	@GetMapping ("/{municipality}")
 	public String youthCouncil(Model model, @PathVariable String municipality) {
-		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality));
+		model.addAttribute("ycWithAnnouncements", youthCouncilService.findByMunicipalityWithAnnouncements(municipality));
+		model.addAttribute("ycWithCallsForIdeas", youthCouncilService.findByMunicipalityWithCallsForIdeas(municipality));
+		model.addAttribute("ycWithActionPoints", youthCouncilService.findByMunicipalityWithActionPoints(municipality));
 		return "youthCouncil";
 	}
 
@@ -86,13 +86,9 @@ public class YouthCouncilController {
 
 	@GetMapping ("/{municipality}/callforideas/{callForIdeaId}")
 	public String youthCouncilCallForAction(Model model, @PathVariable String municipality, @PathVariable long callForIdeaId) {
-		var possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
-		model.addAttribute("youthCouncil", possibleYouthCouncil);
+		CallForIdea callForIdea = callForIdeaService.findWithIdeas(callForIdeaId);
 
-		List<Idea> callForIdeaIdeas = callForIdeaService.find(callForIdeaId).getIdeas();
-
-		model.addAttribute("ideas", callForIdeaIdeas);
-		model.addAttribute("callForIdea", callForIdeaService.find(callForIdeaId));
+		model.addAttribute("callForIdea", callForIdea);
 		return "callForIdea";
 	}
 
@@ -149,7 +145,7 @@ public class YouthCouncilController {
 		YouthCouncil youthCouncil = youthCouncilService.findByMunicipality(municipality);
 		try {
 			model.addAttribute("actionPoint", youthCouncil.getActionPoint(actionpointid));
-			model.addAttribute("labels", Label.values());
+			model.addAttribute("labels", ActionPointStatus.values());
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			//			model.addAttribute("youthCouncil", youthCouncil);

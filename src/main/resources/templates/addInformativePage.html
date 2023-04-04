@@ -5,7 +5,7 @@
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 </head>
 <body class="m-3">
-<th:block th:insert="~{includes::navbar(${authUser}, 'adding-informative-page')}"></th:block>
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'adding-informative-page')}"></th:block>
 <section class="container">
 	<div class="row">
 		<div class="col-12">

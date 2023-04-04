@@ -8,6 +8,7 @@ spring:
         hibernate:
             ddl-auto: create-drop
         database: HSQL
+        show-sql: true
     security:
         user:
             name: admin

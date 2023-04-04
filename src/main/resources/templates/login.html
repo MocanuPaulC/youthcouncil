@@ -6,7 +6,7 @@
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 </head>
 <body class="m-3">
-<th:block th:insert="~{includes::navbar(${authUser}, 'login')}"></th:block>
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'login')}"></th:block>
 <div class="container">
 	<div class="card mx-auto" style="max-width: 25rem;">
 		<div class="card-header bg-primary text-white text-center">

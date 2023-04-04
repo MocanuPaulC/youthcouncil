@@ -1,0 +1,55 @@
+@startuml
+
+class ActionPoint {
+    String title
+    List<Image> images
+    String video
+    String description
+    ActionPointStatus status
+    Idea initialIdea
+    List<Share> shares
+    List<Reaction> reactions
+    List<User> followers
+}
+
+class Idea {
+    Image image
+    Theme theme
+    User user
+    List<Share> shares
+    List<Reaction> reactions
+}
+
+interface Interactable {
+
+}
+
+class Share {
+    Interactable item
+    Image image
+    PlatformUser user
+}
+
+class Reaction {
+    Interactable item
+    Emoji reaction
+    PlatformUser user
+}
+
+class PlatformUser {
+    String username
+    String password
+    Role role
+    List<YouthCouncilSubscription> youthCouncilSubscriptions
+    List<ActionPointSubscription> actionPointSubscriptions
+}
+
+
+Share o-- Interactable
+Reaction o-- Interactable
+Share o-- PlatformUser
+Reaction o-- PlatformUser
+
+ActionPoint --|> Interactable
+Idea --|> Interactable
+@enduml

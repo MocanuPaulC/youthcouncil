@@ -5,7 +5,7 @@
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 </head>
 <body class="m-3">
-<th:block th:insert="~{includes::navbar(${authUser}, 'register')}"></th:block>
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'register')}"></th:block>
 <h1>Register</h1>
 <div class="container">
 	<form class="mx-auto col-md-6 col-lg-4 form"
