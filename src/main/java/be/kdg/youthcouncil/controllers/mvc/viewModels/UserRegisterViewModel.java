@@ -1,7 +1,6 @@
 package be.kdg.youthcouncil.controllers.mvc.viewModels;
 
 
-import be.kdg.youthcouncil.domain.user.Role;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -38,7 +37,6 @@ public class UserRegisterViewModel {
 	@Pattern (regexp = "^[0-9]+$", message = "Postcode can only contain numbers")
 	private String postcode;
 
-	private Role role = Role.MEMBER;
 
 
 }

@@ -1,0 +1,10 @@
+spring:
+    jpa:
+        database: postgresql
+        hibernate:
+            ddl-auto: create-drop
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/YouthCouncil
+        username: postgres
+        password: ${POSTGRES_PASSWORD}

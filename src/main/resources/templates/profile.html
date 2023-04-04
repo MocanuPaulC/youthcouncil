@@ -7,7 +7,7 @@
 	<script defer src="/js/editUsername.js" type="module"></script>
 </head>
 <body class="m-3">
-<header th:insert="~{includes::navbar(${authUser}, 'profile')}"></header>
+<header th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'profile')}"></header>
 <section class="container">
 	<div class="row">
 		<div class="col-12">

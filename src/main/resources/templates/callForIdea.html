@@ -11,17 +11,17 @@
 
 </head>
 <body class="m-3">
-<th:block th:insert="~{includes::navbar(${authUser}, 'login')}"></th:block>
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'login')}"></th:block>
 <section th:text="${callForIdea.getTitle()}"></section>
 
-<input id="idea-text" sec:authorize="hasRole('ROLE_MEMBER')" th:value="respectfully, suckOndEEzNutsss" type="text">
-<button class="submit-idea btn btn-danger" sec:authorize="hasRole('ROLE_MEMBER')" type="button">Super mega crazy submit
-																								button wow
+<input id="idea-text" sec:authorize="hasRole('ROLE_MEMBER')" type="text">
+<button class="submit-idea btn btn-danger" sec:authorize="hasRole('ROLE_MEMBER')" type="button">
+	Super mega crazy submit button wow
 </button>
-<section class="idea" th:each="idea: ${ideas}">
-	<span th:text="${idea.getTitle()}"></span>
+<section class="idea" th:each="idea: ${callForIdea.getIdeas()}">
+	<span th:text="${idea.getIdea()}"></span>
 </section>
 </body>
 <input class="hiddenUserId" th:id="'userId_'+${authUser.getId()}" type="hidden">
-<input class="hiddenCFIId" th:id="'cfiId_'+${callForIdea.getId()}" type="hidden">
+<input class="hiddenCFIId" th:id="'cfiId_'+${callForIdea.getCallForIdeaId()}" type="hidden">
 </html>

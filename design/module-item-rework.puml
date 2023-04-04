@@ -1,0 +1,184 @@
+@startuml
+
+enum ActionPointStatus {
+    NEW
+	NOT_INCLUDED
+	INCLUDED
+	IN_PROGRESS
+	REALISED
+}
+
+class Theme {
+    String name
+}
+
+class InformativePage {
+    String title
+    List<String> paragraphs
+    Image image
+    Video video
+}
+
+class Announcement {
+    String title
+    String description
+    LocalDateTime announcementTime
+    List<Media> images
+}
+
+class ActionPoint {
+    String title
+    List<Image> images
+    String video
+    String description
+    ActionPointStatus status
+    Idea initialIdea
+    List<Share> shares
+    List<Reaction> reactions
+    List<User> followers
+}
+
+class CallForIdea {
+    List<Idea> ideas
+}
+
+class Idea {
+    Image image
+    Theme theme
+    User user
+    List<Share> shares
+    List<Reaction> reactions
+}
+
+interface Interactable {
+
+}
+
+'image overlays the images of the original post
+class Share {
+    Interactable item
+    Image image
+}
+
+class Reaction {
+    Interactable item
+    Emoji reaction
+}
+
+
+enum Emoji {
+    LIKE(👍)
+	HEART(❤️)
+	ROCKET(🚀)
+	POOP(💩)
+	SKELETON(💀)
+}
+
+class Image {
+    String path
+    + getPath()
+    + getType() : MediaType
+}
+
+class Video {
+    String path
+    + getPath()
+    + getType() : MediaType
+}
+
+interface Media {
+    getPath() : String
+    getType() : MediaType
+}
+
+
+enum MediaType {
+    VIDEO
+    IMAGE
+}
+
+
+class YouthCouncil {
+    List<YouthCouncilSubscription> subscribers
+    List<Announcement> announcements
+    List<InformativePage> informativePages
+    List<ActionPoint> actionPoints
+}
+
+class YouthCouncilSubscription {
+    User user
+    YouthCouncil youthCouncil
+
+}
+
+enum Role {
+	COUNCIL_ADMIN
+	MODERATOR
+	MEMBER
+}
+
+interface Authenticable {
+    isGA() : boolean
+    getUsername() : String
+    getPassword() : String
+}
+
+class User {
+    String username
+    String password
+    Role role
+    List<YouthCouncilSubscription> youthCouncilSubscriptions
+    List<ActionPointSubscription> actionPointSubscriptions
+}
+
+class GeneralAdmin {
+    String username
+    String password
+}
+
+class ActionPointSubscription {
+    User user
+    ActionPoint actionPoint
+}
+
+
+'?????
+'class Module {
+
+'}
+
+'????
+'class Questionare {
+
+'}
+
+ActionPoint --|> Interactable
+Idea --|> Interactable
+
+
+
+Idea --* CallForIdea
+
+Share --* Interactable
+Reaction --* Interactable
+
+Emoji --* Reaction
+
+Image --|> Media
+Video --|> Media
+
+User "1" --o "*" YouthCouncilSubscription
+YouthCouncil "1" --o "*" YouthCouncilSubscription
+
+User "1" --o "*" ActionPointSubscription
+ActionPoint "1" --o "*" ActionPointSubscription
+
+YouthCouncil "1" o-- "*" Announcement
+YouthCouncil "1" o-- "*" InformativePage
+YouthCouncil "1" o-- "*" ActionPoint
+YouthCouncil "1" o-- "*" CallForIdea
+
+User --|> Authenticable
+GeneralAdmin --|> Authenticable
+
+@enduml

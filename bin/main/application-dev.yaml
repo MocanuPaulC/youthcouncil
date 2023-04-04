@@ -1,0 +1,18 @@
+spring:
+    datasource:
+        driver-class-name: org.hsqldb.jdbc.JDBCDriver
+        url: jdbc:hsqldb:file:./db/youthCouncilDB;DB_CLOSE_DELAY=-1
+        username: admin
+        password: admin
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        database: HSQL
+    security:
+        user:
+            name: admin
+            password: admin
+            roles: MEMBER
+#logging:
+#    level:
+#        root: debug

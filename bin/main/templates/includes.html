@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Fragments</title>
+	<meta charset="UTF-8">
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+</head>
+<body>
+
+<th:block th:fragment="head_fragment">
+	<meta charset="UTF-8"/>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+	<script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css} ">
+	<link rel="stylesheet" th:href="@{/css/styles.css}">
+</th:block>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" th:fragment="navbar(user, page)">
+	<div class="container-fluid">
+		<a class="navbar-brand" th:href="@{/}">Youthcouncil platform</a>
+		<button aria-controls="offcanvasDarkNavbar"
+				class="navbar-toggler"
+				data-bs-target="#offcanvasDarkNavbar"
+				data-bs-toggle="offcanvas"
+				type="button">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div aria-labelledby="offcanvasDarkNavbarLabel"
+			 class="offcanvas offcanvas-end text-bg-dark"
+			 id="offcanvasDarkNavbar"
+			 tabindex="-1">
+			<div class="offcanvas-header">
+				<h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Debattle</h5>
+				<button aria-label="Close"
+						class="btn-close btn-close-white"
+						data-bs-dismiss="offcanvas"
+						type="button">
+				</button>
+			</div>
+			<div class="offcanvas-body">
+				<ul class="navbar-nav justify-content-end align-items-center flex-grow-1 pe-0 pe-lg-3">
+					<li>
+						<a class="btn"
+						   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+						   th:classappend="${page == 'create-youthcouncil' ? 'btn-light' : 'btn-dark'}"
+						   th:href="@{/youthcouncils/add}"
+						   type="button">
+							Create YC
+						</a>
+					</li>
+					<li>
+						<a class="btn"
+						   th:classappend="${page == 'youthcouncils' ? 'btn-light' : 'btn-dark'}"
+						   th:href="@{/youthcouncils}"
+						   type="button">
+							YC List
+						</a>
+					</li>
+					<li>
+						<a class="btn"
+						   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+						   th:classappend="${page == 'all-users' ? 'btn-light' : 'btn-dark'}"
+						   th:href="@{/users}"
+						   type="button">
+							All Users
+						</a>
+					</li>
+					<li>
+						<a class="btn"
+						   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+						   th:classappend="${page == 'general-statistics' ? 'btn-light' : 'btn-dark'}"
+						   th:href="@{/statistics}">
+							Statistics
+						</a>
+					</li>
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated() && !hasRole('ROLE_GENERAL_ADMIN')">
+						<a aria-expanded="false"
+						   class="nav-link dropdown-toggle"
+						   data-bs-toggle="dropdown"
+						   href="#"
+						   role="button">
+							My Youthcouncils
+						</a>
+						<ul class="dropdown-menu dropdown-menu-dark">
+							<li th:each="youthcouncil: ${user.getYouthCouncils()}">
+								<a class="dropdown-item"
+								   th:href="@{/youthcouncils/{municipality}(municipality=${youthcouncil.getMunicipality()})}"
+								   th:text="${youthcouncil.getCouncilName()}">
+									Youthcouncil
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<form class="d-flex" role="search">
+					<input aria-label="Search" class="form-control me-2" placeholder="Search" type="search">
+					<button class="btn btn-danger" type="submit">Search</button>
+				</form>
+				<ul class="navbar-nav justify-content-end align-items-center flex-grow-1 py-lg-0 py-3">
+					<li>
+						<a class="btn"
+						   sec:authorize="!isAuthenticated()"
+						   th:classappend="${page == 'login' ? 'btn-light' : 'btn-dark'}"
+						   th:href="@{/login}"
+						   type="button">
+							Log in
+						</a>
+					</li>
+					<li>
+						<a class="btn"
+						   sec:authorize="!isAuthenticated()"
+						   th:classappend="${page == 'register' ? 'btn-light' : 'btn-dark'}"
+						   th:href="@{/register}"
+						   type="button">
+							Register
+						</a>
+					</li>
+					<li>
+						<form sec:authorize="isAuthenticated()" th:action="@{/logout}" th:method="post">
+							<button class="btn btn-secondary" type="submit">Log out</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>
+
+</body>
+</html>

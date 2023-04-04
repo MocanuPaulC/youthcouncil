@@ -3,8 +3,8 @@ package be.kdg.youthcouncil.controllers.mvc;
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserLogInViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
-import be.kdg.youthcouncil.domain.user.User;
-import be.kdg.youthcouncil.service.userService.UserService;
+import be.kdg.youthcouncil.domain.users.PlatformUser;
+import be.kdg.youthcouncil.service.users.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class UserController {
 
 	@GetMapping ("/profile")
 	public String profile(Model model, Principal principal) {
-		User user = userService.findByUsername(principal.getName());
+		PlatformUser user = userService.findUserByUsername(principal.getName());
 		model.addAttribute("user", user);
 		return "profile";
 	}
