@@ -12,13 +12,14 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "themes")
+@Table (name = "themes")
 public class Theme {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private long themeId;
 	private String theme;
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany (fetch = FetchType.LAZY)
+	@JoinColumn (name = "super_theme_theme_id")
 	private List<SubTheme> subThemes;
 
 	public Theme(String theme) {

@@ -6,7 +6,6 @@ import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaShare;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Idea;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
-import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.BlockedUser;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -31,6 +30,7 @@ public class PlatformUser implements Authenticable {
 	private String lastName;
 	private String email;
 	private String postcode;
+	private boolean isGA = false;
 	@Getter (AccessLevel.NONE)
 	@Column (unique = true)
 	private String username;
@@ -60,10 +60,8 @@ public class PlatformUser implements Authenticable {
 	private List<ActionPointSubscription> actionPointSubscriptions;
 	@OneToMany (fetch = FetchType.LAZY)
 	@ToString.Exclude
-	private List<BlockedUser> blockedYouthCouncils;
-	@OneToMany (fetch = FetchType.LAZY)
-	@ToString.Exclude
 	private List<Idea> ideas;
+
 
 	public PlatformUser(String firstName, String lastName, String email, String postcode, String username, String password) {
 		this.firstName = firstName;
@@ -81,7 +79,7 @@ public class PlatformUser implements Authenticable {
 
 	@Override
 	public boolean isGA() {
-		return false;
+		return isGA;
 	}
 
 	@Override

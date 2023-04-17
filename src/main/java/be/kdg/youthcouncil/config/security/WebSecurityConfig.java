@@ -2,17 +2,28 @@ package be.kdg.youthcouncil.config.security;
 
 import be.kdg.youthcouncil.config.security.Oauth.CustomOAuth2UserService;
 import be.kdg.youthcouncil.config.security.Oauth.OAuthLoginSuccessHandler;
+import be.kdg.youthcouncil.config.security.abac.RequestVoter;
 import be.kdg.youthcouncil.service.users.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Configuration
@@ -25,7 +36,8 @@ public class WebSecurityConfig {
 	private UserService userService;
 	private OAuthLoginSuccessHandler oauthLoginSuccessHandler;
 	private CustomLoginSuccessHandler loginSuccessHandler;
-
+	@Autowired
+	private RequestVoter requestVoter;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,12 +49,22 @@ public class WebSecurityConfig {
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 				.authorizeRequests(auths -> auths
-						.antMatchers("/", "/logout", "/login", "/register", "/oauth/**")
+						.antMatchers("/", "/logout", "/login", "/register", "/oauth/**", "/youthcouncils", "/youthcouncils/**")
 						.permitAll()
 						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico")
 						.permitAll()
+						.regexMatchers(HttpMethod.POST, "/api/youthcouncils/\\d/\\d")
+						.permitAll()
+						.antMatchers(HttpMethod.POST, "/api/youthcouncils/**")
+						.hasRole("COUNCIL_ADMIN")
+						.regexMatchers(HttpMethod.PUT, "/api/actionpoints/\\d/\\d")
+						.hasRole("COUNCIL_ADMIN")
+						.regexMatchers(HttpMethod.PATCH, "/api/actionpoints/\\d/\\d")
+						.hasRole("COUNCIL_ADMIN")
 						.anyRequest()
-						.authenticated())
+						.authenticated()
+						.accessDecisionManager(accessDecisionManager())
+				)
 				.formLogin()
 				.loginPage("/login")
 				.permitAll()
@@ -60,4 +82,16 @@ public class WebSecurityConfig {
 
 		return http.build();
 	}
+
+	@Bean
+	public AccessDecisionManager accessDecisionManager() {
+		List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
+		decisionVoters.add(new RoleVoter());
+		decisionVoters.add(new AuthenticatedVoter());
+		decisionVoters.add(new WebExpressionVoter());
+		decisionVoters.add(requestVoter);
+		return new UnanimousBased(decisionVoters);
+	}
+
+
 }

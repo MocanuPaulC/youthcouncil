@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.Provider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,29 +48,31 @@ public class MappingConfiguration {
 		           .addMapping(idea -> idea.getUser().getUsername(), IdeaDTO::setUsername);
 
 		modelMapper.createTypeMap(NewSubscriptionDTO.class, YouthCouncilSubscription.class)
-				.addMapping(NewSubscriptionDTO::getUserId, YouthCouncilSubscription::setSubscriber)
-				.addMapping(NewSubscriptionDTO::getYouthCouncilId, YouthCouncilSubscription::setYouthCouncil)
-				.addMapping(NewSubscriptionDTO::getRole, YouthCouncilSubscription::setRole);
+		           .addMapping(NewSubscriptionDTO::getUserId, YouthCouncilSubscription::setSubscriber)
+		           .addMapping(NewSubscriptionDTO::getYouthCouncilId, YouthCouncilSubscription::setYouthCouncil)
+		           .addMapping(NewSubscriptionDTO::getRole, YouthCouncilSubscription::setRole);
 
 		modelMapper.createTypeMap(YouthCouncilSubscription.class, SubscriptionDTO.class)
-				.addMapping(YouthCouncilSubscription::getRole, SubscriptionDTO::setSubscriptionRole)
-				.addMapping(YouthCouncilSubscription::getSubscriber, SubscriptionDTO::setSubscriberId)
-				.addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilId)
-				.addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilName);
+		           .addMapping(YouthCouncilSubscription::getRole, SubscriptionDTO::setSubscriptionRole)
+		           .addMapping(YouthCouncilSubscription::getSubscriber, SubscriptionDTO::setSubscriberId)
+		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilId)
+		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilName);
 		return modelMapper;
 	}
 
 	private void converterConfiguration(ModelMapper modelMapper) {
 		Converter<Long, PlatformUser> toPlatformUser = new AbstractConverter<Long, PlatformUser>() {
 			protected PlatformUser convert(Long source) {
-				return userRepository.findById(source).orElseThrow(() -> new UserNotFoundException("The user could not be found!"));
+				return userRepository.findById(source)
+				                     .orElseThrow(() -> new UserNotFoundException("The user could not be found!"));
 			}
 		};
 		modelMapper.addConverter(toPlatformUser);
 
 		Converter<Long, CallForIdea> toCallForIdeas = new AbstractConverter<Long, CallForIdea>() {
 			protected CallForIdea convert(Long source) {
-				return callForIdeaRepository.findById(source).orElseThrow(() -> new CallForIdeaNotFoundException(source));
+				return callForIdeaRepository.findById(source)
+				                            .orElseThrow(() -> new CallForIdeaNotFoundException(source));
 			}
 		};
 		modelMapper.addConverter(toCallForIdeas);
@@ -85,7 +86,8 @@ public class MappingConfiguration {
 
 		Converter<Long, YouthCouncil> toYouthCouncil = new AbstractConverter<Long, YouthCouncil>() {
 			protected YouthCouncil convert(Long source) {
-				return youthCouncilRepository.findById(source).orElseThrow(() -> new YouthCouncilIdNotFoundException(source));
+				return youthCouncilRepository.findById(source)
+				                             .orElseThrow(() -> new YouthCouncilIdNotFoundException(source));
 			}
 		};
 		modelMapper.addConverter(toYouthCouncil);

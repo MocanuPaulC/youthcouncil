@@ -31,6 +31,9 @@ public class YouthCouncilSubscription {
 
 	private SubscriptionRole role;
 
+	@Column (name = "is_blocked", nullable = false)
+	private boolean isBlocked = false;
+
 	public YouthCouncilSubscription(PlatformUser subscriber, YouthCouncil youthCouncil, SubscriptionRole role) {
 		this.subscriber = subscriber;
 		this.youthCouncil = youthCouncil;

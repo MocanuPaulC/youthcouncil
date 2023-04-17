@@ -38,12 +38,12 @@ public class GeneralAdmin implements Authenticable {
 
 	@Override
 	public String getUsername() {
-		return null;
+		return this.username;
 	}
 
 	@Override
 	public String getPassword() {
-		return null;
+		return this.username;
 	}
 
 	@Override

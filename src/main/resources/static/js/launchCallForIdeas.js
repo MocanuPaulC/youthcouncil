@@ -9,6 +9,7 @@ button.addEventListener("click", async () => {
 	const res = await fetch(`/api/youthcouncils/${youthCouncilID}/callforideas`, {
 		method: "POST",
 		headers: {
+			"youthCouncilID": youthCouncilID,
 			"Content-Type": "application/json",
 			Accept: "application/json",
 			[name]: value

@@ -34,4 +34,11 @@ public interface UserRepository extends JpaRepository<PlatformUser, Long> {
 					"WHERE u.username = :username"
 	)
 	Optional<PlatformUser> findWithSubscriptions(String username);
+
+	@Query (
+			"SELECT u FROM PlatformUser u " +
+					"LEFT JOIN FETCH u.youthCouncilSubscriptions " +
+					"WHERE u.userId= :id"
+	)
+	Optional<PlatformUser> findByIdWithYouthCouncilSubscriptions(long id);
 }

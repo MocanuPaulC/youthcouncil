@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html lang="en"
 	  xmlns:th="http://www.thymeleaf.org">
-	<head>
+<head>
 
-		<title th:text="${youthCouncil.getMunicipality()}"></title>
-		<th:block th:insert="~{includes::head_fragment}"></th:block>
-		<script defer src="/js/turnToEditable.js" type="module"></script>
+	<title th:text="${youthCouncil.getMunicipality()}"></title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+	<script defer src="/js/turnToEditable.js" type="module"></script>
 
-	</head>
+</head>
 
 
-	<body>
-		  <th:block th:insert="~{includes::navbar(${authUser}, 'adding-informative-page')}"></th:block>
+<body>
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'actionpoint')}"></th:block>
 
-		<button class="edit btn btn-primary" type="button">Edit</button>
-		<input class="actionPointId" th:id="'ap_'+${actionPoint.id}" type="hidden">
-		<input class="youthCouncilId" th:id="'yc_' + ${youthCouncil.getId()}" type="hidden">
-		<h1 class="editable" id="title" th:text="${actionPoint.getTitle()}"></h1>
-		<h2 class="editable" id="description" th:text="${actionPoint.getDescription()}"></h2>
-		<h3 id="label" th:text="${actionPoint.getLabel()}"></h3>
-		<select hidden="hidden" id="labelInput">
-			<option th:each="label : ${labels}" th:text="${label}"></option>
-		</select>
-		<button class="save btn btn-primary">Save</button>
+<button
+		class="edit btn btn-primary"
+		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + youthCouncil.getMunicipality()+ ''')')}"
+		type="button">
+	Edit
+</button>
+<input class="actionPointId" th:id="'ap_'+${actionPoint.getActionPointId()}" type="hidden">
+<input class="youthCouncilId" th:id="'yc_' + ${youthCouncil.getYouthCouncilId()}" type="hidden">
+<h1 class="editable" id="title" th:text="${actionPoint.getTitle()}"></h1>
+<h2 class="editable" id="description" th:text="${actionPoint.getDescription()}"></h2>
+<h3 id="status" th:text="${actionPoint.getStatus()}"></h3>
+<select hidden="hidden" id="statusInput">
+	<option th:each="status : ${labels}" th:text="${status}"></option>
+</select>
+<button class="save btn btn-primary"
+		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + youthCouncil.getMunicipality()+ ''')')}"
 
-	</body>
+>Save
+</button>
+
+</body>
 </html>

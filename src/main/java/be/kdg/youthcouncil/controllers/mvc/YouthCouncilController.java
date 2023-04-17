@@ -13,6 +13,7 @@ import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.AnnouncementService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.CallForIdeaService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.InformativePageService;
+import be.kdg.youthcouncil.service.youthcouncil.subscriptions.YouthCouncilSubscriptionService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class YouthCouncilController {
 	private final ModelMapper modelMapper;
 
 	private final YouthCouncilService youthCouncilService;
+	private final YouthCouncilSubscriptionService youthCouncilSubscriptionService;
 	private final UserService userService;
 
 	private final CallForIdeaService callForIdeaService;
@@ -79,7 +81,8 @@ public class YouthCouncilController {
 	public String youthCouncilStatistics(Model model, @PathVariable String municipality) {
 		YouthCouncil possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
 		model.addAttribute("youthCouncil", possibleYouthCouncil);
-		model.addAttribute("users", youthCouncilService.getAllMembers(municipality));
+		model.addAttribute("subscriptions", youthCouncilSubscriptionService.findAllByYouthCouncil(possibleYouthCouncil));
+
 
 		return "statistics";
 	}
@@ -142,7 +145,7 @@ public class YouthCouncilController {
 	@GetMapping ("/{municipality}/actionpoints/{actionpointid}")
 	public String getActionPointsOfYouthCouncil(@PathVariable String municipality, @PathVariable long actionpointid, Model model) {
 
-		YouthCouncil youthCouncil = youthCouncilService.findByMunicipality(municipality);
+		YouthCouncil youthCouncil = youthCouncilService.findByMunicipalityWithActionPoints(municipality);
 		try {
 			model.addAttribute("actionPoint", youthCouncil.getActionPoint(actionpointid));
 			model.addAttribute("labels", ActionPointStatus.values());

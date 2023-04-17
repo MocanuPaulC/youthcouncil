@@ -4,12 +4,14 @@ import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
 import be.kdg.youthcouncil.domain.users.Authenticable;
 import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
+import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 
 import java.util.List;
 import java.util.Map;
 
 public interface UserService {
 	List<PlatformUser> findAllUsers();
+
 	void create(UserRegisterViewModel userViewModel);
 
 	PlatformUser findById(long id);
@@ -19,17 +21,31 @@ public interface UserService {
 	void save(UserRegisterViewModel userViewModel);
 
 	boolean updateRole(long id, String role);
+
 	void save(PlatformUser user);
+
 	PlatformUser findUserByUsername(String username);
 
 	PlatformUser findWithSubscriptionsAndYouthCouncils(String username);
+
 	GeneralAdmin findAdminByUsername(String username);
+
 	Authenticable findAuthenticableByUsername(String username);
+
 	void updateUsername(String oldUsername, String newUsername);
 
 	List<PlatformUser> findAllWithIdeas();
 
 	boolean checkIfAuthenticableExists(String username);
+
 	boolean checkIfUserExists(String username);
+
 	boolean checkIfAdminExists(String username);
+
+	PlatformUser findByIdWithYouthCouncilSubscriptions(long id);
+
+	SubscriptionRole findSubscriptionRoleOfUserToYouthCouncil(long userId, long youthCouncilId);
+
+	boolean isUserAdminOfYouthCouncil(long userId, long youthCouncilId);
+
 }
