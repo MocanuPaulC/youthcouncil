@@ -14,21 +14,27 @@
 <p th:text="${ycWithActionPoints.getDescription()}"></p>
 <a class="btn btn-dark"
    sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
-   th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${youthCouncil.getMunicipality()})}">
+   th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${ycWithActionPoints.getMunicipality()})}">
 	Create council admin
 </a>
 
-<button class="join-council btn btn-primary" sec:authorize="hasAnyRole('ROLE_MEMBER','ROLE_MODERATOR')"
+
+<button class="join-council btn btn-primary"
+		th:if="${#authorization.expression(
+		'!hasAuthority(''USER@' + ycWithActionPoints.getMunicipality()+''')'
+		+ ' && !hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
+		+ ' && !hasAuthority(''MODERATOR@' + ycWithActionPoints.getMunicipality()+''')'
+		)}"
 		th:text="'Join '+${ycWithActionPoints.getCouncilName()} +'!'"
 		type="button"></button>
-<input id="authUserId" th:value="${authUser.id}" type="hidden"/>
+<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
 <input id="youthCouncilId" th:value="${ycWithActionPoints.getYouthCouncilId()}" type="hidden">
 
 
 <button class="btn btn-primary"
 		data-bs-target="#launch-call-for-ideas-modal"
 		data-bs-toggle="modal"
-		sec:authorize="hasRole('ROLE_COUNCIL_ADMIN')"
+		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}"
 		type="button">
 	Launch call for ideas
 </button>
@@ -61,14 +67,16 @@
 </div>
 
 <a class="btn btn-dark"
-   sec:authorize="hasAnyRole('ROLE_GENERAL_ADMIN','ROLE_COUNCIL_ADMIN')"
-   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${ycWithActionPoints.getMunicipality()})}">
+   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${ycWithActionPoints.getMunicipality()})}"
+   th:if="${#authorization.expression(
+		'hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
+		+ ' || hasAuthority(''ROLE_GENERAL_ADMIN'')')}">
 	Statistics
 </a>
 
 <a class="btn btn-dark"
-   sec:authorize="hasAnyRole('ROLE_COUNCIL_ADMIN')"
-   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${ycWithActionPoints.getMunicipality()})}">
+   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${ycWithActionPoints.getMunicipality()})}"
+   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}">
 	add announcement
 </a>
 

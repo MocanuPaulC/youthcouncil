@@ -5,7 +5,6 @@ import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Announcement;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
-import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.BlockedUser;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import be.kdg.youthcouncil.exceptions.ActionPointNotFound;
 import lombok.*;
@@ -47,9 +46,6 @@ public class YouthCouncil {
 	@OneToMany (mappedBy = "owningYouthCouncil", fetch = FetchType.LAZY)
 	@ToString.Exclude
 	private List<CallForIdea> callForIdeas;
-	@OneToMany (fetch = FetchType.LAZY)
-	@ToString.Exclude
-	private List<BlockedUser> blockedUsers;
 
 	public YouthCouncil(String councilName, String municipality, String description, Image councilLogo, boolean isAfterElection) {
 		this.councilName = councilName;
@@ -68,5 +64,9 @@ public class YouthCouncil {
 		                   .filter(item -> item.getActionPointId() == id)
 		                   .findFirst()
 		                   .orElseThrow(() -> {throw new ActionPointNotFound(id);});
+	}
+
+	public void addActionPoint(ActionPoint newActionPoint) {
+		actionPoints.add(newActionPoint);
 	}
 }

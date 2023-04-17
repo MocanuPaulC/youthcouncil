@@ -1,7 +1,6 @@
 package be.kdg.youthcouncil.config;
 
 import be.kdg.youthcouncil.domain.media.Image;
-import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.*;
@@ -58,7 +57,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 	private void loadData() {
 
 		// USERS
-		adminRepository.save(new GeneralAdmin("gadmin", encoder.encode("gadmin")));
+		//		adminRepository.save(new GeneralAdmin("gadmin", encoder.encode("gadmin")));
 
 		List<String> userNames = List.of("cadmin1", "cadmin2", "moderator1", "moderator2", "member1", "member2", "member3");
 		List<Integer> userPostcodes = List.of(23423, 457456, 8325, 57809, 12362, 6799, 21356);
@@ -69,7 +68,9 @@ public class DatabaseSeeder implements CommandLineRunner {
 			userList.add(new PlatformUser(n, n, n + "@localhost", userPostcodes.get(0)
 			                                                                   .toString(), n, encoder.encode(n)));
 		});
-
+		PlatformUser ga = new PlatformUser("gadmin", "gadmin", "gadmin@localhost", "23423", "gadmin", encoder.encode("gadmin"));
+		ga.setGA(true);
+		userList.add(ga);
 		userRepository.saveAll(userList);
 
 		//THEMES
@@ -109,14 +110,15 @@ public class DatabaseSeeder implements CommandLineRunner {
 		youthCouncilRepository.saveAll(List.of(youthCouncil1, youthCouncil2));
 
 		YouthCouncilSubscription youthCouncilSubscription1 = new YouthCouncilSubscription(userList.get(0), youthCouncil1, SubscriptionRole.COUNCIL_ADMIN);
-		YouthCouncilSubscription youthCouncilSubscription2 = new YouthCouncilSubscription(userList.get(1), youthCouncil2, SubscriptionRole.COUNCIL_ADMIN);
 		YouthCouncilSubscription youthCouncilSubscription3 = new YouthCouncilSubscription(userList.get(2), youthCouncil1, SubscriptionRole.MODERATOR);
+		YouthCouncilSubscription youthCouncilSubscription6 = new YouthCouncilSubscription(userList.get(5), youthCouncil1, SubscriptionRole.USER);
+		YouthCouncilSubscription youthCouncilSubscription9 = new YouthCouncilSubscription(userList.get(4), youthCouncil1, SubscriptionRole.USER);
+
+		YouthCouncilSubscription youthCouncilSubscription2 = new YouthCouncilSubscription(userList.get(1), youthCouncil2, SubscriptionRole.COUNCIL_ADMIN);
 		YouthCouncilSubscription youthCouncilSubscription4 = new YouthCouncilSubscription(userList.get(3), youthCouncil2, SubscriptionRole.MODERATOR);
 		YouthCouncilSubscription youthCouncilSubscription5 = new YouthCouncilSubscription(userList.get(4), youthCouncil2, SubscriptionRole.USER);
-		YouthCouncilSubscription youthCouncilSubscription6 = new YouthCouncilSubscription(userList.get(5), youthCouncil1, SubscriptionRole.USER);
 		YouthCouncilSubscription youthCouncilSubscription7 = new YouthCouncilSubscription(userList.get(6), youthCouncil2, SubscriptionRole.USER);
 		YouthCouncilSubscription youthCouncilSubscription8 = new YouthCouncilSubscription(userList.get(0), youthCouncil2, SubscriptionRole.USER);
-		YouthCouncilSubscription youthCouncilSubscription9 = new YouthCouncilSubscription(userList.get(4), youthCouncil1, SubscriptionRole.USER);
 
 		youthCouncilSubscriptionRepository.saveAll(List.of(youthCouncilSubscription1, youthCouncilSubscription2, youthCouncilSubscription3, youthCouncilSubscription4, youthCouncilSubscription5, youthCouncilSubscription6, youthCouncilSubscription7, youthCouncilSubscription8, youthCouncilSubscription9));
 

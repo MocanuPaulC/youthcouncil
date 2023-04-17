@@ -5,6 +5,7 @@ import be.kdg.youthcouncil.domain.users.Authenticable;
 import be.kdg.youthcouncil.domain.users.AuthenticationType;
 import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
+import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import be.kdg.youthcouncil.exceptions.UserNotFoundException;
 import be.kdg.youthcouncil.exceptions.UsernameAlreadyExistsException;
@@ -82,6 +83,32 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public SubscriptionRole findSubscriptionRoleOfUserToYouthCouncil(long userId, long youthCouncilId) {
+		return userRepository
+				.findByIdWithYouthCouncilSubscriptions(userId)
+				.flatMap(user -> user.getYouthCouncilSubscriptions().stream()
+				                     .filter(subscription -> subscription.getYouthCouncil()
+				                                                         .getYouthCouncilId() == youthCouncilId)
+				                     .findFirst()
+				                     .map(YouthCouncilSubscription::getRole))
+				.orElseThrow(() -> new YouthCouncilSubscriptionNotFoundException(userId, youthCouncilId));
+	}
+
+	@Override
+	public boolean isUserAdminOfYouthCouncil(long userId, long youthCouncilId) {
+		return userRepository
+				.findByIdWithYouthCouncilSubscriptions(userId)
+				.map(user -> user.getYouthCouncilSubscriptions().stream()
+				                 .anyMatch(subscription ->
+						                 subscription
+								                 .getRole().equals(SubscriptionRole.COUNCIL_ADMIN)
+								                 && subscription.getYouthCouncil().getYouthCouncilId() == youthCouncilId
+				                 ))
+				.orElse(false);
+	}
+
+
+	@Override
 	public void updateUsername(String oldUsername, String newUsername) {
 		if (checkIfUserExists(newUsername)) throw new UsernameAlreadyExistsException(newUsername);
 		PlatformUser user = userRepository.findByUsername(oldUsername)
@@ -124,6 +151,12 @@ public class UserServiceImpl implements UserService {
 		});
 		System.out.println(user);
 		return user;
+	}
+
+	@Override
+	public PlatformUser findByIdWithYouthCouncilSubscriptions(long id) {
+		return userRepository.findByIdWithYouthCouncilSubscriptions(id)
+		                     .orElseThrow(() -> new UserNotFoundException(id));
 	}
 
 	@Override

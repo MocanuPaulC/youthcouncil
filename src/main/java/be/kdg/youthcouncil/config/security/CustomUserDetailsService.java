@@ -1,7 +1,7 @@
-package be.kdg.youthcouncil.service.userService;
+package be.kdg.youthcouncil.config.security;
 
-import be.kdg.youthcouncil.config.security.CustomUserDetails;
 import be.kdg.youthcouncil.domain.users.Authenticable;
+import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.service.users.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,33 +12,80 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
 	private final UserService userService;
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 	public CustomUserDetailsService(UserService userService) {
 		this.userService = userService;
 	}
 
 	@Override
-	public CustomUserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-		logger.debug("Loading user by username " + s);
-		Authenticable user = userService.findAuthenticableByUsername(s);
-
+	public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		logger.debug("Loading user by username " + username);
+		Authenticable user = userService.findAuthenticableByUsername(username);
+		PlatformUser platformUser = userService.findByIdWithYouthCouncilSubscriptions(user.getId());
 
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		//TODO implement multi tenent system
+
 		if (user.isGA()) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_GENERAL_ADMIN"));
+			authorities.addAll(Arrays.asList(
+					new SimpleGrantedAuthority("GENERAL_ADMIN"),
+					new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"),
+					new SimpleGrantedAuthority("ROLE_MODERATOR"),
+					new SimpleGrantedAuthority("ROLE_USER")
+			));
 		} else {
-			//FIXME how do we implement roles here
-			authorities.add(new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"));
+			AtomicBoolean isCA = new AtomicBoolean(false);
+			AtomicBoolean isModerator = new AtomicBoolean(false);
+			AtomicBoolean isUser = new AtomicBoolean(false);
+
+			platformUser.getYouthCouncilSubscriptions().forEach(subscription -> {
+				String role = subscription.getRole().toString();
+				String municipality = subscription.getYouthCouncil().getMunicipality();
+
+				switch (role) {
+					case "COUNCIL_ADMIN" -> {
+						if (!isCA.get()) {
+							authorities.addAll(Arrays.asList(
+									new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"),
+									new SimpleGrantedAuthority("ROLE_MODERATOR"),
+									new SimpleGrantedAuthority("ROLE_USER")
+							));
+							isCA.set(true);
+						}
+						authorities.add(new SimpleGrantedAuthority("COUNCIL_ADMIN@" + municipality));
+					}
+					case "USER" -> {
+						if (!isUser.get()) {
+							authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+							isUser.set(true);
+						}
+						authorities.add(new SimpleGrantedAuthority("USER@" + municipality));
+					}
+					case "MODERATOR" -> {
+						if (!isModerator.get()) {
+							authorities.addAll(Arrays.asList(
+									new SimpleGrantedAuthority("ROLE_MODERATOR"),
+									new SimpleGrantedAuthority("ROLE_USER")
+							));
+							isModerator.set(true);
+						}
+						authorities.add(new SimpleGrantedAuthority("MODERATOR@" + municipality));
+					}
+				}
+			});
 		}
+
 		logger.debug("User found");
 		logger.debug("User: " + user.getUsername() + " " + user.getPassword());
-		return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), user.isGA(),authorities);
+
+		return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), user.isGA(), authorities);
 	}
 }

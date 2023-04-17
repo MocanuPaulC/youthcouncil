@@ -2,6 +2,7 @@ package be.kdg.youthcouncil.persistence;
 
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
+import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,6 @@ public class YouthCouncilRepositoryTest {
 		final YouthCouncil youthCouncil = assertDoesNotThrow(optionalYouthCouncil::get);
 		assertSame(youthCouncil.getSubscriptions()
 		                       .get(0)
-		                       .getClass(), be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription.class);
+		                       .getClass(), YouthCouncilSubscription.class);
 	}
 }

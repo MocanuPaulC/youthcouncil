@@ -38,12 +38,17 @@ public class ActionPointServiceImpl implements ActionPointService {
 		if (oldActionPoint.getIsDefault()) {
 			logger.debug("ActionPoint is default");
 			newActionPoint.setIsDefault(false);
+			// Maybe not necessary
+			youthCouncil.addActionPoint(newActionPoint);
+			youthCouncilRepository.save(youthCouncil);
+			return modelMapper.map(actionPointRepository.save(newActionPoint), EditActionPointDto.class);
+		} else {
+			logger.debug("ActionPoint is not default");
+			oldActionPoint.setTitle(newActionPoint.getTitle());
+			oldActionPoint.setDescription(newActionPoint.getDescription());
+			oldActionPoint.setStatus(newActionPoint.getStatus());
+			return modelMapper.map(actionPointRepository.save(oldActionPoint), EditActionPointDto.class);
 		}
-		newActionPoint.setOwningYouthCouncil(youthCouncil);
-		oldActionPoint.setTitle(newActionPoint.getTitle());
-		oldActionPoint.setDescription(newActionPoint.getDescription());
-		oldActionPoint.setStatus(newActionPoint.getStatus());
-		return modelMapper.map(actionPointRepository.save(newActionPoint), EditActionPointDto.class);
 	}
 
 	@Override

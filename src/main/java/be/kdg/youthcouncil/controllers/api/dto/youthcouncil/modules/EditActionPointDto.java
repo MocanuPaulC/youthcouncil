@@ -14,5 +14,7 @@ public class EditActionPointDto {
 	private String title;
 	private String description;
 
+	private long youthCouncilId;
+
 	private ActionPointStatus status;
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en"
-	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
@@ -13,7 +12,7 @@
 
 <div class="container">
 	<div class="container-fluid">
-		<span th:text="'Numer of users: ' + ${users.size()}"></span>
+		<span th:text="'Numer of users: ' + ${subscriptions.size()}"></span>
 		<table class="table table-hover table-bordered" th:for="users">
 			<thead>
 			<tr>
@@ -22,24 +21,25 @@
 				<th scope="col">First Name</th>
 				<th scope="col">Last Name</th>
 				<th scope="col">Role</th>
-				<th scope="col">Idea count</th>
 			</tr>
 			</thead>
 			<tbody>
-			<tr th:each="user: ${users}" th:id="'user_' + ${user.id}">
-				<td th:text="${user.username}"></td>
-				<td th:text="${user.email}"></td>
-				<td th:text="${user.firstName}"></td>
-				<td th:text="${user.lastName}"></td>
-				<td class="role" th:text="${user.role}"></td>
-				<td th:text="${#lists.size(user.getIdeas())}"></td>
-				<td sec:authorize="hasRole('ROLE_COUNCIL_ADMIN')"
-					th:if="${user.role.toString()=='MEMBER' || user.role.toString()=='MODERATOR'}">
+			<tr th:each="subscription: ${subscriptions}" th:id="'user_' + ${subscription.getSubscriber().getId()}">
+				<td th:text="${subscription.getSubscriber().username}"></td>
+				<td th:text="${subscription.getSubscriber().email}"></td>
+				<td th:text="${subscription.getSubscriber().firstName}"></td>
+				<td th:text="${subscription.getSubscriber().lastName}"></td>
+				<td th:text="${subscription.role}"></td>
+				<td
+						th:if="${youthCouncil!=null && #authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + youthCouncil.getMunicipality()+ ''')')
+						&& subscription.getYouthCouncil().youthCouncilId==youthCouncil.getYouthCouncilId()}">
 					<button class="btn btn-primary promote"
-							th:if="${user.getRole().toString()=='MEMBER'}" type="button">
+							th:if="${subscription.getRole().toString()=='USER'}" type="button">
 						Promote
 					</button>
-					<button class="btn btn-danger demote" th:if="${user.role.toString()=='MODERATOR'}" type="button">
+					<button class="btn btn-danger demote"
+							th:if="${subscription.getRole().toString()=='MODERATOR'}"
+							type="button">
 						Demote
 					</button>
 				</td>

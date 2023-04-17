@@ -5,7 +5,7 @@
 	<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
 </head>
 <body>
-<th:block th:insert="~{includes::navbar(${authUser}, 'home')}"></th:block>
+<th:block th:insert="~{includes::navbar(${authUser},${authAdmin}, 'home')}"></th:block>
 <section class="container">
 
 

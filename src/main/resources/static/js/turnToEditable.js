@@ -6,8 +6,8 @@ const apHiddenInput = document.querySelector(".actionPointId");
 const ycHiddenInput = document.querySelector(".youthCouncilId");
 const editButton = document.querySelector(".edit");
 const saveButton = document.querySelector(".save");
-const label = document.querySelector("#label");
-const labelInput = document.querySelector("#labelInput");
+const label = document.querySelector("#status");
+const labelInput = document.querySelector("#statusInput");
 
 // Extract data from DOM elements
 const actionPointId = +apHiddenInput.id.substring(apHiddenInput.id.indexOf("_") + 1);
@@ -66,6 +66,7 @@ function processActionPointEdit() {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
+					"youthCouncilID": youthCouncilId,
 					[name]: value
 				},
 				body: JSON.stringify(actionPoint)

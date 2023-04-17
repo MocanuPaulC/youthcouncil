@@ -1,6 +1,7 @@
 package be.kdg.youthcouncil.persistence.youthcouncil.subscriptions;
 
 import be.kdg.youthcouncil.domain.users.PlatformUser;
+import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,21 @@ public interface YouthCouncilSubscriptionRepository extends JpaRepository<YouthC
 					"WHERE s.youthCouncil.municipality = :municipality"
 	)
 	List<PlatformUser> findSubscribersByMunicipality(String municipality);
+
+
+	@Query (
+			"SELECT s FROM YouthCouncilSubscription s " +
+					"JOIN FETCH s.youthCouncil " +
+					"WHERE s.youthCouncil.youthCouncilId = :youthCouncilId"
+	)
+	List<YouthCouncilSubscription> findByYouthCouncil(long youthCouncilId);
+
+	@Query (
+			"SELECT s FROM YouthCouncilSubscription s " +
+					"WHERE s.youthCouncil= :youthCouncil"
+	)
+	List<YouthCouncilSubscription> findAllByYouthCouncil(YouthCouncil youthCouncil);
+
 }
+
+
