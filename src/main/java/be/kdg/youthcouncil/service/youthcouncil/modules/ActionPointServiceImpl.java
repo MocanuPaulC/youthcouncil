@@ -3,6 +3,7 @@ package be.kdg.youthcouncil.service.youthcouncil.modules;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
+import be.kdg.youthcouncil.exceptions.ActionPointNotFoundException;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
@@ -55,6 +56,12 @@ public class ActionPointServiceImpl implements ActionPointService {
 	public EditActionPointDto updateDefault(long actionPointId, EditActionPointDto editActionPointDto) {
 		//FIXME implement me!
 		return new EditActionPointDto();
+	}
+
+	@Override
+	public ActionPoint findById(long actionPointReactedOnId) {
+		return actionPointRepository.findById(actionPointReactedOnId)
+		                            .orElseThrow(() -> new ActionPointNotFoundException(actionPointReactedOnId));
 	}
 
 }

@@ -3,19 +3,24 @@ package be.kdg.youthcouncil.service.youthcouncil;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
+import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
 import be.kdg.youthcouncil.exceptions.YouthCouncilSubscriptionNotFoundException;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.interactions.ActionPointReactionRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.YouthCouncilSubscriptionRepository;
+import be.kdg.youthcouncil.service.youthcouncil.modules.ActionPointService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +32,8 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 	private final ModelMapper modelMapper;
 	private final YouthCouncilRepository youthCouncilRepository;
 	private final YouthCouncilSubscriptionRepository youthCouncilSubscriptionRepository;
+	private final ActionPointService actionPointService;
+	private final ActionPointReactionRepository actionPointReactionRepository;
 
 	private final UserRepository userRepository;
 
@@ -103,9 +110,27 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 		                             .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
 	}
 
+	@Transactional (readOnly = true)
 	@Override
 	public YouthCouncil findByMunicipalityWithActionPoints(String municipality) {
-		return youthCouncilRepository.findWithActionPointsByMunicipality(municipality)
-		                             .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
+		YouthCouncil youthCouncil = youthCouncilRepository.findWithActionPointsByMunicipality(municipality)
+		                                                  .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
+		addActionPointReactions(youthCouncil.getActionPoints());
+		return youthCouncil;
 	}
+
+	public void addActionPointReactions(List<ActionPoint> actionPoints) {
+		actionPoints.forEach(actionPoint -> addReactions(actionPoint, actionPoint.getReactions(), new ArrayList<ActionPointReaction>()));
+	}
+
+	private void addReactions(ActionPoint actionPoint, List<ActionPointReaction> reactions, List<ActionPointReaction> reactionCopy) {
+		actionPoint.setReactions(reactionCopy);
+		reactions.forEach(reaction -> addReaction(actionPoint, reaction));
+	}
+
+	private void addReaction(ActionPoint actionPoint, ActionPointReaction reaction) {
+		actionPoint.addReaction(reaction);
+	}
+
 }
+

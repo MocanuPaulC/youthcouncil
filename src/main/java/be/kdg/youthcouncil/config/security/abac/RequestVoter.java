@@ -40,7 +40,7 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		String uri = filterInvocation.getRequest().getRequestURI();
 		String youthCouncilIdHeader = filterInvocation.getHttpRequest().getHeader("youthCouncilID");
 
-		if (!uri.contains("api")) {
+		if (!uri.contains("api") || collection.toString().equals("[authenticated]")) {
 			return ACCESS_ABSTAIN;
 		}
 		if (youthCouncilIdHeader == null) {
