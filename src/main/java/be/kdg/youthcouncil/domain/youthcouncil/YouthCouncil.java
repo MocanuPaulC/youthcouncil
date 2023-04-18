@@ -6,7 +6,7 @@ import be.kdg.youthcouncil.domain.youthcouncil.modules.Announcement;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
-import be.kdg.youthcouncil.exceptions.ActionPointNotFound;
+import be.kdg.youthcouncil.exceptions.ActionPointNotFoundException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -63,7 +63,7 @@ public class YouthCouncil {
 		return actionPoints.stream()
 		                   .filter(item -> item.getActionPointId() == id)
 		                   .findFirst()
-		                   .orElseThrow(() -> {throw new ActionPointNotFound(id);});
+		                   .orElseThrow(() -> {throw new ActionPointNotFoundException(id);});
 	}
 
 	public void addActionPoint(ActionPoint newActionPoint) {

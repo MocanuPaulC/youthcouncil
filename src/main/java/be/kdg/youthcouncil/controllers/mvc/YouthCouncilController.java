@@ -4,12 +4,14 @@ package be.kdg.youthcouncil.controllers.mvc;
 import be.kdg.youthcouncil.config.security.annotations.CAOnly;
 import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
+import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointStatus;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.service.users.UserService;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
+import be.kdg.youthcouncil.service.youthcouncil.interactions.ActionPointReactionService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.AnnouncementService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.CallForIdeaService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.InformativePageService;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -38,6 +41,7 @@ public class YouthCouncilController {
 
 	private final YouthCouncilService youthCouncilService;
 	private final YouthCouncilSubscriptionService youthCouncilSubscriptionService;
+	private final ActionPointReactionService actionPointReactionService;
 	private final UserService userService;
 
 	private final CallForIdeaService callForIdeaService;
@@ -70,10 +74,18 @@ public class YouthCouncilController {
 	}
 
 	@GetMapping ("/{municipality}")
-	public String youthCouncil(Model model, @PathVariable String municipality) {
+	public String youthCouncil(Model model, @PathVariable String municipality, Principal principal) {
+		PlatformUser user = null;
+		if (principal != null) {
+			user = userService.findUserByUsername(principal.getName());
+		}
 		model.addAttribute("ycWithAnnouncements", youthCouncilService.findByMunicipalityWithAnnouncements(municipality));
 		model.addAttribute("ycWithCallsForIdeas", youthCouncilService.findByMunicipalityWithCallsForIdeas(municipality));
-		model.addAttribute("ycWithActionPoints", youthCouncilService.findByMunicipalityWithActionPoints(municipality));
+		YouthCouncil ycWithActionPoints = youthCouncilService.findByMunicipalityWithActionPoints(municipality);
+		model.addAttribute("ycWithActionPoints", ycWithActionPoints);
+		model.addAttribute("userReactions", actionPointReactionService.findAllUserReactionsToActionPoints(ycWithActionPoints.getActionPoints(), user));
+
+
 		return "youthCouncil";
 	}
 

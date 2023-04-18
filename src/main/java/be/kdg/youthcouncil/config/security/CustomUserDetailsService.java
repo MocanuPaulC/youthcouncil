@@ -85,6 +85,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		logger.debug("User found");
 		logger.debug("User: " + user.getUsername() + " " + user.getPassword());
+		logger.debug("Authorities: " + authorities);
 
 		return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), user.isGA(), authorities);
 	}

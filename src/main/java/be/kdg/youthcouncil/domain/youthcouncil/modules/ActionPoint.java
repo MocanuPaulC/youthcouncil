@@ -50,6 +50,7 @@ public class ActionPoint implements Activatable, Defaultable {
 	private List<ActionPointShare> shares;
 
 	@OneToMany (fetch = FetchType.LAZY)
+	@JoinColumn (name = "action_point_reacted_on")
 	private List<ActionPointReaction> reactions;
 
 	@Setter (AccessLevel.NONE)
@@ -99,5 +100,9 @@ public class ActionPoint implements Activatable, Defaultable {
 	@Override
 	public int hashCode() {
 		return Objects.hash(actionPointId);
+	}
+
+	public void addReaction(ActionPointReaction reaction) {
+		reactions.add(reaction);
 	}
 }

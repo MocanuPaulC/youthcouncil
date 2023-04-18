@@ -1,11 +1,14 @@
 package be.kdg.youthcouncil.config;
 
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.ActionPointReactionDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.IdeaDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.NewIdeaDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.NewSubscriptionDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.SubscriptionDTO;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
+import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Idea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
@@ -14,12 +17,14 @@ import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscri
 import be.kdg.youthcouncil.exceptions.*;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.CallForIdeaRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.SubThemeRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +36,7 @@ public class MappingConfiguration {
 	private final CallForIdeaRepository callForIdeaRepository;
 	private final SubThemeRepository subThemeRepository;
 	private final YouthCouncilRepository youthCouncilRepository;
+	private final ActionPointRepository actionPointRepository;
 
 	@Bean
 	public ModelMapper modelMapper() {
@@ -69,6 +75,13 @@ public class MappingConfiguration {
 		};
 		modelMapper.addConverter(toPlatformUser);
 
+		Converter<Long, ActionPoint> toActionPoint = new AbstractConverter<Long, ActionPoint>() {
+			protected ActionPoint convert(Long source) {
+				return actionPointRepository.findById(source)
+				                            .orElseThrow(() -> new ActionPointNotFoundException(source));
+			}
+		};
+		modelMapper.addConverter(toActionPoint);
 		Converter<Long, CallForIdea> toCallForIdeas = new AbstractConverter<Long, CallForIdea>() {
 			protected CallForIdea convert(Long source) {
 				return callForIdeaRepository.findById(source)
@@ -130,6 +143,19 @@ public class MappingConfiguration {
 			}
 		};
 		modelMapper.addConverter(fromYouthCouncilToString);
+
+		modelMapper.addMappings(new PropertyMap<ActionPointReactionDto, ActionPointReaction>() {
+
+			@Override
+			protected void configure() {
+				using(toPlatformUser).map(source.getReactingUserId(), destination.getReactingUser());
+				using(toActionPoint).map(source.getActionPointReactedOnId(), destination.getActionPointReactedOn());
+				map().setReaction(source.getReaction());
+				skip(destination.getReactionId());
+			}
+		});
+		modelMapper.addConverter(toPlatformUser);
+
 	}
 
 
