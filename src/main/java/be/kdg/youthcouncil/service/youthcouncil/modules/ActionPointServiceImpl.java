@@ -4,7 +4,7 @@ import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPo
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.exceptions.ActionPointNotFoundException;
-import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
+import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class ActionPointServiceImpl implements ActionPointService {
 	public EditActionPointDto update(long actionPointId, long youthCouncilId, EditActionPointDto editActionPointDto) {
 		ActionPoint newActionPoint = modelMapper.map(editActionPointDto, ActionPoint.class);
 		YouthCouncil youthCouncil = youthCouncilRepository.findById(youthCouncilId)
-		                                                  .orElseThrow(() -> new MunicipalityNotFound("The YouthCouncil " + youthCouncilId + "  could not be found!"));
+		                                                  .orElseThrow(() -> new MunicipalityNotFoundException("The YouthCouncil " + youthCouncilId + "  could not be found!"));
 
 		ActionPoint oldActionPoint = youthCouncil.getActionPoint(actionPointId);
 		if (oldActionPoint.equals(newActionPoint)) {

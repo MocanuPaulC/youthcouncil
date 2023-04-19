@@ -3,6 +3,8 @@
 <head>
 	<title>Youth Platform</title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
+	<link rel="stylesheet" th:href="@{/css/map_svg.css}">
+	<script defer th:src="@{/js/clickableMap.js}" type="module"></script>
 </head>
 <body class="m-3">
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'home')}"></th:block>
@@ -15,6 +17,27 @@
 			<h1>Home</h1>
 		</div>
 	</div>
+</section>
+<section class="map-belgium">
+	<div class="map-belgium-overlay-box">
+		<div id="map-belgium-overlay">
+			<div class="overlay-container">
+				<h3 class="overlay-text">
+
+				</h3>
+				<div class="overlay-buttons">
+					<a class="btn btn-primary link-to-yc">go to</a>
+					<a class="btn btn-danger link-yc-create" sec:authorize="hasRole('ROLE_GENERAL_ADMIN')">create</a>
+				</div>
+				<p class="overlay-sorry" sec:authorize="!hasRole('ROLE_GENERAL_ADMIN')">
+					unfortunately no youthcouncil exists for the municipality
+					<!-- Here we could have some kind of action button to tell the GA to make that youthcouncil -->
+				</p>
+			</div>
+			<div class="overlay-pointer"></div>
+		</div>
+	</div>
+	<th:block th:insert="~{includes/map::map}"></th:block>
 </section>
 </body>
 </html>

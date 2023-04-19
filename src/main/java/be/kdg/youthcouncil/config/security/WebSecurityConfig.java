@@ -51,7 +51,7 @@ public class WebSecurityConfig {
 				.authorizeRequests(auths -> auths
 						.antMatchers("/", "/logout", "/login", "/register", "/oauth/**", "/youthcouncils", "/youthcouncils/**")
 						.permitAll()
-						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico")
+						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico", "/api/municipalities/")
 						.permitAll()
 						.regexMatchers(HttpMethod.POST, "/api/youthcouncils/\\d/\\d")
 						.permitAll()

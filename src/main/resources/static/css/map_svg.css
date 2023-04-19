@@ -1,0 +1,82 @@
+.map-belgium-overlay-box {
+    visibility: hidden;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+
+    --pointer-height: 20px;
+    /*
+    Through JS im editing this variable here which rappresents the
+    sqare root of the rectagle.
+    */
+    --pointer-sqrt: 0px;
+
+    --overlay-border: 1px solid black;
+}
+
+#map-belgium-overlay {
+    visibility: visible;
+    position: absolute;
+    display: none;
+    transform: translate(-50%, calc(-100% - var(--pointer-sqrt)));
+}
+
+.overlay-container {
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    color: black;
+    position: relative;
+    z-index: 10;
+    border: var(--overlay-border);
+}
+
+.overlay-pointer {
+    position: absolute;
+    width: var(--pointer-height);
+    height: var(--pointer-height);
+    transform: rotate(45deg) translate(-50%, var(--pointer-sqrt));
+    transform-origin: bottom center;
+    bottom: 0;
+    left: 50%;
+    background-color: white;
+    z-index: 8;
+    border: var(--overlay-border);
+}
+
+#svg-map {
+}
+
+path {
+    stroke: black;
+    stroke-width: 1px;
+    fill: white;
+}
+
+path[status="JOINED"] {
+    fill: #dc3545;
+}
+
+path[status="JOINED"]:hover {
+    fill: #bb2d3b;
+}
+
+path[status="YOUTHCOUNCIL_EXISTS"] {
+    fill: #0a58ca;
+}
+
+path[status="YOUTHCOUNCIL_EXISTS"]:hover {
+    fill: #0b5ed7;
+}
+
+path[status="YOUTHCOUNCIL_DOESNT_EXIST"] {
+    fill: #6c757d;
+}
+
+path[status="YOUTHCOUNCIL_DOESNT_EXIST"]:hover {
+    fill: #5c636a;
+}

@@ -3,7 +3,7 @@ package be.kdg.youthcouncil.service.youthcouncil.modules;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewAnnoucementViewModel;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Announcement;
-import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
+import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.AnnouncementRepository;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public class AnnouncmentServiceImpl implements AnnouncementService {
 	@Override
 	public void save(String municipality, NewAnnoucementViewModel announcementViewModel) {
 		YouthCouncil youthCouncil = youthCouncilRepository.findByMunicipalityName(municipality)
-		                                                  .orElseThrow(() -> new MunicipalityNotFound("The municipality " + municipality + "could not be found!"));
+		                                                  .orElseThrow(() -> new MunicipalityNotFoundException("The municipality " + municipality + "could not be found!"));
 		Announcement announcement = modelMapper.map(announcementViewModel, Announcement.class);
 
 		youthCouncil.getAnnouncements().add(announcement); //FIXME please make me prettier

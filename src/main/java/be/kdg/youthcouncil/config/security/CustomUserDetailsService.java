@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		if (user.isGA()) {
 			authorities.addAll(Arrays.asList(
-					new SimpleGrantedAuthority("GENERAL_ADMIN"),
+					new SimpleGrantedAuthority("ROLE_GENERAL_ADMIN"),
 					new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"),
 					new SimpleGrantedAuthority("ROLE_MODERATOR"),
 					new SimpleGrantedAuthority("ROLE_USER")

@@ -104,8 +104,8 @@ public class DatabaseSeeder implements CommandLineRunner {
 		mediaRepository.saveAll(List.of(councilLogo1, councilLogo2, image1, image2, image3, image4, image5, image6, image7));
 
 		//YOUTHCOUNCILS
-		YouthCouncil youthCouncil1 = new YouthCouncil("youthcouncil1", "municipality1", "youthcouncil_description", councilLogo1, false);
-		YouthCouncil youthCouncil2 = new YouthCouncil("youthcouncil2", "municipality2", "youthcouncil_description", councilLogo2, true);
+		YouthCouncil youthCouncil1 = new YouthCouncil("youthcouncil1", "Mortsel", "youthcouncil_description", councilLogo1, false);
+		YouthCouncil youthCouncil2 = new YouthCouncil("youthcouncil2", "Kortenaken", "youthcouncil_description", councilLogo2, true);
 
 		youthCouncilRepository.saveAll(List.of(youthCouncil1, youthCouncil2));
 
