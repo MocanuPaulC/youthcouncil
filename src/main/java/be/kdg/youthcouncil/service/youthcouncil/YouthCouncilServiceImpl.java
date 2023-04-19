@@ -6,7 +6,7 @@ import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
-import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
+import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.exceptions.YouthCouncilSubscriptionNotFoundException;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
@@ -40,7 +40,7 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 	@Override
 	public YouthCouncil findById(long id) {
 		return youthCouncilRepository.findById(id)
-		                             .orElseThrow(() -> new MunicipalityNotFound("The YouthCouncil " + id + "  could not be found!"));
+		                             .orElseThrow(() -> new MunicipalityNotFoundException("The YouthCouncil " + id + "  could not be found!"));
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 	@Override
 	public YouthCouncil findByMunicipality(String municipality) {
 		return youthCouncilRepository.findByMunicipalityName(municipality)
-		                             .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
+		                             .orElseThrow(() -> new MunicipalityNotFoundException("The youth-council for the municipality " + municipality + " could not be found."));
 	}
 
 	@Override
@@ -94,27 +94,27 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 		logger.debug("Getting all Informative pages for youth council: " + municipality + "!");
 		Optional<YouthCouncil> possibleYouthCouncil = youthCouncilRepository.getWithInformativePages(municipality);
 		if (possibleYouthCouncil.isEmpty())
-			throw new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found.");
+			throw new MunicipalityNotFoundException("The youth-council for the municipality " + municipality + " could not be found.");
 		return possibleYouthCouncil.get().getInformativePages();
 	}
 
 	@Override
 	public YouthCouncil findByMunicipalityWithAnnouncements(String municipality) {
 		return youthCouncilRepository.findWithAnnouncementsByMunicipality(municipality)
-		                             .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
+		                             .orElseThrow(() -> new MunicipalityNotFoundException("The youth-council for the municipality " + municipality + " could not be found."));
 	}
 
 	@Override
 	public YouthCouncil findByMunicipalityWithCallsForIdeas(String municipality) {
 		return youthCouncilRepository.findWithCallsForIdeasByMunicipality(municipality)
-		                             .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
+		                             .orElseThrow(() -> new MunicipalityNotFoundException("The youth-council for the municipality " + municipality + " could not be found."));
 	}
 
 	@Transactional (readOnly = true)
 	@Override
 	public YouthCouncil findByMunicipalityWithActionPoints(String municipality) {
 		YouthCouncil youthCouncil = youthCouncilRepository.findWithActionPointsByMunicipality(municipality)
-		                                                  .orElseThrow(() -> new MunicipalityNotFound("The youth-council for the municipality " + municipality + " could not be found."));
+		                                                  .orElseThrow(() -> new MunicipalityNotFoundException("The youth-council for the municipality " + municipality + " could not be found."));
 		addActionPointReactions(youthCouncil.getActionPoints());
 		return youthCouncil;
 	}

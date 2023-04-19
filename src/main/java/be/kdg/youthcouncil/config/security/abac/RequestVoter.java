@@ -46,13 +46,14 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		if (youthCouncilIdHeader == null) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "youthCouncilID header is missing");
 		}
-		CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
 
 		if (collection.stream()
 		              .anyMatch(a -> "permitAll".equals(a.toString()))) {
 			return ACCESS_GRANTED;
 		}
-
+		
+		CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
 		String collectionRoleRequest = collection.stream().findFirst()
 		                                         .map(ConfigAttribute::toString)

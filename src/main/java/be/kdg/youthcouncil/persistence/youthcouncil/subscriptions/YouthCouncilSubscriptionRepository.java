@@ -40,6 +40,12 @@ public interface YouthCouncilSubscriptionRepository extends JpaRepository<YouthC
 	)
 	List<YouthCouncilSubscription> findAllByYouthCouncil(YouthCouncil youthCouncil);
 
+	@Query ("""
+			         SELECT s.youthCouncil.municipality 
+			         FROM YouthCouncilSubscription s 
+			         WHERE s.subscriber = :user
+			""")
+	List<String> findSubscribedMunicipalitiesByUser(PlatformUser user);
 }
 
 

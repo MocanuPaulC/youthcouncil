@@ -3,7 +3,7 @@ package be.kdg.youthcouncil.service.youthcouncil.modules;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
-import be.kdg.youthcouncil.exceptions.MunicipalityNotFound;
+import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.InformativePageRepository;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class InformativePageServiceImpl implements InformativePageService {
 	public void save(String municipality, NewInformativePageViewModel informativePageVm) {
 		InformativePage infoPage = modelMapper.map(informativePageVm, InformativePage.class);
 		YouthCouncil youthCouncil = youthCouncilRepository.getWithInformativePages(municipality)
-		                                                  .orElseThrow(() -> new MunicipalityNotFound("The YouthCouncil could not be found!"));
+		                                                  .orElseThrow(() -> new MunicipalityNotFoundException("The YouthCouncil could not be found!"));
 
 		infoPage.setOwningYouthCouncil(youthCouncil);
 		youthCouncil.addInformativePage(infoPage);
