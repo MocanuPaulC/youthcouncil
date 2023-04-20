@@ -33,6 +33,7 @@ public class Idea {
 	private PlatformUser user;
 
 	@ManyToOne
+	@JoinColumn (name = "call_for_ideas_call_for_idea_id")
 	private CallForIdea callForIdeas;
 
 	@OneToMany (fetch = FetchType.LAZY)

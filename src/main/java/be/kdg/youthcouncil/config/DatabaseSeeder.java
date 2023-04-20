@@ -19,11 +19,11 @@ import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.ThemeReposito
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.ActionPointSubscriptionRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.YouthCouncilSubscriptionRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 @Component
 @Profile ({"dev", "prod"})
 @AllArgsConstructor
-public class DatabaseSeeder implements CommandLineRunner {
+public class DatabaseSeeder {
 
 	BCryptPasswordEncoder encoder;
 	UserRepository userRepository;
@@ -49,12 +49,8 @@ public class DatabaseSeeder implements CommandLineRunner {
 	YouthCouncilSubscriptionRepository youthCouncilSubscriptionRepository;
 	ActionPointSubscriptionRepository actionPointSubscriptionRepository;
 
-	@Override
-	public void run(String... args) throws Exception {
-		loadData();
-	}
-
-	private void loadData() {
+	@PostConstruct
+	public void loadData() {
 
 		// USERS
 		//		adminRepository.save(new GeneralAdmin("gadmin", encoder.encode("gadmin")));

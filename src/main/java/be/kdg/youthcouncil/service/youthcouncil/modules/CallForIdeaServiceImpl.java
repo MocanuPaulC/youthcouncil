@@ -27,7 +27,7 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 	@Override
 	public CallForIdea find(long id) {
 		return callForIdeaRepository.findById(id)
-		                            .orElseThrow(() -> {throw new CallForIdeaNotFoundException(id);});
+		                            .orElseThrow(() -> new CallForIdeaNotFoundException(id));
 	}
 
 	public CallForIdea save(CallForIdea callForIdea) {
@@ -36,7 +36,7 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 
 	@Override
 	public CallForIdea findWithIdeas(long id) {
-		return callForIdeaRepository.findWithIdeas(id).orElseThrow(() -> {throw new CallForIdeaNotFoundException(id);});
+		return callForIdeaRepository.findWithIdeas(id).orElseThrow(() -> new CallForIdeaNotFoundException(id));
 	}
 
 

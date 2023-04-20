@@ -20,10 +20,12 @@ public class CallForIdea implements Defaultable, Activatable {
 	private long callForIdeaId;
 	private String title;
 	@OneToMany (fetch = FetchType.LAZY)
+	@JoinColumn (name = "call_for_ideas_call_for_idea_id")
 	private List<Idea> ideas;
 	@ManyToOne
 	private YouthCouncil owningYouthCouncil;
 	@OneToOne
+	@JoinColumn (name = "theme_id")
 	private Theme theme;
 	private boolean isClosed;
 	@Setter (AccessLevel.NONE)
@@ -43,6 +45,7 @@ public class CallForIdea implements Defaultable, Activatable {
 		this.isActive = isActive;
 		this.isDefault = false;
 		this.isClosed = isClosed;
+		this.theme = theme;
 	}
 
 

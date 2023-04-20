@@ -3,11 +3,9 @@ package be.kdg.youthcouncil.config.security;
 import be.kdg.youthcouncil.config.security.Oauth.CustomOAuth2UserService;
 import be.kdg.youthcouncil.config.security.Oauth.OAuthLoginSuccessHandler;
 import be.kdg.youthcouncil.config.security.abac.RequestVoter;
-import be.kdg.youthcouncil.service.users.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -32,12 +30,10 @@ import java.util.List;
 public class WebSecurityConfig {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	private CustomOAuth2UserService oauthUserService;
-	private UserService userService;
-	private OAuthLoginSuccessHandler oauthLoginSuccessHandler;
-	private CustomLoginSuccessHandler loginSuccessHandler;
-	@Autowired
-	private RequestVoter requestVoter;
+	private final CustomOAuth2UserService oauthUserService;
+	private final OAuthLoginSuccessHandler oauthLoginSuccessHandler;
+	private final CustomLoginSuccessHandler loginSuccessHandler;
+	private final RequestVoter requestVoter;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,7 +49,7 @@ public class WebSecurityConfig {
 						.permitAll()
 						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico", "/api/municipalities/")
 						.permitAll()
-						.regexMatchers(HttpMethod.POST, "/api/youthcouncils/\\d/\\d")
+						.regexMatchers(HttpMethod.POST, "/api/youthcouncils/\\d/\\d", "/api/ideas")
 						.permitAll()
 						.antMatchers(HttpMethod.POST, "/api/youthcouncils/**")
 						.hasRole("COUNCIL_ADMIN")
