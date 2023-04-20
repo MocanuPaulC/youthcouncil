@@ -4,47 +4,62 @@ const {name, value} = csrfHeader();
 
 const submitIdea = document.querySelector(".submit-idea");
 const ideaText = document.querySelector("#idea-text");
-const hiddenUserId = document.querySelector(".hiddenUserId");
-const hiddenCFIId = document.querySelector(".hiddenCFIId");
-const callForIdeaId = +hiddenCFIId.id.substring(hiddenCFIId.id.indexOf("_") + 1);
-const userId = +hiddenUserId.id.substring(hiddenUserId.id.indexOf("_") + 1);
+const bodyElement = document.querySelector("body");
+const youthCouncilID = +bodyElement.dataset.youthcouncil_id;
+const userId = +bodyElement.dataset.userId;
+const callForIdeaId = +bodyElement.dataset.callForIdeaId;
+const ideas = document.querySelector(".ideas");
+const subThemeElement = document.querySelector("#subtheme");
 
 
 submitIdea.addEventListener("click", handleIdeaSubmission);
 
 
-function handleIdeaSubmission() {
+async function handleIdeaSubmission() {
+	const subThemeId = +subThemeElement.value;
 
-	fetch(`/api/ideas/${userId}/${callForIdeaId}`, {
+	const body = {
+		userId,
+		callForIdeaId,
+		idea: ideaText.value,
+		subThemeId
+	};
+
+	const response = await fetch(`/api/ideas`, {
 		method: "POST",
 		headers: {
+			youthCouncilID,
 			"Content-Type": "application/json",
 			[name]: value
 		},
-		body: JSON.stringify({title: ideaText.value})
-	})
-		.then((response) => {
-			handlePost(response);
-		});
+		body: JSON.stringify(body)
+	});
 
+	await handlePost(response);
 }
 
-function handlePost(response) {
-	const ideas = document.querySelectorAll(".idea").item(document.querySelectorAll(".idea").length - 1);
-	if (response.ok) {
-		response.json().then((data) => {
-
-			// this is for the sake of display.
-			// In the future, the ideas will not be immediately displayed
-			// because they will first have to go through the moderation process
-			const newIdea = document.createElement("section");
-			const ideaSpan = document.createElement("span");
-			ideaSpan.innerText = data["title"].valueOf();
-			newIdea.insertAdjacentElement("beforeend", ideaSpan);
-			ideas.insertAdjacentElement("afterend", newIdea);
-		});
-		console.log("Great success");
-	} else {
-		console.log("Pain in my Borat");
+async function handlePost(response) {
+	if (!response.ok) {
+		console.log("Something went wrong");
+		return;
 	}
+	/**
+	 * @type {{idea: string, imagePath: string | null, username:string}}
+	 */
+	const data = await response.json();
+
+	const newIdeaElement = document.createElement("div");
+	ideas.append(newIdeaElement);
+	newIdeaElement.classList.add("idea");
+	const usernameElement = document.createElement("p");
+	newIdeaElement.append(usernameElement);
+	usernameElement.classList.add("text-muted", "mb-1");
+	const spanElement = document.createElement("span");
+	spanElement.classList.add("badge", "rounded-pill", "text-bg-info");
+	spanElement.innerText = subThemeElement.options[subThemeElement.selectedIndex].text;
+	usernameElement.innerText = `${data.username} `;
+	usernameElement.append(spanElement);
+	const ideaElement = document.createElement("p");
+	newIdeaElement.append(ideaElement);
+	ideaElement.innerText = data.idea;
 }

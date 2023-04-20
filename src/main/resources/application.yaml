@@ -40,5 +40,5 @@ logging:
         #    web: debug
         be.kdg.youthcouncil: debug
         #        root: debug
-        #sql: debug
+        #        sql: debug
         org.springframework.security: DEBUG

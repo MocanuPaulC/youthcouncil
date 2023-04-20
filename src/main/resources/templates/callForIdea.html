@@ -1,27 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	  xmlns:th="http://www.thymeleaf.org"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<title th:text="${callForIdea.getTitle()}"></title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer src="/js/callForIdea.js" type="module"></script>
-
-
 </head>
-<body class="m-3">
-<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'login')}"></th:block>
-<section th:text="${callForIdea.getTitle()}"></section>
 
-<input id="idea-text" sec:authorize="hasRole('ROLE_MEMBER')" type="text">
-<button class="submit-idea btn btn-danger" sec:authorize="hasRole('ROLE_MEMBER')" type="button">
-	Super mega crazy submit button wow
-</button>
-<section class="idea" th:each="idea: ${callForIdea.getIdeas()}">
-	<span th:text="${idea.getIdea()}"></span>
+<body class="m-3"
+	  th:attr="data-youthcouncil_id=${callForIdea.getOwningYouthCouncil().getYouthCouncilId()}, data-user-id=${authUser.getId()}, data-call-for-idea-id=${callForIdea.getCallForIdeaId()}">
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'login')}"></th:block>
+<h1 th:text="${callForIdea.getTitle()}"></h1>
+
+<input class="form-control mb-3" id="idea-text" type="text">
+
+<div class="input-group mb-3">
+	<button class="btn btn-outline-danger submit-idea" type="button">Submit idea</button>
+	<select aria-label="Select a subtheme" class="form-select" id="subtheme" name="subtheme">
+		<option disabled selected>Choose...</option>
+		<option th:each="subtheme: ${callForIdea.getTheme().getSubThemes()}"
+				th:text="${subtheme.getSubTheme()}"
+				th:value="${subtheme.getSubThemeId()}"></option>
+	</select>
+</div>
+
+<section class="ideas">
+	<div class="idea" th:each="idea: ${callForIdea.getIdeas()}">
+		<p class="text-muted mb-1">
+			<th:block th:text="${idea.getUser().getUsername()}"></th:block>
+			<span class="badge rounded-pill text-bg-info" th:text="${idea.getSubTheme().getSubTheme()}"></span>
+		</p>
+		<p th:text="${idea.getIdea()}"></p>
+	</div>
 </section>
 </body>
-<input class="hiddenUserId" th:id="'userId_'+${authUser.getId()}" type="hidden">
-<input class="hiddenCFIId" th:id="'cfiId_'+${callForIdea.getCallForIdeaId()}" type="hidden">
 </html>
