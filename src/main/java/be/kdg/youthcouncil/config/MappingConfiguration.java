@@ -21,6 +21,7 @@ import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepositor
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.CallForIdeaRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.SubThemeRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -63,57 +64,97 @@ public class MappingConfiguration {
 		           .addMapping(YouthCouncilSubscription::getSubscriber, SubscriptionDTO::setSubscriberId)
 		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilId)
 		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilName);
+
+		modelMapper.createTypeMap(ActionPointReaction.class, ActionPointReactionDto.class)
+		           .addMapping(ActionPointReaction::getReaction, ActionPointReactionDto::setReaction)
+		           .addMapping(ActionPointReaction::getActionPointReactedOn, ActionPointReactionDto::setActionPointReactedOnId)
+		           .addMapping(ActionPointReaction::getReactingUser, ActionPointReactionDto::setReactingUserId);
 		return modelMapper;
 	}
 
 	private void converterConfiguration(ModelMapper modelMapper) {
-		Converter<Long, PlatformUser> toPlatformUser = context ->
-				userRepository.findById(context.getSource())
-				              .orElseThrow(() -> new UserNotFoundException("The user could not be found!"));
+		Converter<Long, PlatformUser> toPlatformUser = new AbstractConverter<Long, PlatformUser>() {
+			protected PlatformUser convert(Long source) {
+				return userRepository.findById(source)
+				                     .orElseThrow(() -> new UserNotFoundException("The user could not be found!"));
+			}
+		};
 		modelMapper.addConverter(toPlatformUser);
 
-		Converter<Long, ActionPoint> toActionPoint = context ->
-				actionPointRepository.findById(context.getSource())
-				                     .orElseThrow(() -> new ActionPointNotFoundException(context.getSource()));
+		Converter<ActionPoint, Long> toActionPointId = new AbstractConverter<ActionPoint, Long>() {
+			protected Long convert(ActionPoint source) {
+				return source.getActionPointId();
+			}
+		};
+		modelMapper.addConverter(toActionPointId);
+
+		Converter<Long, ActionPoint> toActionPoint = new AbstractConverter<Long, ActionPoint>() {
+			protected ActionPoint convert(Long source) {
+				return actionPointRepository.findById(source)
+				                            .orElseThrow(() -> new ActionPointNotFoundException(source));
+			}
+		};
 		modelMapper.addConverter(toActionPoint);
-		Converter<Long, CallForIdea> toCallForIdeas = context ->
-				callForIdeaRepository.findById(context.getSource())
-				                     .orElseThrow(() -> new CallForIdeaNotFoundException(context.getSource()));
+		Converter<Long, CallForIdea> toCallForIdeas = new AbstractConverter<Long, CallForIdea>() {
+			protected CallForIdea convert(Long source) {
+				return callForIdeaRepository.findById(source)
+				                            .orElseThrow(() -> new CallForIdeaNotFoundException(source));
+			}
+		};
 		modelMapper.addConverter(toCallForIdeas);
 
-		Converter<Long, SubTheme> toSubTheme = context ->
-				subThemeRepository.findById(context.getSource())
-				                  .orElseThrow(() -> new SubThemeNotFoundException(context.getSource()));
+		Converter<Long, SubTheme> toSubTheme = new AbstractConverter<Long, SubTheme>() {
+			protected SubTheme convert(Long source) {
+				return subThemeRepository.findById(source).orElseThrow(() -> new SubThemeNotFoundException(source));
+			}
+		};
 		modelMapper.addConverter(toSubTheme);
 
-		Converter<Long, YouthCouncil> toYouthCouncil = context ->
-				youthCouncilRepository.findById(context.getSource())
-				                      .orElseThrow(() -> new YouthCouncilIdNotFoundException(context.getSource()));
+		Converter<Long, YouthCouncil> toYouthCouncil = new AbstractConverter<Long, YouthCouncil>() {
+			protected YouthCouncil convert(Long source) {
+				return youthCouncilRepository.findById(source)
+				                             .orElseThrow(() -> new YouthCouncilIdNotFoundException(source));
+			}
+		};
 		modelMapper.addConverter(toYouthCouncil);
 
-		Converter<Integer, SubscriptionRole> toSubscriptionRole = context -> {
-			try {
-				return SubscriptionRole.values()[context.getSource()];
-			} catch (ArrayIndexOutOfBoundsException e) {
-				throw new InvalidSubscriptionIdException(context.getSource());
+		Converter<Integer, SubscriptionRole> toSubscriptionRole = new AbstractConverter<Integer, SubscriptionRole>() {
+			protected SubscriptionRole convert(Integer source) {
+				try {
+					return SubscriptionRole.values()[source];
+				} catch (ArrayIndexOutOfBoundsException e) {
+					throw new InvalidSubscriptionIdException(source);
+				}
 			}
 		};
 		modelMapper.addConverter(toSubscriptionRole);
 
-		Converter<SubscriptionRole, String> fromSubscriptionRoleToString = context ->
-				context.getSource() != null ? context.getSource().toString() : "";
+		Converter<SubscriptionRole, String> fromSubscriptionRoleToString = new AbstractConverter<SubscriptionRole, String>() {
+			protected String convert(SubscriptionRole source) {
+				return source != null ? source.toString() : "";
+			}
+		};
 		modelMapper.addConverter(fromSubscriptionRoleToString);
 
-		Converter<PlatformUser, Long> fromUserToLong = context ->
-				context.getSource() != null ? context.getSource().getId() : null;
+		Converter<PlatformUser, Long> fromUserToLong = new AbstractConverter<PlatformUser, Long>() {
+			protected Long convert(PlatformUser source) {
+				return source != null ? source.getId() : null;
+			}
+		};
 		modelMapper.addConverter(fromUserToLong);
 
-		Converter<YouthCouncil, Long> fromYouthCouncilToLong = context ->
-				context.getSource() != null ? context.getSource().getYouthCouncilId() : null;
+		Converter<YouthCouncil, Long> fromYouthCouncilToLong = new AbstractConverter<YouthCouncil, Long>() {
+			protected Long convert(YouthCouncil source) {
+				return source != null ? source.getYouthCouncilId() : null;
+			}
+		};
 		modelMapper.addConverter(fromYouthCouncilToLong);
 
-		Converter<YouthCouncil, String> fromYouthCouncilToString = context ->
-				context.getSource() != null ? context.getSource().getCouncilName() : "";
+		Converter<YouthCouncil, String> fromYouthCouncilToString = new AbstractConverter<YouthCouncil, String>() {
+			protected String convert(YouthCouncil source) {
+				return source != null ? source.getCouncilName() : "";
+			}
+		};
 		modelMapper.addConverter(fromYouthCouncilToString);
 
 		modelMapper.addMappings(new PropertyMap<ActionPointReactionDto, ActionPointReaction>() {
