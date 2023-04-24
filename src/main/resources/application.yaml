@@ -4,19 +4,19 @@ spring:
             client:
                 registration:
                     google:
-                        clientId: 4924686869-6lfnouaqdaed7tn3lvcpqrddjn5slime.apps.googleusercontent.com
-                        clientSecret: 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
+                        clientId: ${GOOGLE_CLIENT_ID}
+                        clientSecret: ${GOOGLE_CLIENT_SECRET}
                         scope:
                             - email
                             - profile
                     facebook:
-                        clientId: 230883409507790
-                        clientSecret: 3e320334c91d91dbb1c3c71afddc38b1
+                        clientId: ${FACEBOOK_CLIENT_ID}
+                        clientSecret: ${FACEBOOK_CLIENT_SECRET}
                         scope:
                             - email
                             - public_profile
     profiles:
-        active: dev # options: dev, prod
+        active: ${ACTIVE_SPRING_PROFILE} # options: dev, prod
     jpa:
         show-sql: false
         open-in-view: false
@@ -38,7 +38,7 @@ server:
 logging:
     level:
         #    web: debug
-        be.kdg.youthcouncil: debug
+        be.kdg.youthcouncil: error
         #        root: debug
         #        sql: debug
-        org.springframework.security: DEBUG
+        org.springframework.security: error
