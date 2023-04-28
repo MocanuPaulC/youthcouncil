@@ -10,5 +10,8 @@ public interface CallForIdeaService {
 
 	CallForIdea save(CallForIdea callForIdea);
 
+	void setDisplay(long actionPointId, boolean isDisplayed);
+
+
 	CallForIdea findWithIdeas(long id);
 }

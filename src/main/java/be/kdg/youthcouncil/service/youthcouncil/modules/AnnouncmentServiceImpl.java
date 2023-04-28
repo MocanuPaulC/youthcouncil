@@ -3,6 +3,8 @@ package be.kdg.youthcouncil.service.youthcouncil.modules;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewAnnoucementViewModel;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Announcement;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
+import be.kdg.youthcouncil.exceptions.AnnouncementNotFoundException;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.AnnouncementRepository;
@@ -32,6 +34,18 @@ public class AnnouncmentServiceImpl implements AnnouncementService {
 	@Override
 	public List<Announcement> findAll(String municipality) {
 		return announcementRepository.findByMunicipality(municipality);
+	}
+
+	@Override
+	public void setDisplay(long actionPointId, boolean isDisplayed) {
+		Announcement announcement = announcementRepository.findById(actionPointId)
+		                                                  .orElseThrow(() -> new AnnouncementNotFoundException(actionPointId));
+		if (isDisplayed) {
+			announcement.setModuleStatus(ModuleStatus.DISPLAYED);
+		} else {
+			announcement.setModuleStatus(ModuleStatus.HIDDEN);
+		}
+		announcementRepository.save(announcement);
 	}
 
 	@Transactional

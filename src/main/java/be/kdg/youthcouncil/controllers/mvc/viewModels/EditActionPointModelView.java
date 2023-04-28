@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.controllers.mvc.viewModels;
 
-import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointLabel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +16,6 @@ public class EditActionPointModelView {
 	private String description;
 	private boolean isEnabled;
 	private boolean isDefault;
-	private ActionPointStatus status;
+	private ActionPointLabel status;
 
 }

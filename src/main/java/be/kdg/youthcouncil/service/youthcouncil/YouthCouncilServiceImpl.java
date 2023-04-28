@@ -113,10 +113,49 @@ public class YouthCouncilServiceImpl implements YouthCouncilService {
 	@Transactional (readOnly = true)
 	@Override
 	public YouthCouncil findByMunicipalityWithActionPoints(String municipality) {
-		YouthCouncil youthCouncil = youthCouncilRepository.findWithActionPointsByMunicipality(municipality)
+		YouthCouncil youthCouncil = youthCouncilRepository.findByMunicipalityWithActionPoints(municipality)
 		                                                  .orElseThrow(() -> new MunicipalityNotFoundException("The youth-council for the municipality " + municipality + " could not be found."));
 		addActionPointReactions(youthCouncil.getActionPoints());
 		return youthCouncil;
+	}
+
+
+	@Transactional (readOnly = true)
+	@Override
+	public YouthCouncil findByMunicipalityWithActionPointsDisplayed(String municipality) {
+		YouthCouncil youthCouncil = youthCouncilRepository.findByMunicipalityWithActionPointsToDisplay(municipality)
+		                                                  .orElseGet(() -> {
+			                                                  YouthCouncil youthCouncil1 = youthCouncilRepository.findByMunicipalityName(municipality)
+			                                                                                                     .orElseThrow(() -> new MunicipalityNotFoundException(municipality));
+			                                                  youthCouncil1.setActionPoints(new ArrayList<>());
+			                                                  return youthCouncil1;
+		                                                  });
+
+		addActionPointReactions(youthCouncil.getActionPoints());
+		return youthCouncil;
+	}
+
+
+	@Override
+	public YouthCouncil findByMunicipalityWithCallsForIdeasDisplayed(String municipality) {
+		return youthCouncilRepository.findByMunicipalityWithCallForIdeasDisplayed(municipality)
+		                             .orElseGet(() -> {
+			                             YouthCouncil youthCouncil = youthCouncilRepository.findByMunicipalityName(municipality)
+			                                                                               .orElseThrow(() -> new MunicipalityNotFoundException(municipality));
+			                             youthCouncil.setCallForIdeas(new ArrayList<>());
+			                             return youthCouncil;
+		                             });
+	}
+
+	@Override
+	public YouthCouncil findByMunicipalityWithAnnouncementsDisplayed(String municipality) {
+		return youthCouncilRepository.findByMunicipalityWithAnnouncementsDisplayed(municipality)
+		                             .orElseGet(() -> {
+			                             YouthCouncil youthCouncil = youthCouncilRepository.findByMunicipalityName(municipality)
+			                                                                               .orElseThrow(() -> new MunicipalityNotFoundException(municipality));
+			                             youthCouncil.setAnnouncements(new ArrayList<>());
+			                             return youthCouncil;
+		                             });
 	}
 
 	public void addActionPointReactions(List<ActionPoint> actionPoints) {

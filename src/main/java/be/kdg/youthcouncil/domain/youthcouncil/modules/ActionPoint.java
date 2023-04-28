@@ -5,6 +5,7 @@ import be.kdg.youthcouncil.domain.media.Video;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointShare;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.interfaces.Defaultable;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 import lombok.*;
@@ -19,7 +20,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table (name = "action_points")
-public class ActionPoint implements Activatable, Defaultable {
+public class ActionPoint implements Defaultable {
 
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -37,7 +38,7 @@ public class ActionPoint implements Activatable, Defaultable {
 	private Video video;
 
 	@Column (nullable = false)
-	private ActionPointStatus status;
+	private ActionPointLabel status;
 	@OneToMany (fetch = FetchType.LAZY)
 	private List<ActionPointSubscription> subscriptions;
 	@OneToMany (fetch = FetchType.LAZY)
@@ -53,31 +54,21 @@ public class ActionPoint implements Activatable, Defaultable {
 	@JoinColumn (name = "action_point_reacted_on")
 	private List<ActionPointReaction> reactions;
 
-	@Setter (AccessLevel.NONE)
-	@Getter (AccessLevel.NONE)
-	private boolean isActive;
+	private ModuleStatus moduleStatus;
+
 	@Setter (AccessLevel.NONE)
 	@Getter (AccessLevel.NONE)
 	private boolean isDefault;
 
-	public ActionPoint(String title, String description, SubTheme theme, ActionPointStatus status, YouthCouncil owningYouthCouncil, boolean isActive) {
+	public ActionPoint(String title, String description, SubTheme theme, ActionPointLabel status, YouthCouncil owningYouthCouncil, ModuleStatus moduleStatus) {
 		this.title = title;
 		this.description = description;
 		this.theme = theme;
 		this.status = status;
 		this.owningYouthCouncil = owningYouthCouncil;
-		this.isActive = isActive;
+		this.moduleStatus = moduleStatus;
 	}
 
-	@Override
-	public boolean getActiveStatus() {
-		return isActive;
-	}
-
-	@Override
-	public void setActiveStatus(boolean isActive) {
-		this.isActive = isActive;
-	}
 
 	@Override
 	public boolean getIsDefault() {
@@ -88,6 +79,7 @@ public class ActionPoint implements Activatable, Defaultable {
 	public void setIsDefault(boolean isDefault) {
 		this.isDefault = isDefault;
 	}
+
 
 	@Override
 	public boolean equals(Object o) {

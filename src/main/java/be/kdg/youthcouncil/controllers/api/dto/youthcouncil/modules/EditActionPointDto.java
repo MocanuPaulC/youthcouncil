@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules;
 
-import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointLabel;
 import lombok.*;
 
 @Getter
@@ -16,5 +16,5 @@ public class EditActionPointDto {
 
 	private long youthCouncilId;
 
-	private ActionPointStatus status;
+	private ActionPointLabel status;
 }

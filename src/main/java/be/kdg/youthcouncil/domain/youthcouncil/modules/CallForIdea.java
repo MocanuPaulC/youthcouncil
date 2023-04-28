@@ -1,6 +1,7 @@
 package be.kdg.youthcouncil.domain.youthcouncil.modules;
 
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.interfaces.Defaultable;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.Theme;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table (name = "call_for_ideas")
-public class CallForIdea implements Defaultable, Activatable {
+public class CallForIdea implements Defaultable {
 
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -30,22 +31,21 @@ public class CallForIdea implements Defaultable, Activatable {
 	private boolean isClosed;
 	@Setter (AccessLevel.NONE)
 	@Getter (AccessLevel.NONE)
-	private boolean isActive;
-	@Setter (AccessLevel.NONE)
-	@Getter (AccessLevel.NONE)
 	private boolean isDefault;
+
+	private ModuleStatus moduleStatus;
 
 
 	/*
 	 * Use this constructor to create a specialized Call for ideas
 	 */
-	public CallForIdea(String title, YouthCouncil owningYouthCouncil, Theme theme, boolean isActive, boolean isClosed) {
+	public CallForIdea(String title, YouthCouncil owningYouthCouncil, Theme theme, ModuleStatus moduleStatus, boolean isClosed) {
 		this.title = title;
 		this.owningYouthCouncil = owningYouthCouncil;
-		this.isActive = isActive;
 		this.isDefault = false;
 		this.isClosed = isClosed;
 		this.theme = theme;
+		this.moduleStatus = moduleStatus;
 	}
 
 
@@ -55,20 +55,10 @@ public class CallForIdea implements Defaultable, Activatable {
 	public CallForIdea(String title, boolean isActive, boolean isClosed) {
 		this.title = title;
 		this.owningYouthCouncil = null;
-		this.isActive = isActive;
 		this.isDefault = true;
 		this.isClosed = isClosed;
 	}
 
-	@Override
-	public boolean getActiveStatus() {
-		return isActive;
-	}
-
-	@Override
-	public void setActiveStatus(boolean isActive) {
-		this.isActive = isActive;
-	}
 
 	@Override
 	public boolean getIsDefault() {

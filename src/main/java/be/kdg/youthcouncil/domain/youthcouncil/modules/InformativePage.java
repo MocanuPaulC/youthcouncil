@@ -3,6 +3,7 @@ package be.kdg.youthcouncil.domain.youthcouncil.modules;
 import be.kdg.youthcouncil.domain.media.Image;
 import be.kdg.youthcouncil.domain.media.Video;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.interfaces.Activatable;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,6 +39,8 @@ public class InformativePage implements Activatable {
 	@Getter (AccessLevel.NONE)
 	@Setter (AccessLevel.NONE)
 	private boolean isActive;
+
+	private boolean isDisplayed;
 
 	public InformativePage(String title, List<String> paragraphs, Image image, Video video, YouthCouncil owningYouthCouncil, InformativePage defaultInformativePage, boolean isActive) {
 		this.title = title;
