@@ -2,6 +2,7 @@ package be.kdg.youthcouncil.service.youthcouncil.modules;
 
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.CallForIdeasDTO;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
 import be.kdg.youthcouncil.exceptions.CallForIdeaNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.CallForIdeaRepository;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,18 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 	public CallForIdea find(long id) {
 		return callForIdeaRepository.findById(id)
 		                            .orElseThrow(() -> new CallForIdeaNotFoundException(id));
+	}
+
+	@Override
+	public void setDisplay(long callForIdeaId, boolean isDisplayed) {
+		CallForIdea callForIdea = callForIdeaRepository.findById(callForIdeaId)
+		                                               .orElseThrow(() -> new CallForIdeaNotFoundException(callForIdeaId));
+		if (isDisplayed) {
+			callForIdea.setModuleStatus(ModuleStatus.DISPLAYED);
+		} else {
+			callForIdea.setModuleStatus(ModuleStatus.HIDDEN);
+		}
+		callForIdeaRepository.save(callForIdea);
 	}
 
 	public CallForIdea save(CallForIdea callForIdea) {

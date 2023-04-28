@@ -3,6 +3,7 @@ package be.kdg.youthcouncil.service.youthcouncil.modules;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
 import be.kdg.youthcouncil.exceptions.ActionPointNotFoundException;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
@@ -62,6 +63,18 @@ public class ActionPointServiceImpl implements ActionPointService {
 	public ActionPoint findById(long actionPointReactedOnId) {
 		return actionPointRepository.findById(actionPointReactedOnId)
 		                            .orElseThrow(() -> new ActionPointNotFoundException(actionPointReactedOnId));
+	}
+
+	@Override
+	public void setDisplay(long actionPointId, boolean isDisplayed) {
+		ActionPoint actionPoint = actionPointRepository.findById(actionPointId)
+		                                               .orElseThrow(() -> new ActionPointNotFoundException(actionPointId));
+		if (isDisplayed) {
+			actionPoint.setModuleStatus(ModuleStatus.DISPLAYED);
+		} else {
+			actionPoint.setModuleStatus(ModuleStatus.HIDDEN);
+		}
+		actionPointRepository.save(actionPoint);
 	}
 
 }

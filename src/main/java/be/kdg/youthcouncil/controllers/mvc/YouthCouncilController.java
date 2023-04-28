@@ -6,7 +6,7 @@ import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
-import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointLabel;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.service.users.UserService;
@@ -79,6 +79,23 @@ public class YouthCouncilController {
 		if (principal != null) {
 			user = userService.findUserByUsername(principal.getName());
 		}
+
+		model.addAttribute("ycWithAnnouncements", youthCouncilService.findByMunicipalityWithAnnouncementsDisplayed(municipality));
+		model.addAttribute("ycWithCallsForIdeas", youthCouncilService.findByMunicipalityWithCallsForIdeasDisplayed(municipality));
+		YouthCouncil ycWithActionPoints = youthCouncilService.findByMunicipalityWithActionPointsDisplayed(municipality);
+		model.addAttribute("ycWithActionPoints", ycWithActionPoints);
+		model.addAttribute("userReactions", actionPointReactionService.findAllUserReactionsToActionPoints(ycWithActionPoints.getActionPoints(), user));
+
+
+		return "youthCouncil";
+	}
+
+	@GetMapping ("/{municipality}/edit")
+	public String editYouthCouncil(Model model, @PathVariable String municipality, Principal principal) {
+		PlatformUser user = null;
+		if (principal != null) {
+			user = userService.findUserByUsername(principal.getName());
+		}
 		model.addAttribute("ycWithAnnouncements", youthCouncilService.findByMunicipalityWithAnnouncements(municipality));
 		model.addAttribute("ycWithCallsForIdeas", youthCouncilService.findByMunicipalityWithCallsForIdeas(municipality));
 		YouthCouncil ycWithActionPoints = youthCouncilService.findByMunicipalityWithActionPoints(municipality);
@@ -86,7 +103,7 @@ public class YouthCouncilController {
 		model.addAttribute("userReactions", actionPointReactionService.findAllUserReactionsToActionPoints(ycWithActionPoints.getActionPoints(), user));
 
 
-		return "youthCouncil";
+		return "editYouthCouncil";
 	}
 
 	@GetMapping ("/{municipality}/statistics")
@@ -156,11 +173,11 @@ public class YouthCouncilController {
 
 	@GetMapping ("/{municipality}/actionpoints/{actionpointid}")
 	public String getActionPointsOfYouthCouncil(@PathVariable String municipality, @PathVariable long actionpointid, Model model) {
-
-		YouthCouncil youthCouncil = youthCouncilService.findByMunicipalityWithActionPoints(municipality);
+		//TODO: change this to get the actionpoint by id from the actionPointService directly
+		YouthCouncil youthCouncil = youthCouncilService.findByMunicipalityWithActionPointsDisplayed(municipality);
 		try {
 			model.addAttribute("actionPoint", youthCouncil.getActionPoint(actionpointid));
-			model.addAttribute("labels", ActionPointStatus.values());
+			model.addAttribute("labels", ActionPointLabel.values());
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			//			model.addAttribute("youthCouncil", youthCouncil);

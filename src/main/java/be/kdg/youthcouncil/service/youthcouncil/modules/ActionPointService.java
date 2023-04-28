@@ -10,4 +10,6 @@ public interface ActionPointService {
 	EditActionPointDto updateDefault(long actionPointId, EditActionPointDto editActionPointDto);
 
 	ActionPoint findById(long actionPointReactedOnId);
+
+	void setDisplay(long actionPointId, boolean isDisplayed);
 }

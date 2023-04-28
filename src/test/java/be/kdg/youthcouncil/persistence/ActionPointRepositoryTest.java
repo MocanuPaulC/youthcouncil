@@ -2,7 +2,8 @@ package be.kdg.youthcouncil.persistence;
 
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
-import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointLabel;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.SubThemeRepository;
@@ -29,7 +30,7 @@ public class ActionPointRepositoryTest {
 	public void saveActionPointFromActionPointRepositorySavesActionPoint() {
 		YouthCouncil youthCouncil = youthCouncilRepository.findAll().get(0);
 		ActionPoint actionPoint = new ActionPoint("title", "sefsef", subThemeRepository.findAll()
-		                                                                               .get(0), ActionPointStatus.NEW, youthCouncil, true);
+		                                                                               .get(0), ActionPointLabel.NEW, youthCouncil, ModuleStatus.DISPLAYED);
 		ActionPoint savedActionPoint = actionPointRepository.save(actionPoint);
 
 		assertEquals(savedActionPoint.getActionPointId(), actionPointRepository.findById(savedActionPoint.getActionPointId())

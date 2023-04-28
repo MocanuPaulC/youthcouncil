@@ -1,8 +1,9 @@
 package be.kdg.youthcouncil.controllers.api;
 
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
-import be.kdg.youthcouncil.service.youthcouncil.modules.ActionPointService;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.UpdateDisplayStatusDTO;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
+import be.kdg.youthcouncil.service.youthcouncil.modules.ActionPointService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,4 +35,14 @@ public class RestActionPointController {
 
 		return ResponseEntity.ok(actionPointToReturn);
 	}
+
+	@PatchMapping ("/{actionPointId}/set-display")
+	public void setDisplay(@PathVariable long actionPointId, @RequestBody UpdateDisplayStatusDTO displayStatusDTO) {
+		logger.debug("in setDisplay");
+		logger.debug("actionPointId: " + actionPointId);
+		logger.debug("isDisplayed: " + displayStatusDTO.isDisplayed());
+		actionPointService.setDisplay(actionPointId, displayStatusDTO.isDisplayed());
+
+	}
+
 }

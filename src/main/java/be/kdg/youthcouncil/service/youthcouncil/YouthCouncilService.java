@@ -39,4 +39,9 @@ public interface YouthCouncilService {
 
 	YouthCouncil findByMunicipalityWithActionPoints(String municipality);
 
+	YouthCouncil findByMunicipalityWithActionPointsDisplayed(String municipality);
+
+	YouthCouncil findByMunicipalityWithCallsForIdeasDisplayed(String municipality);
+
+	YouthCouncil findByMunicipalityWithAnnouncementsDisplayed(String municipality);
 }

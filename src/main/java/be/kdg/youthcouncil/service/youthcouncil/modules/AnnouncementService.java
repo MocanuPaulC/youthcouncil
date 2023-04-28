@@ -11,5 +11,7 @@ public interface AnnouncementService {
 
 	List<Announcement> findAll(String municipality);
 
+	void setDisplay(long actionPointId, boolean isDisplayed);
+
 	void save(String municipality, NewAnnoucementViewModel announcement);
 }

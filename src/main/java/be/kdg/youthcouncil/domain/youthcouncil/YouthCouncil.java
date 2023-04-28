@@ -10,6 +10,7 @@ import be.kdg.youthcouncil.exceptions.ActionPointNotFoundException;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -36,16 +37,16 @@ public class YouthCouncil {
 	private List<YouthCouncilSubscription> subscriptions;
 	@OneToMany (fetch = FetchType.LAZY, mappedBy = "owningYouthCouncil")
 	@ToString.Exclude
-	private List<Announcement> announcements;
+	private List<Announcement> announcements = new ArrayList<>();
 	@OneToMany (fetch = FetchType.LAZY, mappedBy = "owningYouthCouncil")
 	@ToString.Exclude
-	private List<InformativePage> informativePages;
+	private List<InformativePage> informativePages = new ArrayList<>();
 	@OneToMany (fetch = FetchType.LAZY, mappedBy = "owningYouthCouncil")
 	@ToString.Exclude
-	private List<ActionPoint> actionPoints;
+	private List<ActionPoint> actionPoints = new ArrayList<>();
 	@OneToMany (mappedBy = "owningYouthCouncil", fetch = FetchType.LAZY)
 	@ToString.Exclude
-	private List<CallForIdea> callForIdeas;
+	private List<CallForIdea> callForIdeas = new ArrayList<>();
 
 	public YouthCouncil(String councilName, String municipality, String description, Image councilLogo, boolean isAfterElection) {
 		this.councilName = councilName;
@@ -54,6 +55,7 @@ public class YouthCouncil {
 		this.councilLogo = councilLogo;
 		this.isAfterElection = isAfterElection;
 	}
+
 
 	public void addInformativePage(InformativePage informativePage) {
 		informativePages.add(informativePage);

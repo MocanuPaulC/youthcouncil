@@ -1,4 +1,4 @@
-package be.kdg.youthcouncil.domain.youthcouncil.modules;
+package be.kdg.youthcouncil.domain.youthcouncil.modules.interfaces;
 
 public interface Activatable {
 	boolean getActiveStatus();

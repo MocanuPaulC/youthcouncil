@@ -119,19 +119,19 @@ public class DatabaseSeeder {
 		youthCouncilSubscriptionRepository.saveAll(List.of(youthCouncilSubscription1, youthCouncilSubscription2, youthCouncilSubscription3, youthCouncilSubscription4, youthCouncilSubscription5, youthCouncilSubscription6, youthCouncilSubscription7, youthCouncilSubscription8, youthCouncilSubscription9));
 
 		//ANNOUNCEMENTS
-		Announcement announcement1 = new Announcement("Happening AB", "annoucement description", LocalDateTime.now(), youthCouncil1, true);
-		Announcement announcement2 = new Announcement("Announcement XY", "annoucement description", LocalDateTime.now(), youthCouncil1, true);
-		Announcement announcement3 = new Announcement("Activity1", "annoucement description", LocalDateTime.now(), youthCouncil1, true);
-		Announcement announcement4 = new Announcement("Announcement KL", "annoucement description", LocalDateTime.now(), youthCouncil2, true);
-		Announcement announcement5 = new Announcement("Activity2", "annoucement description", LocalDateTime.now(), youthCouncil2, true);
-		Announcement announcement6 = new Announcement("Happening UT", "annoucement description", LocalDateTime.now(), youthCouncil2, true);
+		Announcement announcement1 = new Announcement("Happening AB", "annoucement description", LocalDateTime.now(), youthCouncil1, ModuleStatus.DISPLAYED);
+		Announcement announcement2 = new Announcement("Announcement XY", "annoucement description", LocalDateTime.now(), youthCouncil1, ModuleStatus.DISPLAYED);
+		Announcement announcement3 = new Announcement("Activity1", "annoucement description", LocalDateTime.now(), youthCouncil1, ModuleStatus.DISPLAYED);
+		Announcement announcement4 = new Announcement("Announcement KL", "annoucement description", LocalDateTime.now(), youthCouncil2, ModuleStatus.DISPLAYED);
+		Announcement announcement5 = new Announcement("Activity2", "annoucement description", LocalDateTime.now(), youthCouncil2, ModuleStatus.DISPLAYED);
+		Announcement announcement6 = new Announcement("Happening UT", "annoucement description", LocalDateTime.now(), youthCouncil2, ModuleStatus.DISPLAYED);
 
 		announcementRepository.saveAll(List.of(announcement1, announcement2, announcement3, announcement4, announcement5, announcement6));
 
 		//CALL FOR IDEAS and IDEAS
 
-		CallForIdea callForIdea1 = new CallForIdea("call for very good ideas!", youthCouncil1, theme1, true, false);
-		CallForIdea callForIdea2 = new CallForIdea("call for very very bad ideas!", youthCouncil2, theme2, true, false);
+		CallForIdea callForIdea1 = new CallForIdea("call for very good ideas!", youthCouncil1, theme1, ModuleStatus.DISPLAYED, false);
+		CallForIdea callForIdea2 = new CallForIdea("call for very very bad ideas!", youthCouncil2, theme2, ModuleStatus.DISPLAYED, false);
 
 		callForIdeaRepository.saveAll(List.of(callForIdea1, callForIdea2));
 
@@ -152,10 +152,10 @@ public class DatabaseSeeder {
 		informativePageRepository.saveAll(List.of(informativePage1, informativePage2, informativePage3, informativePage4));
 
 		// ACTION POINTS
-		ActionPoint actionPoint1 = new ActionPoint("action point title 1", "description", subTheme1a, ActionPointStatus.NEW, youthCouncil1, true);
-		ActionPoint actionPoint2 = new ActionPoint("action point title 2", "description", subTheme2a, ActionPointStatus.INCLUDED, youthCouncil1, true);
-		ActionPoint actionPoint3 = new ActionPoint("action point title 3", "description", subTheme2b, ActionPointStatus.NEW, youthCouncil2, true);
-		ActionPoint actionPoint4 = new ActionPoint("action point title 4", "description", subTheme2c, ActionPointStatus.REALISED, youthCouncil2, true);
+		ActionPoint actionPoint1 = new ActionPoint("action point title 1", "description", subTheme1a, ActionPointLabel.NEW, youthCouncil1, ModuleStatus.DISPLAYED);
+		ActionPoint actionPoint2 = new ActionPoint("action point title 2", "description", subTheme2a, ActionPointLabel.INCLUDED, youthCouncil1, ModuleStatus.DISPLAYED);
+		ActionPoint actionPoint3 = new ActionPoint("action point title 3", "description", subTheme2b, ActionPointLabel.NEW, youthCouncil2, ModuleStatus.DISPLAYED);
+		ActionPoint actionPoint4 = new ActionPoint("action point title 4", "description", subTheme2c, ActionPointLabel.REALISED, youthCouncil2, ModuleStatus.DISPLAYED);
 
 		actionPointRepository.saveAll(List.of(actionPoint1, actionPoint2, actionPoint3, actionPoint4));
 

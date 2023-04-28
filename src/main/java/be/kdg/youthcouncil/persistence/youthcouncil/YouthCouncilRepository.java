@@ -63,27 +63,54 @@ public interface YouthCouncilRepository extends JpaRepository<YouthCouncil, Long
 
 	@Query ("""
 			SELECT  yc FROM YouthCouncil yc
-			JOIN FETCH yc.actionPoints
+			JOIN FETCH yc.actionPoints ap
 			WHERE yc.municipality = :municipality
+			AND ap.moduleStatus = 0
 			""")
-	Optional<YouthCouncil> findWithActionPointsByMunicipality(String municipality);
+	Optional<YouthCouncil> findByMunicipalityWithActionPointsToDisplay(String municipality);
 
 	@Query ("""
 			SELECT  yc FROM YouthCouncil yc
-			JOIN FETCH yc.announcements
+			LEFT JOIN FETCH yc.announcements
 			WHERE yc.municipality = :municipality
 			""")
 	Optional<YouthCouncil> findWithAnnouncementsByMunicipality(String municipality);
 
 	@Query ("""
 			SELECT  yc FROM YouthCouncil yc
-			JOIN FETCH yc.callForIdeas
+			LEFT JOIN FETCH yc.callForIdeas
 			WHERE yc.municipality = :municipality
 			""")
 	Optional<YouthCouncil> findWithCallsForIdeasByMunicipality(String municipality);
+
+
+	@Query ("""
+			SELECT  yc FROM YouthCouncil yc
+			LEFT JOIN FETCH yc.actionPoints
+			WHERE yc.municipality = :municipality
+			""")
+	Optional<YouthCouncil> findByMunicipalityWithActionPoints(String municipality);
+
+	@Query ("""
+			SELECT  yc FROM YouthCouncil yc
+			LEFT JOIN FETCH yc.callForIdeas cfi
+			WHERE yc.municipality = :municipality
+			AND cfi.moduleStatus = 0
+			""")
+	Optional<YouthCouncil> findByMunicipalityWithCallForIdeasDisplayed(String municipality);
+
+
+	@Query ("""
+			SELECT  yc FROM YouthCouncil yc
+			LEFT JOIN FETCH yc.announcements an
+			WHERE yc.municipality = :municipality
+			AND an.moduleStatus = 0
+			""")
+	Optional<YouthCouncil> findByMunicipalityWithAnnouncementsDisplayed(String municipality);
 
 	@Query ("""
 			SELECT yc.municipality FROM YouthCouncil yc	
 			""")
 	List<String> findMunicipalitiesWithYouthcouncil();
+
 }
