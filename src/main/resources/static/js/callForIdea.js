@@ -1,4 +1,6 @@
 import csrfHeader from "./csrfHeader.js";
+import {addReaction, fetchReactions} from "./reactions.js";
+import {getUser} from "./includes.js";
 
 const {name, value} = csrfHeader();
 
@@ -6,7 +8,7 @@ const submitIdea = document.querySelector(".submit-idea");
 const ideaText = document.querySelector("#idea-text");
 const bodyElement = document.querySelector("body");
 const youthCouncilID = +bodyElement.dataset.youthcouncil_id;
-const userId = +bodyElement.dataset.userId;
+let userId = undefined;
 const callForIdeaId = +bodyElement.dataset.callForIdeaId;
 const ideas = document.querySelector(".ideas");
 const subThemeElement = document.querySelector("#subtheme");
@@ -14,10 +16,23 @@ const subThemeElement = document.querySelector("#subtheme");
 
 submitIdea.addEventListener("click", handleIdeaSubmission);
 
+const buttons = document.querySelectorAll("button[id^=\"reaction-\"]");
+buttons.forEach(button => {
+	button.addEventListener("click", () => {
+		addReaction(event, "idea");
+	});
+});
+
+const reactionBtn = document.querySelectorAll("button[id^=\"expandBtn\"]");
+
+reactionBtn.forEach(btn => btn.addEventListener("click", () => {
+	fetchReactions(event, "idea");
+}));
+
 
 async function handleIdeaSubmission() {
 	const subThemeId = +subThemeElement.value;
-
+	userId = getUser(true);
 	const body = {
 		userId,
 		callForIdeaId,

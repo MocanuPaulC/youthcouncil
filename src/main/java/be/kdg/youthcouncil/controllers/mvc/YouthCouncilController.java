@@ -118,7 +118,7 @@ public class YouthCouncilController {
 
 	@GetMapping ("/{municipality}/callforideas/{callForIdeaId}")
 	public String youthCouncilCallForAction(Model model, @PathVariable String municipality, @PathVariable long callForIdeaId) {
-		CallForIdea callForIdea = callForIdeaService.findWithIdeas(callForIdeaId);
+		CallForIdea callForIdea = callForIdeaService.findByIdWithIdeasWithReactions(callForIdeaId);
 
 		model.addAttribute("callForIdea", callForIdea);
 		return "callForIdea";

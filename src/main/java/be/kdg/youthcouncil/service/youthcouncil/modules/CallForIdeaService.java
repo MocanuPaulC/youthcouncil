@@ -6,7 +6,7 @@ import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 public interface CallForIdeaService {
 	CallForIdea create(CallForIdeasDTO callForIdeasDTO);
 
-	CallForIdea find(long id);
+	CallForIdea findById(long id);
 
 	CallForIdea save(CallForIdea callForIdea);
 
@@ -14,4 +14,6 @@ public interface CallForIdeaService {
 
 
 	CallForIdea findWithIdeas(long id);
+
+	CallForIdea findByIdWithIdeasWithReactions(long id);
 }

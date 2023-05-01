@@ -39,7 +39,9 @@ public class Idea {
 	@OneToMany (fetch = FetchType.LAZY)
 	private List<IdeaShare> shares;
 	@OneToMany (fetch = FetchType.LAZY)
+	@JoinColumn (name = "idea_reacted_on")
 	private List<IdeaReaction> reactions;
+
 
 	public Idea(String idea, SubTheme subTheme, Image image, PlatformUser user, CallForIdea callForIdeas) {
 		this.idea = idea;
@@ -48,4 +50,9 @@ public class Idea {
 		this.user = user;
 		this.callForIdeas = callForIdeas;
 	}
+
+	public void addReaction(IdeaReaction reaction) {
+		reactions.add(reaction);
+	}
+
 }

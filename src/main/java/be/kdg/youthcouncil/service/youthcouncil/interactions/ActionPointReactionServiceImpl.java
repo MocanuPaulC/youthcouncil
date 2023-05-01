@@ -1,10 +1,9 @@
 package be.kdg.youthcouncil.service.youthcouncil.interactions;
 
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.ActionPointReactionDto;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
-import be.kdg.youthcouncil.exceptions.ActionPointReactionNotFound;
+import be.kdg.youthcouncil.exceptions.ActionPointReactionNotFoundException;
 import be.kdg.youthcouncil.exceptions.UserNotFoundException;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.interactions.ActionPointReactionRepository;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -29,30 +29,27 @@ public class ActionPointReactionServiceImpl implements ActionPointReactionServic
 
 	@Override
 	public ActionPointReaction save(ActionPointReaction reaction) {
-		ActionPointReaction existingReaction = actionPointReactionRepository.findByActionPointReactedOnAndReactingUser(reaction.getActionPointReactedOn(), reaction.getReactingUser())
-		                                                                    .orElse(null);
-		// null means we make a new reaction
-		if (existingReaction == null) {
-			return actionPointReactionRepository.save(reaction);
+		Optional<ActionPointReaction> existingReaction = actionPointReactionRepository.findByActionPointReactedOnAndReactingUser(reaction.getActionPointReactedOn(), reaction.getReactingUser());
+
+		if (existingReaction.isPresent()) {
+			if (existingReaction.get().getReaction().equals(reaction.getReaction())) {
+				actionPointReactionRepository.delete(existingReaction.get());
+				return existingReaction.get();
+			}
+			reaction.setReactionId(existingReaction.get().getReactionId());
 		}
-		// if it's the same reaction, we remove it
-		if (existingReaction.getReaction().equals(reaction.getReaction())) {
-			actionPointReactionRepository.delete(existingReaction);
-			return existingReaction;
-		}
-		// different reaction means we change it
-		existingReaction.setReaction(reaction.getReaction());
-		return actionPointReactionRepository.save(existingReaction);
+
+		return actionPointReactionRepository.save(reaction);
+
 	}
 
 
 	@Override
-	public void addReactionCount(ActionPointReactionDto returnDto) {
-		returnDto
-				.setReactionCount(actionPointReactionRepository
-						.countByActionPointReactedOn(actionPointRepository
-								.findById(returnDto.getActionPointReactedOnId())
-								.orElseThrow(ActionPointReactionNotFound::new)));
+	public long getReactionCount(long entityId) {
+		return actionPointReactionRepository
+				.countByActionPointReactedOn(actionPointRepository
+						.findById(entityId)
+						.orElseThrow(ActionPointReactionNotFoundException::new));
 	}
 
 
@@ -69,10 +66,10 @@ public class ActionPointReactionServiceImpl implements ActionPointReactionServic
 	@Override
 	public ActionPointReaction findUserReactionToActionPoint(long actionPointId, long userId) {
 		ActionPoint actionPoint = actionPointRepository.findById(actionPointId)
-		                                               .orElseThrow(ActionPointReactionNotFound::new);
+		                                               .orElseThrow(ActionPointReactionNotFoundException::new);
 		PlatformUser user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 		return actionPointReactionRepository.findByActionPointReactedOnAndReactingUser(actionPoint, user)
-		                                    .orElseThrow(ActionPointReactionNotFound::new);
+		                                    .orElseThrow(ActionPointReactionNotFoundException::new);
 
 	}
 }
