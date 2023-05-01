@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.config;
 
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.ActionPointReactionDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.ReactionDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.IdeaDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.NewIdeaDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.NewSubscriptionDTO;
@@ -8,6 +8,7 @@ import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.Subscr
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
+import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Idea;
@@ -19,6 +20,7 @@ import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.CallForIdeaRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.IdeaRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.SubThemeRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.AbstractConverter;
@@ -38,6 +40,7 @@ public class MappingConfiguration {
 	private final SubThemeRepository subThemeRepository;
 	private final YouthCouncilRepository youthCouncilRepository;
 	private final ActionPointRepository actionPointRepository;
+	private final IdeaRepository ideaRepository;
 
 	@Bean
 	public ModelMapper modelMapper() {
@@ -65,10 +68,17 @@ public class MappingConfiguration {
 		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilId)
 		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilName);
 
-		modelMapper.createTypeMap(ActionPointReaction.class, ActionPointReactionDto.class)
-		           .addMapping(ActionPointReaction::getReaction, ActionPointReactionDto::setReaction)
-		           .addMapping(ActionPointReaction::getActionPointReactedOn, ActionPointReactionDto::setActionPointReactedOnId)
-		           .addMapping(ActionPointReaction::getReactingUser, ActionPointReactionDto::setReactingUserId);
+		modelMapper.createTypeMap(ActionPointReaction.class, ReactionDto.class)
+		           .addMapping(ActionPointReaction::getReaction, ReactionDto::setReaction)
+		           .addMapping(ActionPointReaction::getActionPointReactedOn, ReactionDto::setEntityReactedOnId)
+		           .addMapping(ActionPointReaction::getReactingUser, ReactionDto::setReactingUserId)
+		           .addMapping(ActionPointReaction::getReactionId, ReactionDto::setReactionId);
+		modelMapper.createTypeMap(IdeaReaction.class, ReactionDto.class)
+		           .addMapping(IdeaReaction::getReaction, ReactionDto::setReaction)
+		           .addMapping(IdeaReaction::getIdeaReactedOn, ReactionDto::setEntityReactedOnId)
+		           .addMapping(IdeaReaction::getReactingUser, ReactionDto::setReactingUserId)
+		           .addMapping(IdeaReaction::getReactionId, ReactionDto::setReactionId);
+
 		return modelMapper;
 	}
 
@@ -86,12 +96,25 @@ public class MappingConfiguration {
 				return source.getActionPointId();
 			}
 		};
+
+		Converter<Idea, Long> toIdeaId = new AbstractConverter<Idea, Long>() {
+			protected Long convert(Idea source) {
+				return source.getIdeaId();
+			}
+		};
+		modelMapper.addConverter(toIdeaId);
 		modelMapper.addConverter(toActionPointId);
 
 		Converter<Long, ActionPoint> toActionPoint = new AbstractConverter<Long, ActionPoint>() {
 			protected ActionPoint convert(Long source) {
 				return actionPointRepository.findById(source)
 				                            .orElseThrow(() -> new ActionPointNotFoundException(source));
+			}
+		};
+		Converter<Long, Idea> toIdea = new AbstractConverter<Long, Idea>() {
+			protected Idea convert(Long source) {
+				return ideaRepository.findById(source)
+				                     .orElseThrow(() -> new IdeaNotFoundException(source));
 			}
 		};
 		modelMapper.addConverter(toActionPoint);
@@ -157,17 +180,26 @@ public class MappingConfiguration {
 		};
 		modelMapper.addConverter(fromYouthCouncilToString);
 
-		modelMapper.addMappings(new PropertyMap<ActionPointReactionDto, ActionPointReaction>() {
+		modelMapper.addMappings(new PropertyMap<ReactionDto, ActionPointReaction>() {
 
 			@Override
 			protected void configure() {
 				using(toPlatformUser).map(source.getReactingUserId(), destination.getReactingUser());
-				using(toActionPoint).map(source.getActionPointReactedOnId(), destination.getActionPointReactedOn());
+				using(toActionPoint).map(source.getEntityReactedOnId(), destination.getActionPointReactedOn());
 				map().setReaction(source.getReaction());
-				skip(destination.getReactionId());
+				map().setReactionId(source.getReactionId());
 			}
 		});
-		modelMapper.addConverter(toPlatformUser);
+		modelMapper.addMappings(new PropertyMap<ReactionDto, IdeaReaction>() {
+
+			@Override
+			protected void configure() {
+				using(toPlatformUser).map(source.getReactingUserId(), destination.getReactingUser());
+				using(toIdea).map(source.getEntityReactedOnId(), destination.getIdeaReactedOn());
+				map().setReaction(source.getReaction());
+				map().setReactionId(source.getReactionId());
+			}
+		});
 
 	}
 

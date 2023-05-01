@@ -7,7 +7,7 @@
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer th:src="@{/js/launchCallForIdeas.js}" type="module"></script>
 	<script defer th:src="@{/js/youthCouncil.js}" type="module"></script>
-	<link rel="stylesheet" th:href="@{/css/youthcouncil.css}">
+	<link rel="stylesheet" th:href="@{/css/reactions.css}">
 </head>
 <body class="m-3" th:attr="data-youthcouncil_id=${ycWithActionPoints.getYouthCouncilId()}">
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'youthcouncil')}"></th:block>
@@ -29,7 +29,6 @@
 		th:text="'Join '+${ycWithActionPoints.getCouncilName()} +'!'"
 		type="button"></button>
 <input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
-<input id="youthCouncilId" th:value="${ycWithActionPoints.getYouthCouncilId()}" type="hidden">
 
 
 <button class="btn btn-primary"
@@ -120,7 +119,7 @@
 						</button>
 						<div class="dropdown-menu"
 							 style="--bs-dropdown-min-width: 16rem"
-							 th:id="${'actionPoint_' + actionpoint.getActionPointId()}">
+							 th:id="${'entity_' + actionpoint.getActionPointId()}">
 							<button class="btn" id="reaction-like">&#128077;</button>
 							<button class="btn" id="reaction-heart">&#129505;</button>
 							<button class="btn" id="reaction-rocket">&#128640;</button>

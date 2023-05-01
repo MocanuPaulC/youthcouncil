@@ -5,11 +5,14 @@
 	<title th:text="${callForIdea.getTitle()}"></title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer src="/js/callForIdea.js" type="module"></script>
+	<link rel="stylesheet" th:href="@{/css/reactions.css}">
 </head>
 
 <body class="m-3"
-	  th:attr="data-youthcouncil_id=${callForIdea.getOwningYouthCouncil().getYouthCouncilId()}, data-user-id=${authUser.getId()}, data-call-for-idea-id=${callForIdea.getCallForIdeaId()}">
+	  th:attr="data-youthcouncil_id=${callForIdea.getOwningYouthCouncil().getYouthCouncilId()}, data-call-for-idea-id=${callForIdea.getCallForIdeaId()}">
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'login')}"></th:block>
+<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
+
 <h1 th:text="${callForIdea.getTitle()}"></h1>
 
 <input class="form-control mb-3" id="idea-text" type="text">
@@ -31,6 +34,28 @@
 			<span class="badge rounded-pill text-bg-info" th:text="${idea.getSubTheme().getSubTheme()}"></span>
 		</p>
 		<p th:text="${idea.getIdea()}"></p>
+		<div class="btn-group dropup"
+			 role="group"
+			 th:id="${'idea_' + idea.getIdeaId()}">
+			<button aria-expanded="false"
+					class="btn btn-primary dropdown-toggle"
+					data-bs-toggle="dropdown"
+					id="expandBtn"
+					type="button">
+				&#128077;
+			</button>
+			<div class="dropdown-menu"
+				 style="--bs-dropdown-min-width: 16rem"
+				 th:id="${'entity_' + idea.getIdeaId()}">
+				<button class="btn" id="reaction-like">&#128077;</button>
+				<button class="btn" id="reaction-heart">&#129505;</button>
+				<button class="btn" id="reaction-rocket">&#128640;</button>
+				<button class="btn" id="reaction-poop">&#128169;</button>
+				<button class="btn" id="reaction-skeleton">&#128128;</button>
+			</div>
+			<span th:id="${'reaction_count_' + idea.getIdeaId()}"
+				  th:text="${idea.getReactions().size()}"></span>
+		</div>
 	</div>
 </section>
 </body>

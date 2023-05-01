@@ -10,11 +10,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActionPointReactionDto {
-
-	private long actionPointReactedOnId;
+public class ReactionDto {
+	private long reactionId;
+	private long entityReactedOnId;
 	private Emoji reaction;
 	private long reactingUserId;
 	private long reactionCount;
-
 }
