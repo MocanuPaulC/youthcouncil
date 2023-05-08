@@ -5,6 +5,7 @@ import be.kdg.youthcouncil.domain.media.Video;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointShare;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.ActionPointStatus;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.interfaces.Defaultable;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
@@ -38,7 +39,7 @@ public class ActionPoint implements Defaultable {
 	private Video video;
 
 	@Column (nullable = false)
-	private ActionPointLabel status;
+	private ActionPointStatus status;
 	@OneToMany (fetch = FetchType.LAZY)
 	@JoinColumn (name = "action_point")
 	private List<ActionPointSubscription> subscriptions;
@@ -60,8 +61,9 @@ public class ActionPoint implements Defaultable {
 	@Setter (AccessLevel.NONE)
 	@Getter (AccessLevel.NONE)
 	private boolean isDefault;
+	private boolean isDisplayed = false;
 
-	public ActionPoint(String title, String description, SubTheme theme, ActionPointLabel status, YouthCouncil owningYouthCouncil, ModuleStatus moduleStatus) {
+	public ActionPoint(String title, String description, SubTheme theme, ActionPointStatus status, YouthCouncil owningYouthCouncil, ModuleStatus moduleStatus) {
 		this.title = title;
 		this.description = description;
 		this.theme = theme;

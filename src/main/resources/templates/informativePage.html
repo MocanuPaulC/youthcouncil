@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Informative Pages</title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+</head>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'informative-pages')}"></th:block>
+<section>
+	<div class="container my-5">
+		<div class="bg-body-tertiary p-5 rounded">
+			<h1 class="display-5" th:text="${informativePage.title}"></h1>
+			<div th:each="block : ${informativePage.infoPageBlocks}">
+				<h1 th:if="${block.type.toString().equals('HEADER_BIG')}" th:text="${block.content}"></h1>
+				<h2 th:if="${block.type.toString().equals('HEADER_MEDIUM')}" th:text="${block.content}"></h2>
+				<h3 th:if="${block.type.toString().equals('HEADER_SMALL')}" th:text="${block.content}"></h3>
+				<p th:if="${block.type.toString().equals('PARAGRAPH')}" th:text="${block.content}"></p>
+				<img alt="informative page image"
+					 class="w-100"
+					 th:if="${block.type.toString().equals('IMAGE')}"
+					 th:src="${block.content.contains('/') ? '' : '/images/uploads/'} + ${block.content}"/>
+				<video class="w-100"
+					   controls th:if="${block.type.toString().equals('VIDEO')}">
+					<source th:src="${block.content.contains('/') ? '' : '/images/uploads/'} + ${block.content}">
+				</video>
+			</div>
+		</div>
+	</div>
+</section>
+
+</body>
+</html>

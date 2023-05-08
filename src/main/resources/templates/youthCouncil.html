@@ -10,105 +10,114 @@
 	<link rel="stylesheet" th:href="@{/css/reactions.css}">
 </head>
 <body class="m-3" th:attr="data-youthcouncil_id=${ycWithActionPoints.getYouthCouncilId()}">
-<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'youthcouncil')}"></th:block>
-<h1 th:text="${ycWithActionPoints.getCouncilName()}"></h1>
-<p th:text="${ycWithActionPoints.getDescription()}"></p>
-<a class="btn btn-dark"
-   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
-   th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${ycWithActionPoints.getMunicipality()})}">
-	Create council admin
-</a>
+<section>
+	<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'youthcouncil')}"></th:block>
+	<h1 th:text="${ycWithActionPoints.getCouncilName()}"></h1>
+	<p th:text="${ycWithActionPoints.getDescription()}"></p>
+
+	<div class="yc-button-area">
+		<a class="btn btn-dark"
+		   th:href="@{/youthcouncils/{municipality}/informativepages(municipality=${ycWithActionPoints.getMunicipality()})}">
+			Informative pages
+		</a>
+
+		<a class="btn btn-dark"
+		   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+		   th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${ycWithActionPoints.getMunicipality()})}">
+			Create council admin
+		</a>
 
 
-<button class="join-council btn btn-primary"
-		th:if="${#authorization.expression(
-		'!hasAuthority(''USER@' + ycWithActionPoints.getMunicipality()+''')'
-		+ ' && !hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
-		+ ' && !hasAuthority(''MODERATOR@' + ycWithActionPoints.getMunicipality()+''')'
-		)}"
-		th:text="'Join '+${ycWithActionPoints.getCouncilName()} +'!'"
-		type="button"></button>
-<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
+		<button class="join-council btn btn-primary"
+				th:if="${#authorization.expression(
+			'!hasAuthority(''USER@' + ycWithActionPoints.getMunicipality()+''')'
+			+ ' && !hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
+			+ ' && !hasAuthority(''MODERATOR@' + ycWithActionPoints.getMunicipality()+''')'
+			)}"
+				th:text="'Join '+${ycWithActionPoints.getCouncilName()} +'!'"
+				type="button"></button>
+		<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
 
 
-<button class="btn btn-primary"
-		data-bs-target="#launch-call-for-ideas-modal"
-		data-bs-toggle="modal"
-		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}"
-		type="button">
-	Launch call for ideas
-</button>
+		<button class="btn btn-primary"
+				data-bs-target="#launch-call-for-ideas-modal"
+				data-bs-toggle="modal"
+				th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}"
+				type="button">
+			Launch call for ideas
+		</button>
 
-<div aria-hidden="true"
-	 aria-labelledby="launch-call-for-ideas-modalLabel"
-	 class="modal fade"
-	 id="launch-call-for-ideas-modal"
-	 tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalLabel">New Call for Ideas</h1>
-				<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-			</div>
-			<div class="modal-body">
-				<form>
-					<div class="mb-3">
-						<label class="col-form-label" for="c4i-title">Title:</label>
-						<textarea class="form-control" id="c4i-title"></textarea>
+		<div aria-hidden="true"
+			 aria-labelledby="launch-call-for-ideas-modalLabel"
+			 class="modal fade"
+			 id="launch-call-for-ideas-modal"
+			 tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">New Call for Ideas</h1>
+						<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
 					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
-				<button class="btn btn-primary" id="launch-call-for-ideas" type="button">Launch</button>
+					<div class="modal-body">
+						<form>
+							<div class="mb-3">
+								<label class="col-form-label" for="c4i-title">Title:</label>
+								<textarea class="form-control" id="c4i-title"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+						<button class="btn btn-primary" id="launch-call-for-ideas" type="button">Launch</button>
+					</div>
+				</div>
 			</div>
 		</div>
+
+		<a class="btn btn-dark"
+		   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${ycWithActionPoints.getMunicipality()})}"
+		   th:if="${#authorization.expression(
+			'hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
+			+ ' || hasAuthority(''ROLE_GENERAL_ADMIN'')')}">
+			Statistics
+		</a>
+
+		<a class="btn btn-dark"
+		   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${ycWithActionPoints.getMunicipality()})}"
+		   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}">
+			add announcement
+		</a>
+
+		<a class="btn btn-primary"
+		   th:href="@{/youthcouncils/{municipality}/edit(municipality=${ycWithActionPoints.getMunicipality()})}"
+		   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}">
+			Edit
+		</a>
+
 	</div>
-</div>
 
-<a class="btn btn-dark"
-   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${ycWithActionPoints.getMunicipality()})}"
-   th:if="${#authorization.expression(
-		'hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
-		+ ' || hasAuthority(''ROLE_GENERAL_ADMIN'')')}">
-	Statistics
-</a>
+	<h2>Action point</h2>
+	<div class="d-flex gap-2">
+		<div class="card mb-3" style="max-width: 540px;" th:each="actionpoint: ${ycWithActionPoints.getActionPoints()}">
+			<div class="card-header">Action point</div>
+			<div class="row g-0">
+				<div class="col-md-4">
+					<img class="img-fluid placeholder h-100 rounded-start" th:alt="${actionpoint.getTitle()}">
+				</div>
+				<div class="col-md-8">
+					<div class="card-body">
+						<h5>
+							<a class="card-title"
+							   th:href="@{/youthcouncils/{municipality}/actionpoints/{actionpointid}(municipality=${ycWithActionPoints.getMunicipality()}, actionpointid=${actionpoint.getActionPointId()})}"
+							   th:text="${actionpoint.getTitle()}">Card title
+							</a>
+						</h5>
+						<p class="card-text" th:text="${actionpoint.getDescription()}">
+							Some quick example text to build on the card title and make up the bulk of the card's
+							content.
+						</p>
 
-<a class="btn btn-dark"
-   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${ycWithActionPoints.getMunicipality()})}"
-   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}">
-	add announcement
-</a>
-
-<a class="btn btn-primary"
-   th:href="@{/youthcouncils/{municipality}/edit(municipality=${ycWithActionPoints.getMunicipality()})}"
-   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}">
-	Edit
-</a>
-
-<h2>Action point</h2>
-<div class="d-flex gap-2">
-	<div class="card mb-3" style="max-width: 540px;" th:each="actionpoint: ${ycWithActionPoints.getActionPoints()}">
-		<div class="card-header d-flex justify-content-between">
-			Action point
-
-		</div>
-		<div class="row g-0">
-			<div class="col-md-4">
-				<img class="img-fluid placeholder h-100 rounded-start" th:alt="${actionpoint.getTitle()}">
-			</div>
-			<div class="col-md-8">
-				<div class="card-body">
-					<h5>
-						<a class="card-title"
-						   th:href="@{/youthcouncils/{municipality}/actionpoints/{actionpointid}(municipality=${ycWithActionPoints.getMunicipality()}, actionpointid=${actionpoint.getActionPointId()})}"
-						   th:text="${actionpoint.getTitle()}">Card title
-						</a>
-					</h5>
-					<p class="card-text" th:text="${actionpoint.getDescription()}">
-						Some quick example text to build on the card title and make up the bulk of the card's
-						content.
-					</p>
+					</div>
 
 					<div class="btn-group dropup"
 						 role="group"
@@ -136,58 +145,62 @@
 			</div>
 		</div>
 	</div>
-</div>
 
-<h2>Calls for Ideas</h2>
-<div class="d-flex gap-2">
-	<div class="card mb-3" style="max-width: 540px;" th:each="callforideas: ${ycWithCallsForIdeas.getCallForIdeas()}">
-		<div class="card-header">Call for Idea</div>
-		<div class="row g-0">
-			<div class="col-md-4">
-				<img class="img-fluid placeholder h-100 rounded-start" th:alt="${callforideas.getTitle()}">
-			</div>
-			<div class="col-md-8">
-				<div class="card-body">
-					<h5>
-						<a class="card-title"
-						   th:href="@{/youthcouncils/{municipality}/callforideas/{callforideasId}(municipality=${ycWithCallsForIdeas.getMunicipality()}, callforideasId=${callforideas.getCallForIdeaId()})}"
-						   th:text="${callforideas.getTitle()}">Card title
-						</a>
-					</h5>
-					<p class="card-text">
-						Please give us your ideas for the future of our municipality.
-					</p>
+	<h2>Calls for Ideas</h2>
+	<div class="d-flex gap-2">
+		<div class="card mb-3"
+			 style="max-width: 540px;"
+			 th:each="callforideas: ${ycWithCallsForIdeas.getCallForIdeas()}">
+			<div class="card-header">Call for Idea</div>
+			<div class="row g-0">
+				<div class="col-md-4">
+					<img class="img-fluid placeholder h-100 rounded-start" th:alt="${callforideas.getTitle()}">
+				</div>
+				<div class="col-md-8">
+					<div class="card-body">
+						<h5>
+							<a class="card-title"
+							   th:href="@{/youthcouncils/{municipality}/callforideas/{callforideasId}(municipality=${ycWithCallsForIdeas.getMunicipality()}, callforideasId=${callforideas.getCallForIdeaId()})}"
+							   th:text="${callforideas.getTitle()}">Card title
+							</a>
+						</h5>
+						<p class="card-text">
+							Please give us your ideas for the future of our municipality.
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<h2>Announcement</h2>
-<div class="d-flex gap-2">
-	<div class="card mb-3" style="max-width: 540px;" th:each="announcement: ${ycWithAnnouncements.getAnnouncements()}">
-		<div class="card-header">Announcement</div>
-		<div class="row g-0">
-			<div class="col-md-4">
-				<img class="img-fluid placeholder h-100 rounded-start" th:alt="${announcement.getTitle()}">
-			</div>
-			<div class="col-md-8">
-				<div class="card-body">
-					<h5>
-						<a class="card-title"
-						   th:href="@{/youthcouncils/{municipality}/announcement/{announcementId}(municipality=${ycWithAnnouncements.getMunicipality()}, announcementId=${announcement.getAnnouncementId()})}"
-						   th:text="${announcement.getTitle()}">Card title
-						</a>
-					</h5>
-					<p class="card-text" th:text="${announcement.getDescription()}">
-						Some quick example text to build on the card title and make up the bulk of the card's
-						content.
-					</p>
+	<h2>Announcement</h2>
+	<div class="d-flex gap-2">
+		<div class="card mb-3"
+			 style="max-width: 540px;"
+			 th:each="announcement: ${ycWithAnnouncements.getAnnouncements()}">
+			<div class="card-header">Announcement</div>
+			<div class="row g-0">
+				<div class="col-md-4">
+					<img class="img-fluid placeholder h-100 rounded-start" th:alt="${announcement.getTitle()}">
+				</div>
+				<div class="col-md-8">
+					<div class="card-body">
+						<h5>
+							<a class="card-title"
+							   th:href="@{/youthcouncils/{municipality}/announcement/{announcementId}(municipality=${ycWithAnnouncements.getMunicipality()}, announcementId=${announcement.getAnnouncementId()})}"
+							   th:text="${announcement.getTitle()}">Card title
+							</a>
+						</h5>
+						<p class="card-text" th:text="${announcement.getDescription()}">
+							Some quick example text to build on the card title and make up the bulk of the card's
+							content.
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</section>
 
 </body>
 </html>

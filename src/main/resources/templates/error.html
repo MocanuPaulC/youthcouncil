@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Sorry an error occurred!</title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+</head>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'home')}"></th:block>
+<section class="container">
+	<h1>Ups! An error occurred!</h1>
+	<p th:text="${error}"></p>
+</section>
+</body>
+</html>
