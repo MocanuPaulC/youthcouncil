@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface ActionPointRepository extends JpaRepository<ActionPoint, Long> {
@@ -16,4 +18,10 @@ public interface ActionPointRepository extends JpaRepository<ActionPoint, Long> 
 	)
 	ActionPoint findWithShares(ActionPoint actionPoint);
 
+	@Query (
+			"SELECT ap FROM ActionPoint ap " +
+					"JOIN FETCH ap.subscriptions " +
+					"WHERE ap.actionPointId = :actionPointId"
+	)
+	Optional<ActionPoint> findByIdWithSubscriptions(long actionPointId);
 }

@@ -7,10 +7,12 @@ import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaShare;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Idea;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
+import be.kdg.youthcouncil.utility.Notification;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,6 +64,9 @@ public class PlatformUser implements Authenticable {
 	@ToString.Exclude
 	private List<Idea> ideas;
 
+	@OneToMany (fetch = FetchType.LAZY)
+	private List<Notification> notifications;
+
 
 	public PlatformUser(String firstName, String lastName, String email, String postcode, String username, String password) {
 		this.firstName = firstName;
@@ -70,6 +75,7 @@ public class PlatformUser implements Authenticable {
 		this.postcode = postcode;
 		this.username = username;
 		this.password = password;
+		this.notifications = new ArrayList<>();
 	}
 
 	@Override
@@ -108,5 +114,9 @@ public class PlatformUser implements Authenticable {
 	@Override
 	public int hashCode() {
 		return getClass().hashCode();
+	}
+
+	public void addNotification(Notification notification) {
+		notifications.add(notification);
 	}
 }

@@ -43,7 +43,7 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		if (!uri.contains("api") || collection.toString().equals("[authenticated]")) {
 			return ACCESS_ABSTAIN;
 		}
-		if (youthCouncilIdHeader == null) {
+		if (youthCouncilIdHeader == null && !uri.contains("notifications")) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "youthCouncilID header is missing");
 		}
 
@@ -52,7 +52,7 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		              .anyMatch(a -> "permitAll".equals(a.toString()))) {
 			return ACCESS_GRANTED;
 		}
-		
+
 		CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
 		String collectionRoleRequest = collection.stream().findFirst()
@@ -63,19 +63,30 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		if ((user.isGa() && "GENERAL_ADMIN".equals(collectionRoleRequest))) return ACCESS_GRANTED;
 
 		logger.debug("Request for {} permission received", collectionRoleRequest);
+		if (youthCouncilIdHeader != null) {
+			int youthCouncilId = Integer.parseInt(youthCouncilIdHeader);
 
-		int youthCouncilId = Integer.parseInt(youthCouncilIdHeader);
-
-		try {
-			if (userService.findSubscriptionRoleOfUserToYouthCouncil(user.getUserId(), youthCouncilId)
-			               .equals(SubscriptionRole.valueOf(collectionRoleRequest))) {
+			try {
+				if (userService.findSubscriptionRoleOfUserToYouthCouncil(user.getUserId(), youthCouncilId)
+				               .equals(SubscriptionRole.valueOf(collectionRoleRequest))) {
+					return ACCESS_GRANTED;
+				} else {
+					return ACCESS_DENIED;
+				}
+			} catch (YouthCouncilSubscriptionNotFoundException e) {
+				logger.debug(e.getMessage());
+				return ACCESS_DENIED;
+			}
+		} else {
+			logger.error("YouthCouncilID header is missing, make sure you put it in the header of your request");
+			logger.error("That is if you are trying to access anything related to a youth council");
+			if (authentication.getAuthorities()
+			                  .stream()
+			                  .anyMatch(a -> a.getAuthority().equals("ROLE_" + collectionRoleRequest))) {
 				return ACCESS_GRANTED;
 			} else {
 				return ACCESS_DENIED;
 			}
-		} catch (YouthCouncilSubscriptionNotFoundException e) {
-			logger.debug(e.getMessage());
-			return ACCESS_DENIED;
 		}
 	}
 }

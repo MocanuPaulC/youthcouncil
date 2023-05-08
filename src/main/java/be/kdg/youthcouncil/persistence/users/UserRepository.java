@@ -41,4 +41,19 @@ public interface UserRepository extends JpaRepository<PlatformUser, Long> {
 					"WHERE u.userId= :id"
 	)
 	Optional<PlatformUser> findByIdWithYouthCouncilSubscriptions(long id);
+
+	@Query (
+			"SELECT u FROM PlatformUser u " +
+					"LEFT JOIN FETCH u.notifications n " +
+					"WHERE u.userId = :userId " +
+					"AND n.isRead = false"
+	)
+	Optional<PlatformUser> findByIdWithNotificationsNotSeen(long userId);
+
+	@Query (
+			"SELECT u FROM PlatformUser u " +
+					"LEFT JOIN FETCH u.actionPointSubscriptions n " +
+					"WHERE u.userId = :userId  "
+	)
+	Optional<PlatformUser> findByIdWithActionPointSubscriptions(long userId);
 }

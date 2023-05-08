@@ -1,3 +1,11 @@
 html {
     margin-top: calc(56px + 1.5rem); /* 56px is the height of the navbar */
 }
+
+notification-item-not-seen {
+    background-color: red;
+}
+
+notification-item-seen {
+    background-color: white;
+}

@@ -25,9 +25,8 @@ reactionBtn.forEach(btn => btn.addEventListener("click", () => {
 
 function addUserToCouncil() {
 
-	const youthCouncilId = document.getElementById("youthCouncilId").value;
 	const userId = getUser(true);
-	fetch(`/api/youthcouncils/${youthCouncilId}/${userId}`, {
+	fetch(`/api/youthcouncils/${youthCouncilID}/${userId}`, {
 		method: "POST",
 		headers: {
 			youthCouncilID,
@@ -43,5 +42,6 @@ function addUserToCouncil() {
 			}
 		});
 }
+
 
 
