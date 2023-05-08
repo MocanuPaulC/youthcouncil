@@ -45,7 +45,7 @@ public class WebSecurityConfig {
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 				.authorizeRequests(auths -> auths
-						.antMatchers("/", "/logout", "/login", "/register", "/oauth/**", "/youthcouncils", "/youthcouncils/**")
+						.antMatchers(HttpMethod.GET, "/", "/logout", "/login", "/register", "/oauth/**", "/youthcouncils", "/youthcouncils/**")
 						.permitAll()
 						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico", "/api/municipalities/")
 						.permitAll()
