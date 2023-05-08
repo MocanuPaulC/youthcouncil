@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Adding informative page</title>
+	<th:block th:insert="~{includes::head_fragment}"></th:block>
+	<link rel="stylesheet" th:href="@{/css/addInformativePage.css}">
+	<script defer src="/js/createInformativePage.js" type="module"></script>
+</head>
+<body class="m-3">
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'adding-informative-page')}"></th:block>
+<section class="container">
+	<div class="row">
+		<div class="col-12">
+			<h1>New InformativePage:</h1>
+			<input class="h1" id="info-page-title" th:if="${editorType.equals('create')}" type="text">
+			<h1 class="h1" id="info-page-title" th:if="${editorType.equals('edit')}" th:text="${title}"></h1>
+		</div>
+		<div id="info-page-creation-overlay">
+			<div class="card block-selection">
+				<div class="card-body">
+					<button class="btn btn-primary" id="block-type"></button>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 form-control form">
+			<div class="container-fluid" id="info-page-container" th:infopage-type="${infoPageType}">
+			</div>
+			<div class="container-fluid">
+				<div class="row info-page-footer">
+					<div class="col-10">
+						<button block-position="end" class="btn btn-primary add-block-button" type="button">
+							<svg class="bi bi-plus-circle-fill"
+								 fill="currentColor"
+								 height="16"
+								 viewBox="0 0 16 16"
+								 width="16"
+								 xmlns="http://www.w3.org/2000/svg">
+								<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+							</svg>
+						</button>
+					</div>
+					<div class="col-2">
+						<button button-type="submit" class="btn btn-success" th:submit-type="${editorType}">save
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+</body>
+</html>

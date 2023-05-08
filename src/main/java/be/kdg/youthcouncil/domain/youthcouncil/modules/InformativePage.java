@@ -1,20 +1,20 @@
 package be.kdg.youthcouncil.domain.youthcouncil.modules;
 
-import be.kdg.youthcouncil.domain.media.Image;
-import be.kdg.youthcouncil.domain.media.Video;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.interfaces.Activatable;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table (name = "informative_pages")
+@Table (name = "informative_pages", uniqueConstraints = {@UniqueConstraint (columnNames = {"title", "owning_youth_council_youth_council_id"})})
 public class InformativePage implements Activatable {
 
 	@Id
@@ -22,34 +22,36 @@ public class InformativePage implements Activatable {
 	private long informativePageId;
 	private String title;
 
-	@ElementCollection
-	private List<String> paragraphs;
-
-	@OneToOne
-	private Image image;
-	@OneToOne
-	private Video video;
-
 	@ManyToOne
+	@JoinColumn (name = "owning_youth_council_youth_council_id")
 	private YouthCouncil owningYouthCouncil;
 
 	@ManyToOne
 	private InformativePage defaultInformativePage;
 
+	@OneToMany (fetch = FetchType.EAGER)
+	private List<InformativePageBlock> infoPageBlocks = new ArrayList<>();
+
 	@Getter (AccessLevel.NONE)
 	@Setter (AccessLevel.NONE)
 	private boolean isActive;
+	private boolean isDefault = false;
 
 	private boolean isDisplayed;
 
-	public InformativePage(String title, List<String> paragraphs, Image image, Video video, YouthCouncil owningYouthCouncil, InformativePage defaultInformativePage, boolean isActive) {
+	public InformativePage(String title, boolean isDefault) {
 		this.title = title;
-		this.paragraphs = paragraphs;
-		this.image = image;
-		this.video = video;
+		this.isDefault = isDefault;
+	}
+
+	public InformativePage(String title, boolean isDefault, YouthCouncil owningYouthCouncil) {
+		this.title = title;
+		this.isDefault = isDefault;
 		this.owningYouthCouncil = owningYouthCouncil;
-		this.defaultInformativePage = defaultInformativePage;
-		this.isActive = isActive;
+	}
+
+	public void addBlock(InformativePageBlock infoPageBlock) {
+		this.infoPageBlocks.add(infoPageBlock);
 	}
 
 	@Override

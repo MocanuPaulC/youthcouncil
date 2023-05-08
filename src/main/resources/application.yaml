@@ -31,8 +31,12 @@ spring:
     sql:
         init:
             mode: never
-#            data-locations: classpath:data.sql  comment this out once we have a data.sql file
-#            schema-locations: classpath:schema.sql
+    #            data-locations: classpath:data.sql  comment this out once we have a data.sql file
+    #            schema-locations: classpath:schema.sql
+    servlet:
+        multipart:
+            max-file-size: 5MB
+            max-request-size: 5MB
 server:
     port: 8081
 logging:

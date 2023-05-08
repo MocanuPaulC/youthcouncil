@@ -4,6 +4,7 @@ import be.kdg.youthcouncil.domain.media.Image;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.*;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.ActionPointStatus;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.Theme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
@@ -156,18 +157,18 @@ public class DatabaseSeeder {
 		ideaRepository.saveAll(List.of(idea11, idea12, idea21, idea22));
 
 		//INFORMATIVE PAGE
-		InformativePage informativePage1 = new InformativePage("info page title 1", List.of("paragrah 1", "paragrah 2", "paragrah 3"), image7, null, youthCouncil1, null, true);
-		InformativePage informativePage2 = new InformativePage("info page title 2", List.of("paragrah 1", "paragrah 2", "paragrah 3"), image7, null, youthCouncil1, null, true);
-		InformativePage informativePage3 = new InformativePage("info page title 3", List.of("paragrah 1", "paragrah 2", "paragrah 3"), image7, null, youthCouncil2, null, true);
-		InformativePage informativePage4 = new InformativePage("info page title 4", List.of("paragrah 1", "paragrah 2", "paragrah 3"), image7, null, youthCouncil2, null, true);
+		InformativePage informativePage1 = new InformativePage("info page title 1", true, youthCouncil1);
+		InformativePage informativePage2 = new InformativePage("info page title 2", true, youthCouncil1);
+		InformativePage informativePage3 = new InformativePage("info page title 3", true, youthCouncil2);
+		InformativePage informativePage4 = new InformativePage("info page title 4", true, youthCouncil2);
 
 		informativePageRepository.saveAll(List.of(informativePage1, informativePage2, informativePage3, informativePage4));
 
 		// ACTION POINTS
-		ActionPoint actionPoint1 = new ActionPoint("action point title 1", "description", subTheme1a, ActionPointLabel.NEW, youthCouncil1, ModuleStatus.DISPLAYED);
-		ActionPoint actionPoint2 = new ActionPoint("action point title 2", "description", subTheme2a, ActionPointLabel.INCLUDED, youthCouncil1, ModuleStatus.DISPLAYED);
-		ActionPoint actionPoint3 = new ActionPoint("action point title 3", "description", subTheme2b, ActionPointLabel.NEW, youthCouncil2, ModuleStatus.DISPLAYED);
-		ActionPoint actionPoint4 = new ActionPoint("action point title 4", "description", subTheme2c, ActionPointLabel.REALISED, youthCouncil2, ModuleStatus.DISPLAYED);
+		ActionPoint actionPoint1 = new ActionPoint("action point title 1", "description", subTheme1a, ActionPointStatus.NEW, youthCouncil1, ModuleStatus.DISPLAYED);
+		ActionPoint actionPoint2 = new ActionPoint("action point title 2", "description", subTheme2a, ActionPointStatus.INCLUDED, youthCouncil1, ModuleStatus.DISPLAYED);
+		ActionPoint actionPoint3 = new ActionPoint("action point title 3", "description", subTheme2b, ActionPointStatus.NEW, youthCouncil2, ModuleStatus.DISPLAYED);
+		ActionPoint actionPoint4 = new ActionPoint("action point title 4", "description", subTheme2c, ActionPointStatus.REALISED, youthCouncil2, ModuleStatus.DISPLAYED);
 
 		actionPointRepository.saveAll(List.of(actionPoint1, actionPoint2, actionPoint3, actionPoint4));
 

@@ -38,6 +38,8 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		logger.debug("filterChain setup");
+		//http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated().and().csrf().disable();
+
 		http
 				.httpBasic()
 				.and()
