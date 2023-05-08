@@ -15,10 +15,15 @@
 	<script defer th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 	<link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css} ">
 	<link rel="stylesheet" th:href="@{/css/styles.css}">
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script defer src="/js/notifications.js" type="module"></script>
 </th:block>
 
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" th:fragment="navbar(user, admin, page)">
+	<input id="authUserIdNavBar" th:if="${user!=null}" th:value="${user.id}" type="hidden"/>
+	<input id="authUserUsernameNavBar" th:if="${user!=null}" th:value="${user.username}" type="hidden"/>
 	<div class="container-fluid">
 		<a class="navbar-brand" th:href="@{/}">Youthcouncil platform</a>
 		<button aria-controls="offcanvasDarkNavbar"
@@ -117,6 +122,27 @@
 						   type="button">
 							Register
 						</a>
+					</li>
+					<li>
+						<div class="btn-group dropstart "
+							 sec:authorize="isAuthenticated()">
+							<button aria-expanded="false"
+									class="btn btn-dark dropdown-toggle "
+									data-bs-toggle="dropdown"
+									id="notification-dropdown"
+									style="margin: 0.2em"
+									type="button">
+								&#128276;
+							</button>
+							<div class="dropdown-menu dropdown-menu-notification dropdown-menu-lg-end"
+								 id="notification-container"
+								 style="--bs-dropdown-min-width: 16rem">
+								<div th:class="${notification.read ? 'notification-item-seen' : 'notification-item-not-seen'} + ' dropdown-item'"
+									 th:each="notification: ${notifications}"
+									 th:text="${notification.text}"></div>
+							</div>
+						</div>
+
 					</li>
 					<li>
 						<form sec:authorize="isAuthenticated()" th:action="@{/logout}" th:method="post">

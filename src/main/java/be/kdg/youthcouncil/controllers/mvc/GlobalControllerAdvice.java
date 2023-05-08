@@ -1,9 +1,9 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
-import be.kdg.youthcouncil.domain.users.GeneralAdmin;
-import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.config.security.CustomUserDetails;
 import be.kdg.youthcouncil.config.security.Oauth.CustomOAuth2User;
+import be.kdg.youthcouncil.domain.users.GeneralAdmin;
+import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.service.users.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -46,5 +46,8 @@ public class GlobalControllerAdvice {
 
 		model.addAttribute("authUser", user);
 		model.addAttribute("authAdmin", admin);
+		if (user != null) {
+			model.addAttribute("notifications", userService.findLatest10AllNotifications(user.getId()));
+		}
 	}
 }

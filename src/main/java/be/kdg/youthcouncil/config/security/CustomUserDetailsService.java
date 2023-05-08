@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		logger.debug("Loading user by username " + username);
 		Authenticable user = userService.findAuthenticableByUsername(username);
 		PlatformUser platformUser = userService.findByIdWithYouthCouncilSubscriptions(user.getId());
-
+		
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
 		if (user.isGA()) {

@@ -89,7 +89,10 @@
 <h2>Action point</h2>
 <div class="d-flex gap-2">
 	<div class="card mb-3" style="max-width: 540px;" th:each="actionpoint: ${ycWithActionPoints.getActionPoints()}">
-		<div class="card-header">Action point</div>
+		<div class="card-header d-flex justify-content-between">
+			Action point
+
+		</div>
 		<div class="row g-0">
 			<div class="col-md-4">
 				<img class="img-fluid placeholder h-100 rounded-start" th:alt="${actionpoint.getTitle()}">

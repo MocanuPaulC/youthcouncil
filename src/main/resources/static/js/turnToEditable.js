@@ -1,4 +1,5 @@
 import csrfHeader from "./csrfHeader.js";
+import {sendMessage} from "./notifications.js";
 
 const {name, value} = csrfHeader();
 // Select DOM elements
@@ -12,19 +13,29 @@ const labelInput = document.querySelector("#statusInput");
 // Extract data from DOM elements
 const actionPointId = +apHiddenInput.id.substring(apHiddenInput.id.indexOf("_") + 1);
 const youthCouncilId = +ycHiddenInput.id.substring(ycHiddenInput.id.indexOf("_") + 1);
+let title = document.querySelector("#actionPointTitle").value;
+
 const municipality = window.location.pathname.split("/")[2];
 
 // Initialize initial values array
-const initialValues = document.querySelectorAll(".editable");
-const initialValuesArray = Array.from(initialValues).map(tag => tag.textContent);
+let initialValues = document.querySelectorAll(".editable");
+let initialValuesArray = Array.from(initialValues).map(tag => tag.textContent);
 
 // Attach event listeners
-editButton.addEventListener("click", turnTagsToEditable);
-saveButton.addEventListener("click", turnEditableToTags);
+if (editButton != null) {
+	editButton.addEventListener("click", turnTagsToEditable);
+}
+if (saveButton != null) {
+	saveButton.addEventListener("click", turnEditableToTags);
+	// saveButton.addEventListener("click", sendMessage);
+}
+
 
 // Convert tags to editable state
 function turnTagsToEditable() {
 	const editableTags = document.querySelectorAll(".editable");
+	initialValues = document.querySelectorAll(".editable");
+	initialValuesArray = Array.from(initialValues).map(tag => tag.textContent);
 	editableTags.forEach(tag => {
 		tag.style.color = "gray";
 		tag.style.fontStyle = "italic";
@@ -49,33 +60,42 @@ function turnEditableToTags() {
 	label.removeAttribute("hidden");
 	label.innerText = labelInput.value;
 	labelInput.setAttribute("hidden", "hidden");
+
 }
 
 // Process the edited action point and send it to the server
 function processActionPointEdit() {
 	const editableTags = document.querySelectorAll(".editable");
-	for (let i = 0; i < editableTags.length; i++) {
-		if (editableTags[i].textContent !== initialValuesArray[i]
-			|| labelInput.value !== label.innerText) {
-			const actionPoint = {};
-			actionPoint[label.id] = labelInput.value;
-			editableTags.forEach(tag => {
-				actionPoint[tag.id] = tag.textContent;
-			});
-			fetch(`/api/actionpoints/${youthCouncilId}/${actionPointId}`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					"youthCouncilID": youthCouncilId,
-					[name]: value
-				},
-				body: JSON.stringify(actionPoint)
-			})
-				.then((response) => {
-					handleUpdateResponse(response);
-				});
-			break;
+	let isChanged = false;
+	if (labelInput.value !== label.innerText) {
+		isChanged = true;
+		sendMessage("actionPoint", title, label.innerText, labelInput.value, label.id);
+	}
+
+	editableTags.forEach((tag, i) => {
+		if (tag.textContent !== initialValuesArray[i]) {
+			isChanged = true;
+			if (tag.id !== "title") {
+				sendMessage("actionPoint", title, initialValuesArray[i], tag.textContent, tag.id);
+			}
 		}
+	});
+
+
+	if (isChanged) {
+		const editableTagsArray = Array.from(editableTags);
+		const actionPoint = Object.fromEntries(editableTagsArray.map((tag) => [tag.id, tag.textContent]));
+		actionPoint[label.id] = labelInput.value;
+		console.log("isChanged sending fetch call");
+		fetch(`/api/actionpoints/${youthCouncilId}/${actionPointId}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				"youthCouncilID": youthCouncilId,
+				[name]: value
+			},
+			body: JSON.stringify(actionPoint)
+		}).then(handleUpdateResponse);
 	}
 }
 
@@ -84,8 +104,10 @@ function handleUpdateResponse(response) {
 	if (response.ok) {
 		response.json()
 			.then(async (json) => {
+				console.log(json);
 				const newID = json["id"];
 				if (newID !== actionPointId) {
+					console.log(newID + " is the new id");
 					window.location.replace(`http://localhost:8081/youthcouncils/${municipality}/actionpoints/${newID}`);
 				}
 			});

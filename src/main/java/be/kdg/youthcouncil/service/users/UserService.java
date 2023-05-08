@@ -5,6 +5,7 @@ import be.kdg.youthcouncil.domain.users.Authenticable;
 import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
+import be.kdg.youthcouncil.utility.Notification;
 
 import java.util.List;
 import java.util.Map;
@@ -48,4 +49,9 @@ public interface UserService {
 
 	boolean isUserAdminOfYouthCouncil(long userId, long youthCouncilId);
 
+	List<Notification> findLatest10AllNotifications(long id);
+
+	void markAllAsReadForUser(long id);
+
+	boolean hasSubscriptionToActionPoint(long userId, long actionPointId);
 }

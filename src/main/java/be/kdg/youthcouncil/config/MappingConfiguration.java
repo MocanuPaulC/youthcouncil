@@ -1,6 +1,7 @@
 package be.kdg.youthcouncil.config;
 
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.ReactionDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.IdeaDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.NewIdeaDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.NewSubscriptionDTO;
@@ -67,6 +68,11 @@ public class MappingConfiguration {
 		           .addMapping(YouthCouncilSubscription::getSubscriber, SubscriptionDTO::setSubscriberId)
 		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilId)
 		           .addMapping(YouthCouncilSubscription::getYouthCouncil, SubscriptionDTO::setYouthCouncilName);
+		modelMapper.createTypeMap(ActionPoint.class, EditActionPointDto.class)
+		           .addMapping(ActionPoint::getActionPointId, EditActionPointDto::setId)
+		           .addMapping(ActionPoint::getTitle, EditActionPointDto::setTitle)
+		           .addMapping(ActionPoint::getDescription, EditActionPointDto::setDescription)
+		           .addMapping(ActionPoint::getStatus, EditActionPointDto::setStatus);
 
 		modelMapper.createTypeMap(ActionPointReaction.class, ReactionDto.class)
 		           .addMapping(ActionPointReaction::getReaction, ReactionDto::setReaction)
@@ -113,8 +119,7 @@ public class MappingConfiguration {
 		};
 		Converter<Long, Idea> toIdea = new AbstractConverter<Long, Idea>() {
 			protected Idea convert(Long source) {
-				return ideaRepository.findById(source)
-				                     .orElseThrow(() -> new IdeaNotFoundException(source));
+				return ideaRepository.findById(source).orElseThrow(() -> new IdeaNotFoundException(source));
 			}
 		};
 		modelMapper.addConverter(toActionPoint);

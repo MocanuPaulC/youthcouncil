@@ -5,6 +5,7 @@ import be.kdg.youthcouncil.domain.users.Authenticable;
 import be.kdg.youthcouncil.domain.users.AuthenticationType;
 import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
+import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import be.kdg.youthcouncil.exceptions.UserNotFoundException;
@@ -12,7 +13,9 @@ import be.kdg.youthcouncil.exceptions.UsernameAlreadyExistsException;
 import be.kdg.youthcouncil.exceptions.YouthCouncilSubscriptionNotFoundException;
 import be.kdg.youthcouncil.persistence.users.AdminRepository;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.NotificationRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.YouthCouncilSubscriptionRepository;
+import be.kdg.youthcouncil.utility.Notification;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -22,9 +25,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +36,8 @@ public class UserServiceImpl implements UserService {
 	private final AdminRepository adminRepository;
 	private final YouthCouncilSubscriptionRepository youthCouncilSubscriptionRepository;
 	private final BCryptPasswordEncoder passwordEncoder;
+	private final NotificationRepository notificationRepository;
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
@@ -58,6 +62,30 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+
+	@Override
+	public void markAllAsReadForUser(long userId) {
+		PlatformUser user = userRepository.findByIdWithNotificationsNotSeen(userId)
+		                                  .orElseThrow(() -> new UserNotFoundException(userId));
+
+		List<Notification> notifications = user.getNotifications();
+		for (Notification notification : notifications) {
+			notification.setRead(true);
+			notificationRepository.save(notification);
+		}
+
+	}
+
+	@Override
+	public boolean hasSubscriptionToActionPoint(long userId, long actionPointId) {
+		return userRepository.findByIdWithActionPointSubscriptions(userId)
+		                     .orElseThrow(() -> new UserNotFoundException(userId))
+		                     .getActionPointSubscriptions()
+		                     .stream()
+		                     .map(ActionPointSubscription::getActionSubscriptionId)
+		                     .anyMatch(a -> a == actionPointId);
+	}
+
 	@Override
 	public void save(PlatformUser user) {
 		userRepository.save(user);
@@ -71,11 +99,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean updateRole(long userId, String role) {
 		try {
-			userRepository.findById(userId).ifPresent(user -> {
-				//FIXME needs to be fixed
-				//user.setRole(Role.valueOf(role));
-				userRepository.save(user);
-			});
+			userRepository.findById(userId).ifPresent(userRepository::save);
 		} catch (HttpClientErrorException | IllegalArgumentException e) {
 			return false;
 		}
@@ -105,6 +129,17 @@ public class UserServiceImpl implements UserService {
 								                 && subscription.getYouthCouncil().getYouthCouncilId() == youthCouncilId
 				                 ))
 				.orElse(false);
+	}
+
+	@Transactional
+	@Override
+	public List<Notification> findLatest10AllNotifications(long id) {
+		return new ArrayList<>(userRepository.findById(id)
+		                                     .orElseThrow(() -> new UserNotFoundException(id))
+		                                     .getNotifications().stream()
+		                                     .sorted(Comparator.comparing(Notification::getDateTime).reversed())
+		                                     .limit(10)
+		                                     .toList());
 	}
 
 
@@ -149,7 +184,6 @@ public class UserServiceImpl implements UserService {
 			                                                                                      .orElseThrow(() -> new YouthCouncilSubscriptionNotFoundException(s.getYouthCouncilSubscriptionId()));
 			s.setYouthCouncil(youthCouncilSubscription.getYouthCouncil());
 		});
-		System.out.println(user);
 		return user;
 	}
 

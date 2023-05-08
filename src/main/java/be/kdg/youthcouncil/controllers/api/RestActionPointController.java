@@ -36,6 +36,24 @@ public class RestActionPointController {
 		return ResponseEntity.ok(actionPointToReturn);
 	}
 
+	@PostMapping ("/subscribe/{userId}/{actionPointId}")
+	public ResponseEntity<String> subscribe(@PathVariable long userId, @PathVariable long actionPointId) {
+		logger.debug("in subscribe");
+		logger.debug("userId: " + userId);
+		logger.debug("actionPointId: " + actionPointId);
+		actionPointService.subscribe(userId, actionPointId);
+		return ResponseEntity.ok("Subscribed");
+	}
+
+	@DeleteMapping ("/subscribe/{userId}/{actionPointId}")
+	public ResponseEntity<String> unsubscribe(@PathVariable long userId, @PathVariable long actionPointId) {
+		logger.debug("in unsubscribe");
+		logger.debug("userId: " + userId);
+		logger.debug("actionPointId: " + actionPointId);
+		actionPointService.unsubscribe(userId, actionPointId);
+		return ResponseEntity.ok("Unsubscribed");
+	}
+
 	@PatchMapping ("/{actionPointId}/set-display")
 	public void setDisplay(@PathVariable long actionPointId, @RequestBody UpdateDisplayStatusDTO displayStatusDTO) {
 		logger.debug("in setDisplay");

@@ -18,6 +18,7 @@ import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.SubThemeRepos
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.ThemeRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.ActionPointSubscriptionRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.YouthCouncilSubscriptionRepository;
+import be.kdg.youthcouncil.utility.Notification;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,6 +49,7 @@ public class DatabaseSeeder {
 	ActionPointRepository actionPointRepository;
 	YouthCouncilSubscriptionRepository youthCouncilSubscriptionRepository;
 	ActionPointSubscriptionRepository actionPointSubscriptionRepository;
+	NotificationRepository notificationRepository;
 
 	@PostConstruct
 	public void loadData() {
@@ -65,8 +67,17 @@ public class DatabaseSeeder {
 			                                                                   .toString(), n, encoder.encode(n)));
 		});
 		PlatformUser ga = new PlatformUser("gadmin", "gadmin", "gadmin@localhost", "23423", "gadmin", encoder.encode("gadmin"));
+		PlatformUser notifiedUser = new PlatformUser("notified", "notified", "notified@localhost", "23423", "notified", encoder.encode("notified"));
+		Notification seenNotification = new Notification("seen notification");
+		notificationRepository.save(seenNotification);
+		seenNotification.setRead(true);
+		Notification unseenNotification = new Notification("unseen notification");
+		notificationRepository.save(unseenNotification);
+		notifiedUser.addNotification(seenNotification);
+		notifiedUser.addNotification(unseenNotification);
 		ga.setGA(true);
 		userList.add(ga);
+		userList.add(notifiedUser);
 		userRepository.saveAll(userList);
 
 		//THEMES
@@ -115,8 +126,9 @@ public class DatabaseSeeder {
 		YouthCouncilSubscription youthCouncilSubscription5 = new YouthCouncilSubscription(userList.get(4), youthCouncil2, SubscriptionRole.USER);
 		YouthCouncilSubscription youthCouncilSubscription7 = new YouthCouncilSubscription(userList.get(6), youthCouncil2, SubscriptionRole.USER);
 		YouthCouncilSubscription youthCouncilSubscription8 = new YouthCouncilSubscription(userList.get(0), youthCouncil2, SubscriptionRole.USER);
+		YouthCouncilSubscription youthCouncilSubscription10 = new YouthCouncilSubscription(userList.get(userList.size() - 1), youthCouncil2, SubscriptionRole.USER);
 
-		youthCouncilSubscriptionRepository.saveAll(List.of(youthCouncilSubscription1, youthCouncilSubscription2, youthCouncilSubscription3, youthCouncilSubscription4, youthCouncilSubscription5, youthCouncilSubscription6, youthCouncilSubscription7, youthCouncilSubscription8, youthCouncilSubscription9));
+		youthCouncilSubscriptionRepository.saveAll(List.of(youthCouncilSubscription1, youthCouncilSubscription2, youthCouncilSubscription3, youthCouncilSubscription4, youthCouncilSubscription5, youthCouncilSubscription6, youthCouncilSubscription7, youthCouncilSubscription8, youthCouncilSubscription9, youthCouncilSubscription10));
 
 		//ANNOUNCEMENTS
 		Announcement announcement1 = new Announcement("Happening AB", "annoucement description", LocalDateTime.now(), youthCouncil1, ModuleStatus.DISPLAYED);
@@ -161,8 +173,9 @@ public class DatabaseSeeder {
 
 		ActionPointSubscription actionPointSubscription1 = new ActionPointSubscription(userList.get(5), actionPoint1);
 		ActionPointSubscription actionPointSubscription2 = new ActionPointSubscription(userList.get(6), actionPoint3);
+		ActionPointSubscription actionPointSubscription3 = new ActionPointSubscription(userList.get(userList.size() - 1), actionPoint3);
 
-		actionPointSubscriptionRepository.saveAll(List.of(actionPointSubscription1, actionPointSubscription2));
+		actionPointSubscriptionRepository.saveAll(List.of(actionPointSubscription1, actionPointSubscription2, actionPointSubscription3));
 	}
 
 

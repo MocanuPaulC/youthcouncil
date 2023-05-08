@@ -40,6 +40,7 @@ public class ActionPoint implements Defaultable {
 	@Column (nullable = false)
 	private ActionPointLabel status;
 	@OneToMany (fetch = FetchType.LAZY)
+	@JoinColumn (name = "action_point")
 	private List<ActionPointSubscription> subscriptions;
 	@OneToMany (fetch = FetchType.LAZY)
 	private List<Idea> inspiredBy;
