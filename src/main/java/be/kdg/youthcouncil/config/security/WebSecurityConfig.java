@@ -2,6 +2,7 @@ package be.kdg.youthcouncil.config.security;
 
 import be.kdg.youthcouncil.config.security.Oauth.CustomOAuth2UserService;
 import be.kdg.youthcouncil.config.security.Oauth.OAuthLoginSuccessHandler;
+import be.kdg.youthcouncil.config.security.abac.ApiRequestVoter;
 import be.kdg.youthcouncil.config.security.abac.RequestVoter;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class WebSecurityConfig {
 	private final CustomOAuth2UserService oauthUserService;
 	private final OAuthLoginSuccessHandler oauthLoginSuccessHandler;
 	private final CustomLoginSuccessHandler loginSuccessHandler;
+	private final ApiRequestVoter apiRequestVoter;
 	private final RequestVoter requestVoter;
 
 	@Bean
@@ -65,6 +67,10 @@ public class WebSecurityConfig {
 						.hasRole("USER")
 						.regexMatchers(HttpMethod.PATCH, "/api/actionpoints/\\d/\\d")
 						.hasRole("COUNCIL_ADMIN")
+						.regexMatchers(HttpMethod.PATCH, "/api/users/\\d/role")
+						.hasRole("COUNCIL_ADMIN")
+						.regexMatchers(HttpMethod.PATCH, "/api/users/\\d/blocked-status")
+						.hasRole("COUNCIL_ADMIN")
 						.anyRequest()
 						.authenticated()
 						.accessDecisionManager(accessDecisionManager())
@@ -93,6 +99,7 @@ public class WebSecurityConfig {
 		decisionVoters.add(new RoleVoter());
 		decisionVoters.add(new AuthenticatedVoter());
 		decisionVoters.add(new WebExpressionVoter());
+		decisionVoters.add(apiRequestVoter);
 		decisionVoters.add(requestVoter);
 		return new UnanimousBased(decisionVoters);
 	}

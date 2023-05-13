@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping ("/statistics")
+@RequestMapping ("/user-management")
 @AllArgsConstructor
 public class GeneralStatistics {
 
@@ -19,10 +19,10 @@ public class GeneralStatistics {
 	private final UserService userService;
 
 	@GetMapping
-	public String youthCouncilStatistics(Model model) {
+	public String userManagement(Model model) {
 		model.addAttribute("subscriptions", youthCouncilSubscriptionService.findAllYouthCouncilSubscriptionsWithUniqueUsers());
 
-		return "statistics";
+		return "userManagement";
 	}
 
 }

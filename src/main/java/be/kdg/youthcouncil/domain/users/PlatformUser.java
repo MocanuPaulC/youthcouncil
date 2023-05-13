@@ -10,6 +10,8 @@ import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscri
 import be.kdg.youthcouncil.utility.Notification;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table (name = "platform_users")
+@SQLDelete (sql = "UPDATE platform_users SET deleted = true WHERE platform_users.user_id=?")
+@Where (clause = "deleted = false")
 public class PlatformUser implements Authenticable {
 
 	@Id
@@ -53,7 +57,7 @@ public class PlatformUser implements Authenticable {
 	@OneToMany (fetch = FetchType.LAZY)
 	@ToString.Exclude
 	private List<IdeaShare> ideaShares;
-	@OneToMany (fetch = FetchType.LAZY)
+	@OneToMany (fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn (name = "subscriber")
 	@ToString.Exclude
 	private List<YouthCouncilSubscription> youthCouncilSubscriptions;
@@ -66,6 +70,8 @@ public class PlatformUser implements Authenticable {
 
 	@OneToMany (fetch = FetchType.LAZY)
 	private List<Notification> notifications;
+
+	private boolean deleted = Boolean.FALSE;
 
 
 	public PlatformUser(String firstName, String lastName, String email, String postcode, String username, String password) {

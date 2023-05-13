@@ -21,7 +21,7 @@ public interface UserService {
 
 	void save(UserRegisterViewModel userViewModel);
 
-	boolean updateRole(long id, String role);
+	boolean updateRole(long id, String role, long youthCouncilId);
 
 	void save(PlatformUser user);
 
@@ -54,4 +54,8 @@ public interface UserService {
 	void markAllAsReadForUser(long id);
 
 	boolean hasSubscriptionToActionPoint(long userId, long actionPointId);
+
+	boolean updateBlockedStatus(long userId, boolean blocked, long youthCouncilId);
+
+	boolean deleteUser(long userId);
 }

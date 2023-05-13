@@ -2,10 +2,9 @@ package be.kdg.youthcouncil.domain.youthcouncil.subscriptions;
 
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -14,7 +13,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
 @Table (name = "youth_council_subscriptions", uniqueConstraints = {@UniqueConstraint (columnNames = {"subscriber", "youth_council"})})
+@SQLDelete (sql = "UPDATE youth_council_subscriptions SET deleted = true WHERE youth_council_subscriptions.youth_council_subscription_id=?")
+@Where (clause = "deleted = false")
 public class YouthCouncilSubscription {
 
 	@Id
@@ -22,7 +24,7 @@ public class YouthCouncilSubscription {
 	private long youthCouncilSubscriptionId;
 
 	@ManyToOne (fetch = FetchType.EAGER)
-	@JoinColumn (name = "subscriber", nullable = false)
+	@JoinColumn (name = "subscriber")
 	private PlatformUser subscriber;
 
 	@ManyToOne (fetch = FetchType.EAGER)
@@ -33,6 +35,8 @@ public class YouthCouncilSubscription {
 
 	@Column (name = "is_blocked", nullable = false)
 	private boolean isBlocked = false;
+
+	private boolean deleted = false;
 
 	public YouthCouncilSubscription(PlatformUser subscriber, YouthCouncil youthCouncil, SubscriptionRole role) {
 		this.subscriber = subscriber;

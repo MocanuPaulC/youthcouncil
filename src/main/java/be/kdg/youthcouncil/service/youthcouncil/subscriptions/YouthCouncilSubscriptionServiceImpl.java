@@ -4,6 +4,7 @@ import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
+import be.kdg.youthcouncil.exceptions.YouthCouncilSubscriptionNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.YouthCouncilSubscriptionRepository;
 import be.kdg.youthcouncil.service.users.UserService;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
@@ -60,5 +61,21 @@ public class YouthCouncilSubscriptionServiceImpl implements YouthCouncilSubscrip
 		                                         .toList();
 
 	}
+
+	@Override
+	public YouthCouncilSubscription findAllByUserIdAndYouthCouncilId(long userId, long youthCouncilId) {
+
+		return youthCouncilSubscriptionRepository.findBySubscriber_userIdAndYouthCouncil_YouthCouncilId(userId, youthCouncilId)
+		                                         .orElseThrow(
+				                                         () -> new YouthCouncilSubscriptionNotFoundException(userId, youthCouncilId));
+	}
+
+	@Override
+	public YouthCouncilSubscription findAllByUserIdAndYouthCouncilMunicipality(long userId, String s) {
+		return youthCouncilSubscriptionRepository.findBySubscriber_userIdAndYouthCouncil_Municipality(userId, s)
+		                                         .orElseThrow(
+				                                         () -> new YouthCouncilSubscriptionNotFoundException(userId, s));
+	}
+
 
 }

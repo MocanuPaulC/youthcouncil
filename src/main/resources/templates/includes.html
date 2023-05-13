@@ -77,8 +77,8 @@
 						<a class="btn"
 						   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
 						   th:classappend="${page == 'general-statistics' ? 'btn-light' : 'btn-dark'}"
-						   th:href="@{/statistics}">
-							Statistics
+						   th:href="@{/user-management}">
+							User Management
 						</a>
 					</li>
 					<li class="nav-item dropdown" sec:authorize="isAuthenticated() && !hasRole('ROLE_GENERAL_ADMIN')">

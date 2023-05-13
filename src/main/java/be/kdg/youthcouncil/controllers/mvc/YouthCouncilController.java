@@ -108,14 +108,14 @@ public class YouthCouncilController {
 		return "editYouthCouncil";
 	}
 
-	@GetMapping ("/{municipality}/statistics")
-	public String youthCouncilStatistics(Model model, @PathVariable String municipality) {
+	@GetMapping ("/{municipality}/user-management")
+	public String youthCouncilUserManagement(Model model, @PathVariable String municipality) {
 		YouthCouncil possibleYouthCouncil = youthCouncilService.findByMunicipality(municipality);
 		model.addAttribute("youthCouncil", possibleYouthCouncil);
 		model.addAttribute("subscriptions", youthCouncilSubscriptionService.findAllByYouthCouncil(possibleYouthCouncil));
 
 
-		return "statistics";
+		return "userManagement";
 	}
 
 	@GetMapping ("/{municipality}/callforideas/{callForIdeaId}")
