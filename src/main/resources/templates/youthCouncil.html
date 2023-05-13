@@ -74,13 +74,13 @@
 			</div>
 		</div>
 
-		<a class="btn btn-dark"
-		   th:href="@{/youthcouncils/{municipality}/statistics(municipality=${ycWithActionPoints.getMunicipality()})}"
-		   th:if="${#authorization.expression(
-			'hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
-			+ ' || hasAuthority(''ROLE_GENERAL_ADMIN'')')}">
-			Statistics
-		</a>
+<a class="btn btn-dark"
+   th:href="@{/youthcouncils/{municipality}/user-management(municipality=${ycWithActionPoints.getMunicipality()})}"
+   th:if="${#authorization.expression(
+		'hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
+		+ ' || hasAuthority(''ROLE_GENERAL_ADMIN'')')}">
+	User management
+</a>
 
 		<a class="btn btn-dark"
 		   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${ycWithActionPoints.getMunicipality()})}"

@@ -9,4 +9,5 @@ import lombok.*;
 @ToString
 public class UpdateUserRoleDTO {
 	private String role;
+	private long youthCouncilId;
 }

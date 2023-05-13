@@ -86,6 +86,38 @@ public class UserServiceImpl implements UserService {
 		                     .anyMatch(a -> a == actionPointId);
 	}
 
+	@Transactional
+	@Override
+	public boolean updateBlockedStatus(long userId, boolean blocked, long youthCouncilId) {
+		try {
+			PlatformUser user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+			user.getYouthCouncilSubscriptions()
+			    .forEach(subscription -> {
+				    if (subscription.getYouthCouncil().getYouthCouncilId() == youthCouncilId) {
+					    subscription.setBlocked(blocked);
+					    youthCouncilSubscriptionRepository.save(subscription);
+				    }
+			    });
+			userRepository.save(user);
+		} catch (HttpClientErrorException | IllegalArgumentException e) {
+			logger.debug("Error while updating blocked status of user with id: " + userId + " to blocked: " + blocked + " for youth council with id: " + youthCouncilId);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean deleteUser(long userId) {
+		try {
+			userRepository.deleteById(userId);
+			return true;
+		} catch (IllegalArgumentException e) {
+			logger.debug("Error while deleting user with id: " + userId);
+			return false;
+		}
+	}
+
+
 	@Override
 	public void save(PlatformUser user) {
 		userRepository.save(user);
@@ -96,11 +128,20 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 	}
 
+	@Transactional
 	@Override
-	public boolean updateRole(long userId, String role) {
+	public boolean updateRole(long userId, String role, long youthCouncilId) {
 		try {
-			userRepository.findById(userId).ifPresent(userRepository::save);
+			PlatformUser user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+			user.getYouthCouncilSubscriptions()
+			    .forEach(subscription -> {
+				    if (subscription.getYouthCouncil().getYouthCouncilId() == youthCouncilId) {
+					    subscription.setRole(SubscriptionRole.valueOf(role));
+				    }
+			    });
+			userRepository.save(user);
 		} catch (HttpClientErrorException | IllegalArgumentException e) {
+			logger.error("Error while updating role of user with id: " + userId + " to role: " + role + " for youth council with id: " + youthCouncilId);
 			return false;
 		}
 		return true;

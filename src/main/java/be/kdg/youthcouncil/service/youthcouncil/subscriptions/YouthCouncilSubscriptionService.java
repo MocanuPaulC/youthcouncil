@@ -16,4 +16,8 @@ public interface YouthCouncilSubscriptionService {
 	List<YouthCouncilSubscription> findAll();
 
 	List<YouthCouncilSubscription> findAllYouthCouncilSubscriptionsWithUniqueUsers();
+
+	YouthCouncilSubscription findAllByUserIdAndYouthCouncilId(long userId, long youthCouncilId);
+
+	YouthCouncilSubscription findAllByUserIdAndYouthCouncilMunicipality(long userId, String s);
 }

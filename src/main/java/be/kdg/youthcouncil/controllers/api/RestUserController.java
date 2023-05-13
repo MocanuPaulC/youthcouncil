@@ -1,6 +1,5 @@
 package be.kdg.youthcouncil.controllers.api;
 
-import be.kdg.youthcouncil.config.security.annotations.CAOnly;
 import be.kdg.youthcouncil.controllers.api.dto.users.*;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.UpdateUserRoleDTO;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
@@ -31,15 +30,32 @@ public class RestUserController {
 	private final BCryptPasswordEncoder encoder;
 
 
-	@CAOnly
-	@PatchMapping ("/{userId}/role")
-	public ResponseEntity<UserDTO> updateUser(@PathVariable long userId,
-											  @Valid @RequestBody UpdateUserRoleDTO updateUserRoleDTO) {
+	@DeleteMapping ("/{userId}")
+	public ResponseEntity<UserDTO> deleteUser(@PathVariable long userId) {
+		if (userService.deleteUser(userId)) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
 
-		if (userService.updateRole(userId, updateUserRoleDTO.getRole())) {
+	@PatchMapping ("/{userId}/role")
+	public ResponseEntity<UserDTO> updateUser(@PathVariable long userId, @RequestBody UpdateUserRoleDTO updateUserRoleDTO) {
+		logger.debug(updateUserRoleDTO.toString());
+
+		if (userService.updateRole(userId, updateUserRoleDTO.getRole(), updateUserRoleDTO.getYouthCouncilId())) {
 			UserDTO userDTO = new UserDTO();
 			userDTO.setRole(updateUserRoleDTO.getRole());
 			return new ResponseEntity<>(userDTO, HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@PatchMapping ("/{userId}/blocked-status")
+	public ResponseEntity<UpdateUserBlockedStatusDto> updateUserBlockedStatus(@PathVariable long userId, @RequestBody UpdateUserBlockedStatusDto updateUserBlockedStatusDto) {
+		logger.debug(updateUserBlockedStatusDto.toString());
+
+		if (userService.updateBlockedStatus(userId, updateUserBlockedStatusDto.isBlockedStatus(), updateUserBlockedStatusDto.getYouthCouncilId())) {
+			return new ResponseEntity<>(updateUserBlockedStatusDto, HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}

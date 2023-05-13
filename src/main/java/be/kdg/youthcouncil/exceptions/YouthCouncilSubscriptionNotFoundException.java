@@ -13,4 +13,7 @@ public class YouthCouncilSubscriptionNotFoundException extends RuntimeException 
 		super(String.format("Subscription to youthCouncil: %d for user : %d, not found", userId, youthCouncilId));
 	}
 
+	public YouthCouncilSubscriptionNotFoundException(long userId, String municipality) {
+		super(String.format("Subscription to youthCouncil: %s for user : %d, not found", municipality, userId));
+	}
 }
