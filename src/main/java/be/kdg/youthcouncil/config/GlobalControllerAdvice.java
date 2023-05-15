@@ -4,6 +4,7 @@ import be.kdg.youthcouncil.config.security.CustomUserDetails;
 import be.kdg.youthcouncil.config.security.Oauth.CustomOAuth2User;
 import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
+import be.kdg.youthcouncil.exceptions.AccessForbiddenException;
 import be.kdg.youthcouncil.exceptions.InformativePageNotFoundException;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.exceptions.UserNotFoundException;
@@ -70,6 +71,12 @@ public class GlobalControllerAdvice {
 
 	@ExceptionHandler (UserNotFoundException.class)
 	public String handleUserNotFoundException(UserNotFoundException e, Model model) {
+		model.addAttribute("error", e.getMessage());
+		return "error";
+	}
+
+	@ExceptionHandler (AccessForbiddenException.class)
+	public String handleAccessDeniedException(AccessForbiddenException e, Model model) {
 		model.addAttribute("error", e.getMessage());
 		return "error";
 	}

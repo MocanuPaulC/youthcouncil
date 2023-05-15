@@ -1,7 +1,6 @@
 package be.kdg.youthcouncil.service.youthcouncil.modules;
 
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.InformativePageBlockDto;
-import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePageBlock;
 import be.kdg.youthcouncil.exceptions.InformativePageNotFoundException;
@@ -67,16 +66,10 @@ public class InformativePageServiceImpl implements InformativePageService {
 
 	@Override
 	public InformativePage findInfoPage(String title, Optional<String> municipality) {
-		YouthCouncil owningYouthCouncil = municipality.map(m -> youthCouncilRepository.findByMunicipalityName(m)
-		                                                                              .orElseThrow(() -> new MunicipalityNotFoundException("The YouthCouncil could not be found!")))
-		                                              .orElse(null);
-		List<InformativePage> informativePagesByTitle = informativePageRepository.findByTitleAndOwningYouthCouncil(title, owningYouthCouncil);
-		if (informativePagesByTitle.isEmpty()) {
-			throw new InformativePageNotFoundException(title);
-		} else if (informativePagesByTitle.size() > 1) {
-			logger.warn("There are multiple InformativePages with the same title for the same municipality!");
-		}
-		return informativePagesByTitle.get(0);
+		logger.debug("im bugging");
+		logger.debug(informativePageRepository.findAll().toString());
+		return informativePageRepository.findByTitleAndMunicipality(title, municipality.orElse(null))
+		                                .orElseThrow(() -> new InformativePageNotFoundException(title, municipality));
 	}
 
 

@@ -45,6 +45,8 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 			return ACCESS_ABSTAIN;
 		}
 
+		logger.debug(collection.toString());
+		logger.debug(filterInvocation.toString());
 
 		if (collection.stream()
 		              .anyMatch(a -> "permitAll".equals(a.toString()))) {
@@ -92,12 +94,14 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		if (uri.startsWith("/youthcouncils/")) {
 			String[] splitUri = uri.split("/");
 			YouthCouncil yc = youthCouncilService.findByMunicipality(splitUri[2]);
-			String currentSubscription = userService.findSubscriptionRoleOfUserToYouthCouncil(user.getUserId(), yc.getYouthCouncilId())
-			                                        .toString();
 
-			logger.debug("im testing here");
-			logger.debug(currentSubscription);
-			logger.debug(collectionRoleRequest);
+			String currentSubscription;
+			try {
+				currentSubscription = userService.findSubscriptionRoleOfUserToYouthCouncil(user.getUserId(), yc.getYouthCouncilId())
+				                                 .toString();
+			} catch (YouthCouncilSubscriptionNotFoundException e) {
+				return ACCESS_DENIED;
+			}
 			if (currentSubscription.equals(collectionRoleRequest)) {
 				return ACCESS_GRANTED;
 			} else {

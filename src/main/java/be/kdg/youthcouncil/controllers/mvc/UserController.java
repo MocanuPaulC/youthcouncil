@@ -1,6 +1,5 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
-import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserLogInViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
@@ -60,7 +59,6 @@ public class UserController {
 		return "redirect:/";
 	}
 
-	@GAOnly
 	@GetMapping ("/users")
 	public String users(Model model) {
 		model.addAttribute("users", userService.findAllUsers());

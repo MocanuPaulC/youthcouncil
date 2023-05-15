@@ -2,8 +2,6 @@ package be.kdg.youthcouncil.controllers.mvc;
 
 
 import be.kdg.youthcouncil.config.security.CustomUserDetails;
-import be.kdg.youthcouncil.config.security.annotations.CAOnly;
-import be.kdg.youthcouncil.config.security.annotations.GAOnly;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
@@ -57,14 +55,12 @@ public class YouthCouncilController {
 		return "youthCouncils";
 	}
 
-	@GAOnly
 	@GetMapping ("/add")
 	public String getAddYouthCouncil(Model model) {
 		model.addAttribute("youthCouncil", new NewYouthCouncilViewModel());
 		return "addYouthCouncil";
 	}
 
-	@GAOnly
 	@PostMapping ("/add")
 	public String addYouthCouncil(@Valid @ModelAttribute ("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors, HttpServletRequest request) {
 		logger.debug(viewModel.toString() + " in postMapping of addYouthCouncil");
@@ -189,7 +185,6 @@ public class YouthCouncilController {
 		return "announcements";
 	}
 
-	@CAOnly
 	@GetMapping ("/{municipality}/announcements/add")
 	public String getAddAnnouncements(Model model, @PathVariable String municipality) {
 		model.addAttribute("announcement", new NewAnnoucementViewModel());
@@ -197,7 +192,6 @@ public class YouthCouncilController {
 		return "addAnnouncement";
 	}
 
-	@CAOnly
 	@PostMapping ("/{municipality}/announcements/add")
 	public String addAnnouncement(@PathVariable String municipality, @Valid @ModelAttribute ("announcement") NewAnnoucementViewModel viewModel, BindingResult errors, Model model) {
 		if (errors.hasErrors()) {

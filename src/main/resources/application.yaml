@@ -42,7 +42,7 @@ server:
 logging:
     level:
         #    web: debug
-        be.kdg.youthcouncil: error
+        be.kdg.youthcouncil: debug
         #        root: debug
         #        sql: debug
-        org.springframework.security: error
+        org.springframework.security: debug

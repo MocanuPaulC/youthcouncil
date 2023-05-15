@@ -1,5 +1,7 @@
 import csrfHeader from "./csrfHeader.js";
 
+const youthCouncilID = +document.querySelector("body").dataset.youthcouncil_id;
+
 const usernameDisplay = document.getElementById("username-display");
 const usernameSubmit = document.getElementById("username-submit");
 const usernameEditButton = document.getElementById("username-edit-button");
@@ -8,12 +10,12 @@ const usernameSaveButton = document.getElementById("username-save-button");
 
 usernameEditButton.addEventListener("click", handleUsernameEditOnclick);
 usernameSaveButton.addEventListener("click", handleUsernameEditSave);
-usernameCancelButton.addEventListener("click", handleUsernameEditCancel)
+usernameCancelButton.addEventListener("click", handleUsernameEditCancel);
 
 let currentUsername;
 
 function handleUsernameEditOnclick(event) {
-	console.log("editing")
+	console.log("editing");
 	usernameDisplay.setAttribute("contenteditable", "true");
 	usernameEditButton.classList.add("d-none");
 	usernameSaveButton.classList.remove("d-none");
@@ -22,7 +24,7 @@ function handleUsernameEditOnclick(event) {
 }
 
 function handleUsernameEditCancel(event) {
-	console.log("canceling")
+	console.log("canceling");
 	usernameDisplay.setAttribute("contenteditable", "false");
 	usernameEditButton.classList.remove("d-none");
 	usernameSaveButton.classList.add("d-none");
@@ -32,7 +34,7 @@ function handleUsernameEditCancel(event) {
 
 function handleUsernameEditSave(event) {
 	console.log("saving");
-	console.log(currentUsername)
+	console.log(currentUsername);
 	if (usernameDisplay.innerText === currentUsername) {
 		handleUsernameEditCancel();
 		return;
@@ -46,6 +48,7 @@ function handleUsernameEditSave(event) {
 		headers: {
 			"Accept": "application/json",
 			"Content-Type": "application/json",
+			"youthCouncilID": youthCouncilID,
 			[name]: value
 		},
 		body: JSON.stringify({

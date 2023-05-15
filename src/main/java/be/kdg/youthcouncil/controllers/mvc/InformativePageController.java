@@ -55,7 +55,7 @@ public class InformativePageController {
 	@GetMapping ("/youthcouncils/{municipality}/informativepages/{title}/edit")
 	public String editYouthCouncilInfoPage(@PathVariable String municipality, @PathVariable String title, Model model) {
 		if (!informativePageService.exists(Optional.of(municipality), title))
-			throw new InformativePageNotFoundException(title);
+			throw new InformativePageNotFoundException(title, municipality);
 		model.addAttribute("editorType", "edit");
 		model.addAttribute("infoPageType", "youthcouncil");
 		return "informativePageEditor";

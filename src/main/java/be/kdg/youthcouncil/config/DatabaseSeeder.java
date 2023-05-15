@@ -157,10 +157,11 @@ public class DatabaseSeeder {
 		ideaRepository.saveAll(List.of(idea11, idea12, idea21, idea22));
 
 		//INFORMATIVE PAGE
-		InformativePage informativePage1 = new InformativePage("info page title 1", true, youthCouncil1);
-		InformativePage informativePage2 = new InformativePage("info page title 2", true, youthCouncil1);
-		InformativePage informativePage3 = new InformativePage("info page title 3", true, youthCouncil2);
-		InformativePage informativePage4 = new InformativePage("info page title 4", true, youthCouncil2);
+		InformativePage informativePage1 = new InformativePage("info-page-title-1", false, youthCouncil1);
+		InformativePage informativePage2 = new InformativePage("info-page-title-2", false, youthCouncil1);
+		InformativePage informativePage3 = new InformativePage("info-page-title-3", false, youthCouncil2);
+		InformativePage informativePage4 = new InformativePage("info-page-title-4", false, youthCouncil2);
+		InformativePage informativePage5 = new InformativePage("default-info-page", true, null);
 
 		informativePageRepository.saveAll(List.of(informativePage1, informativePage2, informativePage3, informativePage4));
 

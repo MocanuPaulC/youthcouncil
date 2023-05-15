@@ -379,7 +379,9 @@ async function handleFormSubmit(event) {
 
 
 	const title_element = document.getElementById("info-page-title");
-	const page_title = title_element.nodeName === "INPUT" ? title_element.value.toString() : title_element.innerText;
+	const page_title = title_element.nodeName === "INPUT"
+		? title_element.value.toString().replace(" ", "-")
+		: title_element.innerText.replace(" ", "-");
 
 	const is_create_type = info_page_submit.getAttribute("submit-type") === "create";
 	const call_type = is_create_type ? "POST" : "PUT";
