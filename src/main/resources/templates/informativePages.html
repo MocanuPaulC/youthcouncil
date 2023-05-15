@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en"
-	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Informative Pages</title>
@@ -10,14 +9,18 @@
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'informative-pages')}"></th:block>
 <section class="container-fluid">
 	<div class="row" th:each="page : ${informativePages}">
-		<div class="col-3" th:text="${page.title}"></div>
+		<div class="col-3">
+			<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title}"
+			   th:text="${page.title.replaceAll('-', ' ')}"></a>
+		</div>
 		<div class="col-6">
-			<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title} + '/edit'">edit
-																											  page
+			<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title} + '/edit'"
+			   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + municipality + ''')')}">
+				edit page
 			</a>
 		</div>
 	</div>
-	<div class="row" sec:authorize="hasRole('ROLE_COUNCIL_ADMIN')">
+	<div class="row" th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + municipality + ''')')}">
 		<div class="col-12">
 			<a class="btn btn-primary" th:href="'/youthcouncils/' + ${municipality} + '/informativepages/create'">+</a>
 		</div>

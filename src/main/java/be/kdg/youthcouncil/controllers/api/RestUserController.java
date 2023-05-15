@@ -29,7 +29,6 @@ public class RestUserController {
 
 	private final BCryptPasswordEncoder encoder;
 
-
 	@DeleteMapping ("/{userId}")
 	public ResponseEntity<UserDTO> deleteUser(@PathVariable long userId) {
 		if (userService.deleteUser(userId)) {
@@ -37,6 +36,7 @@ public class RestUserController {
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
+
 
 	@PatchMapping ("/{userId}/role")
 	public ResponseEntity<UserDTO> updateUser(@PathVariable long userId, @RequestBody UpdateUserRoleDTO updateUserRoleDTO) {

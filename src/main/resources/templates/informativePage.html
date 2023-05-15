@@ -9,7 +9,7 @@
 <section>
 	<div class="container my-5">
 		<div class="bg-body-tertiary p-5 rounded">
-			<h1 class="display-5" th:text="${informativePage.title}"></h1>
+			<h1 class="display-5" th:text="${informativePage.title.replaceAll('-', ' ')}"></h1>
 			<div th:each="block : ${informativePage.infoPageBlocks}">
 				<h1 th:if="${block.type.toString().equals('HEADER_BIG')}" th:text="${block.content}"></h1>
 				<h2 th:if="${block.type.toString().equals('HEADER_MEDIUM')}" th:text="${block.content}"></h2>

@@ -81,9 +81,7 @@ public class RestInformativePageController {
 			@PathVariable String municipality,
 			@PathVariable String title
 	) {
-		List<InformativePageBlockDto> list = informativePageService.findInfoPageBlocks(Optional.of(municipality), title);
-		logger.debug(list.toString());
-		return ResponseEntity.ok(list);
+		return ResponseEntity.ok(informativePageService.findInfoPageBlocks(Optional.of(municipality), title));
 	}
 
 	@GetMapping ("/informativepageblocks/{title}")

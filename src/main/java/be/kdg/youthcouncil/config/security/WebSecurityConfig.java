@@ -4,6 +4,7 @@ import be.kdg.youthcouncil.config.security.Oauth.CustomOAuth2UserService;
 import be.kdg.youthcouncil.config.security.Oauth.OAuthLoginSuccessHandler;
 import be.kdg.youthcouncil.config.security.abac.ApiRequestVoter;
 import be.kdg.youthcouncil.config.security.abac.RequestVoter;
+import be.kdg.youthcouncil.config.security.abac.UserRequestVoter;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class WebSecurityConfig {
 	private final CustomLoginSuccessHandler loginSuccessHandler;
 	private final ApiRequestVoter apiRequestVoter;
 	private final RequestVoter requestVoter;
+	private final UserRequestVoter userRequestVoter;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -49,30 +51,113 @@ public class WebSecurityConfig {
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 				.authorizeRequests(auths -> auths
-						.antMatchers(HttpMethod.GET, "/", "/logout", "/login", "/register", "/oauth/**", "/youthcouncils", "/youthcouncils/**")
+						.antMatchers(HttpMethod.GET, "/", "/logout", "/login", "/register", "/oauth/**", "/js/**", "/css/**", "/webjars/**", "/favicon.ico", "/error")
 						.permitAll()
-						.antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/webjars/**", "/favicon.ico", "/api/municipalities/")
+						.antMatchers(HttpMethod.POST, "/register")
 						.permitAll()
-						.regexMatchers(HttpMethod.POST, "/api/youthcouncils/\\d/\\d", "/api/ideas")
+						/***********************/
+						/***      OWNER      ***/
+						/***********************/
+						.antMatchers(
+								HttpMethod.GET,
+								"/profile"
+						).hasRole("OWNER")
+						.antMatchers(
+								HttpMethod.POST,
+								"/api/users/*/password", "/api/users/*/username"
+						).hasRole("OWNER")
+						/***********************/
+						/***  GENERAL ADMIN  ***/
+						/***********************/
+						.antMatchers(
+								HttpMethod.GET,
+								"/statistics", "/users",
+								"/youthcouncils/add",
+								"/youthcouncils/*/create-council-admin",
+								"/informativepages/create", "/informativepages/*/edit",
+								"/api/informativepages/informativepageblocks/*"
+						).hasRole("GENERAL_ADMIN")
+						.antMatchers(
+								HttpMethod.POST,
+								"/youthcouncils/add",
+								"/youthcouncils/*/create-council-admin",
+								"/api/informativepages/*"
+						).hasRole("GENERAL_ADMIN")
+						.antMatchers(
+								HttpMethod.PUT,
+								"/api/informativepages/*"
+						).hasRole("GENERAL_ADMIN")
+						/***********************/
+						/***  COUNCIL_ADMIN  ***/
+						/***********************/
+						.antMatchers(
+								HttpMethod.GET,
+								"/youthcouncils/*/edit", "/youthcouncils/*/statistics",
+								"/youthcouncils/*/announcements/add",
+								"/youthcouncils/*/informativepages/create", "/youthcouncils/*/informativepages/*/edit",
+								"/api/informativepages/informativepageblocks/*/*"
+						).hasRole("COUNCIL_ADMIN")
+						.antMatchers(
+								HttpMethod.POST,
+								"/youthcouncils/*/announcements/add",
+								"/api/informativepages/*/*",
+								"/api/youthcouncils/*/callforideas",
+								"/api/youthcouncils/*/*",
+								"/api/ideas"
+						).hasRole("COUNCIL_ADMIN")
+						.antMatchers(
+								HttpMethod.PATCH,
+								"/api/actionpoints/*/*",
+								"/api/call-for-ideas/*/set-display",
+								"/api/annoucements/*/set-display"
+						).hasRole("COUNCIL_ADMIN")
+						.antMatchers(
+								HttpMethod.PUT,
+								"/api/informativepages/*/*",
+								"/api/actionpoints/*/*"
+						).hasRole("COUNCIL_ADMIN")
+						/***********************/
+						/***       USER      ***/
+						/***********************/
+						.antMatchers(
+								HttpMethod.GET,
+								"/api/idea-reaction/*/*"
+						).hasRole("USER")
+						.antMatchers(
+								HttpMethod.POST,
+								"/api/media/upload",
+								"/api/youthcouncils/*/*",
+								"/api/actionpoints/subscribe/*/*",
+								"/api/idea-reaction/react",
+								"/api/ideas"
+						).hasRole("USER")
+						.antMatchers(
+								HttpMethod.PATCH,
+								"/api/notifications/*"
+						)
+						.hasRole("USER")
+						.antMatchers(
+								HttpMethod.DELETE,
+								"/api/users/*",
+								"/api/actionpoints/subscribe/*/*"
+						)
+						.hasRole("USER")
+						/***********************/
+						/***        ALL      ***/
+						/***********************/
+						.antMatchers(HttpMethod.GET,
+								"/youthcouncils", "/youthcouncils/*", "/api/municipalities/",
+								"/youthcouncils/*/informativepages", "/youthcouncils/*/informativepages/*", "/informativepages/*",
+								"/youthcouncils/*/actionpoints", "/youthcouncils/*/actionpoints/*",
+								"/youthcouncils/*/callforideas/*",
+								"/youthcouncils/*/annoucements", "/youthcouncils/*/annoucements/*",
+								"/api/municipalities", "/api/informativepages/blocktypes",
+								"/api/media/imagename"
+
+						)
 						.permitAll()
-						.antMatchers(HttpMethod.POST, "/api/youthcouncils/**")
-						.hasRole("COUNCIL_ADMIN")
-						.regexMatchers(HttpMethod.PATCH, "/api/notifications/\\d")
-						.hasRole("USER")
-						.regexMatchers(HttpMethod.PUT, "/api/actionpoints/\\d/\\d")
-						.hasRole("COUNCIL_ADMIN")
-						.regexMatchers(HttpMethod.DELETE, "/api/actionpoints/subscribe/\\d/\\d")
-						.hasRole("USER")
-						.regexMatchers(HttpMethod.POST, "/api/actionpoints/subscribe/\\d/\\d")
-						.hasRole("USER")
-						.regexMatchers(HttpMethod.PATCH, "/api/actionpoints/\\d/\\d")
-						.hasRole("COUNCIL_ADMIN")
-						.regexMatchers(HttpMethod.PATCH, "/api/users/\\d/role")
-						.hasRole("COUNCIL_ADMIN")
-						.regexMatchers(HttpMethod.PATCH, "/api/users/\\d/blocked-status")
-						.hasRole("COUNCIL_ADMIN")
 						.anyRequest()
-						.authenticated()
+						.denyAll()
 						.accessDecisionManager(accessDecisionManager())
 				)
 				.formLogin()
@@ -101,6 +186,7 @@ public class WebSecurityConfig {
 		decisionVoters.add(new WebExpressionVoter());
 		decisionVoters.add(apiRequestVoter);
 		decisionVoters.add(requestVoter);
+		decisionVoters.add(userRequestVoter);
 		return new UnanimousBased(decisionVoters);
 	}
 

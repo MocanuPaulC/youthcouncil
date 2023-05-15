@@ -195,7 +195,7 @@
 					<div class="card-body">
 						<h5>
 							<a class="card-title"
-							   th:href="@{/youthcouncils/{municipality}/announcement/{announcementId}(municipality=${ycWithAnnouncements.getMunicipality()}, announcementId=${announcement.getAnnouncementId()})}"
+							   th:href="@{/youthcouncils/{municipality}/announcements/{announcementId}(municipality=${ycWithAnnouncements.getMunicipality()}, announcementId=${announcement.getAnnouncementId()})}"
 							   th:text="${announcement.getTitle()}">Card title
 							</a>
 						</h5>

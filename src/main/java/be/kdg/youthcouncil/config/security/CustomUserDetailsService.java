@@ -34,6 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
+
 		if (user.isGA()) {
 			authorities.addAll(Arrays.asList(
 					new SimpleGrantedAuthority("ROLE_GENERAL_ADMIN"),
@@ -85,6 +86,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 			});
 		}
 
+		authorities.add(new SimpleGrantedAuthority(String.format("OWNER@%s", username)));
 		logger.debug("User found");
 		logger.debug("User: " + user.getUsername() + " " + user.getPassword());
 		logger.debug("Authorities: " + authorities);

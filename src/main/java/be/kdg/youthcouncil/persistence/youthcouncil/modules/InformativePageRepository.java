@@ -1,7 +1,6 @@
 package be.kdg.youthcouncil.persistence.youthcouncil.modules;
 
 
-import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePageBlock;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,7 +32,6 @@ public interface InformativePageRepository extends JpaRepository<InformativePage
 
 	List<InformativePage> findAllByTitle(String title);
 
-	List<InformativePage> findByTitleAndOwningYouthCouncil(String title, YouthCouncil youthCouncil);
 
 	@Query ("""
 			select i.infoPageBlocks 
