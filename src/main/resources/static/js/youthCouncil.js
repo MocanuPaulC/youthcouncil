@@ -9,6 +9,10 @@ const button = document.querySelector(".join-council");
 if (button !== null)
 	button.addEventListener("click", addUserToCouncil);
 
+const leaveBtn = document.querySelector(".leave-council");
+if (leaveBtn !== null)
+	leaveBtn.addEventListener("click", leaveYouthCouncil);
+
 const buttons = document.querySelectorAll("button[id^=\"reaction-\"]");
 buttons.forEach(button => {
 	button.addEventListener("click", () => {
@@ -22,6 +26,24 @@ reactionBtn.forEach(btn => btn.addEventListener("click", () => {
 	fetchReactions(event, "action-point");
 }));
 
+function leaveYouthCouncil() {
+	const userId = getUser(true);
+	fetch(`/api/youthcouncils/${youthCouncilID}/${userId}`, {
+		method: "DELETE",
+		headers: {
+			youthCouncilID,
+			"Content-Type": "application/json",
+			[name]: value
+		}
+	})
+		.then((response) => {
+			console.log(response);
+			if (response.status === 200) {
+				location.reload();
+
+			}
+		});
+}
 
 function addUserToCouncil() {
 

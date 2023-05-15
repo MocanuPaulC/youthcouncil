@@ -4,7 +4,6 @@ import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -16,7 +15,6 @@ import javax.persistence.*;
 @ToString
 @Table (name = "youth_council_subscriptions", uniqueConstraints = {@UniqueConstraint (columnNames = {"subscriber", "youth_council"})})
 @SQLDelete (sql = "UPDATE youth_council_subscriptions SET deleted = true WHERE youth_council_subscriptions.youth_council_subscription_id=?")
-@Where (clause = "deleted = false")
 public class YouthCouncilSubscription {
 
 	@Id

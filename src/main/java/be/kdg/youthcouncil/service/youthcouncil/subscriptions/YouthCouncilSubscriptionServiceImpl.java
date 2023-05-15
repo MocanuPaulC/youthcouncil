@@ -11,6 +11,7 @@ import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -31,10 +32,18 @@ public class YouthCouncilSubscriptionServiceImpl implements YouthCouncilSubscrip
 
 	@Override
 	public void create(long youthCouncilId, long userId) {
+
 		YouthCouncil youthCouncil = youthCouncilService.getYouthCouncil(youthCouncilId);
 		PlatformUser platformUser = userService.findByIdWithYouthCouncilSubscriptions(userId);
-		YouthCouncilSubscription subscription = new YouthCouncilSubscription(platformUser, youthCouncil, SubscriptionRole.USER);
-		youthCouncilSubscriptionRepository.save(subscription);
+		try {
+			YouthCouncilSubscription existingSubscription = youthCouncilSubscriptionRepository.findBySubscriber_userIdAndYouthCouncil_YouthCouncilId(userId, youthCouncilId)
+			                                                                                  .orElseThrow(() -> new YouthCouncilSubscriptionNotFoundException(userId, youthCouncilId));
+			existingSubscription.setDeleted(false);
+			youthCouncilSubscriptionRepository.save(existingSubscription);
+		} catch (YouthCouncilSubscriptionNotFoundException e) {
+			YouthCouncilSubscription subscription = new YouthCouncilSubscription(platformUser, youthCouncil, SubscriptionRole.USER);
+			youthCouncilSubscriptionRepository.save(subscription);
+		}
 		userService.save(platformUser);
 	}
 
@@ -57,6 +66,7 @@ public class YouthCouncilSubscriptionServiceImpl implements YouthCouncilSubscrip
 	public List<YouthCouncilSubscription> findAllYouthCouncilSubscriptionsWithUniqueUsers() {
 		return youthCouncilSubscriptionRepository.findAll()
 		                                         .stream()
+		                                         .filter(youthCouncilSubscription -> !youthCouncilSubscription.isDeleted())
 		                                         .filter(distinctByKey(YouthCouncilSubscription::getSubscriber))
 		                                         .toList();
 
@@ -75,6 +85,12 @@ public class YouthCouncilSubscriptionServiceImpl implements YouthCouncilSubscrip
 		return youthCouncilSubscriptionRepository.findBySubscriber_userIdAndYouthCouncil_Municipality(userId, s)
 		                                         .orElseThrow(
 				                                         () -> new YouthCouncilSubscriptionNotFoundException(userId, s));
+	}
+
+	@Override
+	@Transactional
+	public void remove(long youthCouncilId, long userId) {
+		youthCouncilSubscriptionRepository.deleteBySubscriber_userIdAndYouthCouncil_YouthCouncilId(userId, youthCouncilId);
 	}
 
 

@@ -59,6 +59,30 @@ public class RestYouthCouncilController {
 		return ResponseEntity.ok().build();
 	}
 
+	@DeleteMapping ("/{youthCouncilId}/{userId}")
+	public ResponseEntity<CallForIdeasDTO> leaveCouncil(
+			@PathVariable long youthCouncilId,
+			@PathVariable long userId) {
+
+
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+
+		//		logger.info("User {} is joining youth council {}", securityContext.getAuthentication().getPrincipal().getName(), youthCouncilId);
+		youthCouncilSubscriptionService.remove(youthCouncilId, userId);
+		String youthCouncilMunicipality = youthCouncilService.getYouthCouncil(youthCouncilId).getMunicipality();
+
+		Authentication auth = securityContext.getAuthentication();
+
+		List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+		updatedAuthorities.remove(new SimpleGrantedAuthority("USER@" + youthCouncilMunicipality)); //add your role here [e.g., new SimpleGrantedAuthority("ROLE_NEW_ROLE")]
+
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
+
+		securityContext.setAuthentication(newAuth);
+
+		return ResponseEntity.ok().build();
+	}
+
 	@PostMapping ("/{id}/callforideas")
 	public ResponseEntity<CallForIdeasDTO> launchCallForIdeas(@PathVariable Long id, @Valid @RequestBody CallForIdeasDTO callForIdeasDTO, Principal principal) {
 		logger.info("User {} is launching a call for ideas for youth council {}", principal.getName(), id);

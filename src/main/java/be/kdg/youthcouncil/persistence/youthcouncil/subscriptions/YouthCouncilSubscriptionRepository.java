@@ -41,9 +41,10 @@ public interface YouthCouncilSubscriptionRepository extends JpaRepository<YouthC
 	List<YouthCouncilSubscription> findAllByYouthCouncil(YouthCouncil youthCouncil);
 
 	@Query ("""
-			         SELECT s.youthCouncil.municipality 
-			         FROM YouthCouncilSubscription s 
+			         SELECT s.youthCouncil.municipality
+			         FROM YouthCouncilSubscription s
 			         WHERE s.subscriber = :user
+			         AND s.deleted=false
 			""")
 	List<String> findSubscribedMunicipalitiesByUser(PlatformUser user);
 
@@ -53,6 +54,8 @@ public interface YouthCouncilSubscriptionRepository extends JpaRepository<YouthC
 
 
 	Optional<YouthCouncilSubscription> findBySubscriber_userIdAndYouthCouncil_Municipality(long userId, String s);
+
+	void deleteBySubscriber_userIdAndYouthCouncil_YouthCouncilId(long userId, long youthCouncilId);
 }
 
 

@@ -33,8 +33,16 @@
 			'!hasAuthority(''USER@' + ycWithActionPoints.getMunicipality()+''')'
 			+ ' && !hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
 			+ ' && !hasAuthority(''MODERATOR@' + ycWithActionPoints.getMunicipality()+''')'
+			+ ' && !hasAuthority(''ROLE_GENERAL_ADMIN'')'
 			)}"
 				th:text="'Join '+${ycWithActionPoints.getCouncilName()} +'!'"
+				type="button"></button>
+		<button class="leave-council btn btn-primary"
+				th:if="${#authorization.expression(
+			'hasAuthority(''USER@' + ycWithActionPoints.getMunicipality()+''')'
+			+ ' && !hasAuthority(''ROLE_GENERAL_ADMIN'')'
+			)}"
+				th:text="'Leave '+${ycWithActionPoints.getCouncilName()} +'!'"
 				type="button"></button>
 		<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
 
@@ -74,13 +82,13 @@
 			</div>
 		</div>
 
-<a class="btn btn-dark"
-   th:href="@{/youthcouncils/{municipality}/user-management(municipality=${ycWithActionPoints.getMunicipality()})}"
-   th:if="${#authorization.expression(
+		<a class="btn btn-dark"
+		   th:href="@{/youthcouncils/{municipality}/user-management(municipality=${ycWithActionPoints.getMunicipality()})}"
+		   th:if="${#authorization.expression(
 		'hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
 		+ ' || hasAuthority(''ROLE_GENERAL_ADMIN'')')}">
-	User management
-</a>
+			User management
+		</a>
 
 		<a class="btn btn-dark"
 		   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${ycWithActionPoints.getMunicipality()})}"
