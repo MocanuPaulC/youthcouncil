@@ -5,6 +5,7 @@
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer src="/js/changePassword.js" type="module"></script>
 	<script defer src="/js/editUsername.js" type="module"></script>
+	<script defer src="/js/profile.js" type="module"></script>
 </head>
 <body class="m-3">
 <header th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'profile')}"></header>
@@ -13,9 +14,10 @@
 		<div class="col-12">
 			<h1>
 				username:
-				<span th:text="${user.username}" id="username-display"></span>
-				<input id="username-submit" th:user-id="${user.id}" type="hidden">
+				<span id="username-display" th:text="${user.username}"></span>
+				<input id="username-submit" th:user-id="${user.id}" th:value="${authUser.id}" type="hidden">
 				<button class="edit btn btn-primary" id="username-edit-button" type="button">Edit</button>
+				<button class="delete btn btn-danger" id="delete-btn" type="button">Delete</button>
 				<button class="save btn btn-primary d-none" id="username-cancel-button">Cancel</button>
 				<button class="save btn btn-primary d-none" id="username-save-button">Save</button>
 			</h1>

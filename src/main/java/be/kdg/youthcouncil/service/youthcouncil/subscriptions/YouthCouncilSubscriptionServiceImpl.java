@@ -49,7 +49,8 @@ public class YouthCouncilSubscriptionServiceImpl implements YouthCouncilSubscrip
 
 	@Override
 	public List<YouthCouncilSubscription> findAllByYouthCouncil(YouthCouncil youthCouncil) {
-		return youthCouncilSubscriptionRepository.findAllByYouthCouncil(youthCouncil);
+		return youthCouncilSubscriptionRepository.findAllByYouthCouncil(youthCouncil).stream().filter(
+				youthCouncilSubscription -> !youthCouncilSubscription.isDeleted()).toList();
 	}
 
 	@Override
