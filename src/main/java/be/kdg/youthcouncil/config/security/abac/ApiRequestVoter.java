@@ -72,7 +72,7 @@ public class ApiRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 
 			try {
 				YouthCouncilSubscription subscription = youthCouncilSubscriptionService.findAllByUserIdAndYouthCouncilId(user.getUserId(), youthCouncilId);
-				if (subscription.isBlocked()) return ACCESS_DENIED;
+				if (subscription.isBlocked() || subscription.isDeleted()) return ACCESS_DENIED;
 				if (subscription.getRole().equals(SubscriptionRole.valueOf(collectionRoleRequest))) {
 					return ACCESS_GRANTED;
 				} else {

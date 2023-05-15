@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		logger.debug("Loading user by username " + username);
 		Authenticable user = userService.findAuthenticableByUsername(username);
 		PlatformUser platformUser = userService.findByIdWithYouthCouncilSubscriptions(user.getId());
-		
+
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
 		if (user.isGA()) {
@@ -47,37 +47,39 @@ public class CustomUserDetailsService implements UserDetailsService {
 			AtomicBoolean isUser = new AtomicBoolean(false);
 
 			platformUser.getYouthCouncilSubscriptions().forEach(subscription -> {
-				String role = subscription.getRole().toString();
-				String municipality = subscription.getYouthCouncil().getMunicipality();
+				if (!subscription.isDeleted()) {
+					String role = subscription.getRole().toString();
+					String municipality = subscription.getYouthCouncil().getMunicipality();
 
-				switch (role) {
-					case "COUNCIL_ADMIN" -> {
-						if (!isCA.get()) {
-							authorities.addAll(Arrays.asList(
-									new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"),
-									new SimpleGrantedAuthority("ROLE_MODERATOR"),
-									new SimpleGrantedAuthority("ROLE_USER")
-							));
-							isCA.set(true);
+					switch (role) {
+						case "COUNCIL_ADMIN" -> {
+							if (!isCA.get()) {
+								authorities.addAll(Arrays.asList(
+										new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"),
+										new SimpleGrantedAuthority("ROLE_MODERATOR"),
+										new SimpleGrantedAuthority("ROLE_USER")
+								));
+								isCA.set(true);
+							}
+							authorities.add(new SimpleGrantedAuthority("COUNCIL_ADMIN@" + municipality));
 						}
-						authorities.add(new SimpleGrantedAuthority("COUNCIL_ADMIN@" + municipality));
-					}
-					case "USER" -> {
-						if (!isUser.get()) {
-							authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-							isUser.set(true);
+						case "USER" -> {
+							if (!isUser.get()) {
+								authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+								isUser.set(true);
+							}
+							authorities.add(new SimpleGrantedAuthority("USER@" + municipality));
 						}
-						authorities.add(new SimpleGrantedAuthority("USER@" + municipality));
-					}
-					case "MODERATOR" -> {
-						if (!isModerator.get()) {
-							authorities.addAll(Arrays.asList(
-									new SimpleGrantedAuthority("ROLE_MODERATOR"),
-									new SimpleGrantedAuthority("ROLE_USER")
-							));
-							isModerator.set(true);
+						case "MODERATOR" -> {
+							if (!isModerator.get()) {
+								authorities.addAll(Arrays.asList(
+										new SimpleGrantedAuthority("ROLE_MODERATOR"),
+										new SimpleGrantedAuthority("ROLE_USER")
+								));
+								isModerator.set(true);
+							}
+							authorities.add(new SimpleGrantedAuthority("MODERATOR@" + municipality));
 						}
-						authorities.add(new SimpleGrantedAuthority("MODERATOR@" + municipality));
 					}
 				}
 			});

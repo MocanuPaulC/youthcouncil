@@ -20,4 +20,6 @@ public interface YouthCouncilSubscriptionService {
 	YouthCouncilSubscription findAllByUserIdAndYouthCouncilId(long userId, long youthCouncilId);
 
 	YouthCouncilSubscription findAllByUserIdAndYouthCouncilMunicipality(long userId, String s);
+
+	void remove(long youthCouncilId, long userId);
 }
