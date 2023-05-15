@@ -1,12 +1,14 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
 
+import be.kdg.youthcouncil.config.security.BCryptConfig;
 import be.kdg.youthcouncil.config.security.CustomUserDetails;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.ActionPointStatus;
+import be.kdg.youthcouncil.service.EmailService;
 import be.kdg.youthcouncil.service.users.UserService;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.interactions.ActionPointReactionService;
@@ -43,7 +45,8 @@ public class YouthCouncilController {
 	private final ActionPointReactionService actionPointReactionService;
 	private final ActionPointService actionPointService;
 	private final UserService userService;
-
+	private final EmailService emailService;
+	private final BCryptConfig bCryptConfig;
 	private final CallForIdeaService callForIdeaService;
 	private final InformativePageService informativePageService;
 
@@ -146,8 +149,12 @@ public class YouthCouncilController {
 			UserRegisterViewModel userRegisterViewModel = new UserRegisterViewModel();
 			userRegisterViewModel.setEmail(viewModel.getEmail());
 			userRegisterViewModel.setUsername(viewModel.getEmail());
-			userRegisterViewModel.setPassword(viewModel.getPassword());
+			userRegisterViewModel.setPassword(bCryptConfig.passwordEncoder().encode(viewModel.getPassword()));
 			userService.save(userRegisterViewModel);
+			emailService.sendSimpleMessage(viewModel.getEmail(), "Youth Council Admin", "You have been added as an admin to the youth council of " + municipality + ".\n" +
+					"Your username is: " + viewModel.getEmail() + "\n" +
+					"Your password is: " + viewModel.getPassword() + "\n" +
+					"Please change your password after logging in.");
 		}
 
 		return "redirect:/";

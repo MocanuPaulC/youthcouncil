@@ -102,7 +102,6 @@ public class WebSecurityConfig {
 								"/youthcouncils/*/announcements/add",
 								"/api/informativepages/*/*",
 								"/api/youthcouncils/*/callforideas",
-								"/api/youthcouncils/*/*",
 								"/api/ideas"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
@@ -126,7 +125,6 @@ public class WebSecurityConfig {
 						.antMatchers(
 								HttpMethod.POST,
 								"/api/media/upload",
-								"/api/youthcouncils/*/*",
 								"/api/actionpoints/subscribe/*/*",
 								"/api/idea-reaction/react",
 								"/api/ideas"
@@ -152,9 +150,13 @@ public class WebSecurityConfig {
 								"/youthcouncils/*/callforideas/*",
 								"/youthcouncils/*/annoucements", "/youthcouncils/*/annoucements/*",
 								"/api/municipalities", "/api/informativepages/blocktypes",
-								"/api/media/imagename"
+								"/api/media/imagename", "/ws/**"
 
 						)
+						.permitAll()
+						.regexMatchers(HttpMethod.POST, "/api/youthcouncils/\\d/\\d")
+						.permitAll()
+						.regexMatchers(HttpMethod.DELETE, "/api/youthcouncils/\\d/\\d")
 						.permitAll()
 						.anyRequest()
 						.denyAll()
