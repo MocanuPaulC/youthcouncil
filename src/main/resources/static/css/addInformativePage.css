@@ -9,7 +9,7 @@
     height: 100vw;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--c-semi-transparent-bg);
 }
 
 #info-page-creation-overlay .block-selection {

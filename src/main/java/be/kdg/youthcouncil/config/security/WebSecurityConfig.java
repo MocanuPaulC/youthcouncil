@@ -176,7 +176,6 @@ public class WebSecurityConfig {
 				.userService(oauthUserService)
 				.and()
 				.successHandler(oauthLoginSuccessHandler);
-
 		return http.build();
 	}
 
