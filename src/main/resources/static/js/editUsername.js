@@ -15,8 +15,9 @@ usernameCancelButton.addEventListener("click", handleUsernameEditCancel);
 let currentUsername;
 
 function handleUsernameEditOnclick(event) {
-	console.log("editing");
+
 	usernameDisplay.setAttribute("contenteditable", "true");
+	usernameDisplay.classList.add("form-control");
 	usernameEditButton.classList.add("d-none");
 	usernameSaveButton.classList.remove("d-none");
 	usernameCancelButton.classList.remove("d-none");
@@ -24,8 +25,8 @@ function handleUsernameEditOnclick(event) {
 }
 
 function handleUsernameEditCancel(event) {
-	console.log("canceling");
 	usernameDisplay.setAttribute("contenteditable", "false");
+	usernameDisplay.classList.remove("form-control");
 	usernameEditButton.classList.remove("d-none");
 	usernameSaveButton.classList.add("d-none");
 	usernameCancelButton.classList.add("d-none");
@@ -33,8 +34,6 @@ function handleUsernameEditCancel(event) {
 }
 
 function handleUsernameEditSave(event) {
-	console.log("saving");
-	console.log(currentUsername);
 	if (usernameDisplay.innerText === currentUsername) {
 		handleUsernameEditCancel();
 		return;
@@ -57,7 +56,7 @@ function handleUsernameEditSave(event) {
 	}).then(handleUsernameEditResponse);
 }
 
-function handleUsernameEditResponse(response) {
+async function handleUsernameEditResponse(response) {
 	console.log(response.status);
 	if (response.status > 399) {
 		//TODO handle response correctly
@@ -66,6 +65,8 @@ function handleUsernameEditResponse(response) {
 	}
 
 	//TODO do something with the response
-	response.json().then(x => console.log(x.response));
+	let res = await response.json();
+	currentUsername = res.newUsername;
 	handleUsernameEditCancel();
 }
+

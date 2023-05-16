@@ -1,5 +1,6 @@
 html {
     margin-top: calc(56px + 1.5rem); /* 56px is the height of the navbar */
+    --c-semi-transparent-bg: rgba(0, 0, 0, 0.5);
 }
 
 notification-item-not-seen {
@@ -9,3 +10,13 @@ notification-item-not-seen {
 notification-item-seen {
     background-color: white;
 }
+
+#profile-edit-overlay {
+    background-color: var(--c-semi-transparent-bg);
+    z-index: 10;
+}
+
+.profile-container {
+    max-width: 700px;
+}
+

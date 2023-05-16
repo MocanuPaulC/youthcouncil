@@ -2,11 +2,22 @@ import csrfHeader from "./csrfHeader.js";
 
 const passwordField = document.getElementById("password");
 const confirmPasswordField = document.getElementById("confirm-password");
-const resetPasswordSubmit = document.getElementById("resetpassword-submit");
-
+const resetPasswordSubmit = document.getElementById("reset-password-submit");
+const showPasswordResetForm = document.getElementById("edit-password-button");
+const profileEditOverlay = document.getElementById("profile-edit-overlay");
+const changePasswordForm = document.getElementById("change-password-form");
 
 resetPasswordSubmit.addEventListener("click", handleResetOnclick);
-
+showPasswordResetForm.addEventListener("click", function (event) {
+	profileEditOverlay.classList.remove("d-none");
+});
+profileEditOverlay.addEventListener("click", function (event) {
+	if (event.target !== profileEditOverlay) return;
+	profileEditOverlay.classList.add("d-none");
+});
+changePasswordForm.addEventListener("click", function (event) {
+	event.preventDefault();
+});
 
 function handleResetOnclick(event) {
 	const passw_1 = passwordField.value;

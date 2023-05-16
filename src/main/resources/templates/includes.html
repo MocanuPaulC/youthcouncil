@@ -45,43 +45,55 @@
 						type="button">
 				</button>
 			</div>
-			<div class="offcanvas-body">
-				<ul class="navbar-nav justify-content-end align-items-center flex-grow-1 pe-0 pe-lg-3">
-					<li>
-						<a class="btn"
-						   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
-						   th:classappend="${page == 'create-youthcouncil' ? 'btn-light' : 'btn-dark'}"
-						   th:href="@{/youthcouncils/add}"
-						   type="button">
-							Create YC
+			<div class="offcanvas-body gap-2">
+				<div class="nav-item d-flex justify-content-start align-items-center gap-2">
+					<div class="dropdown btn btn-secondary">
+						<a aria-expanded="false"
+						   class="nav-link dropdown-toggle"
+						   data-bs-toggle="dropdown"
+						   href="#"
+						   role="button">
+							Actions
 						</a>
-					</li>
-					<li>
-						<a class="btn"
-						   th:classappend="${page == 'youthcouncils' ? 'btn-light' : 'btn-dark'}"
-						   th:href="@{/youthcouncils}"
-						   type="button">
-							YC List
-						</a>
-					</li>
-					<li>
-						<a class="btn"
-						   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
-						   th:classappend="${page == 'all-users' ? 'btn-light' : 'btn-dark'}"
-						   th:href="@{/users}"
-						   type="button">
-							All Users
-						</a>
-					</li>
-					<li>
-						<a class="btn"
-						   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
-						   th:classappend="${page == 'general-statistics' ? 'btn-light' : 'btn-dark'}"
-						   th:href="@{/user-management}">
-							User Management
-						</a>
-					</li>
-					<li class="nav-item dropdown" sec:authorize="isAuthenticated() && !hasRole('ROLE_GENERAL_ADMIN')">
+						<div class="dropdown-menu dropdown-menu-dark">
+							<div>
+								<a class="dropdown-item"
+								   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+								   th:classappend="${page == 'create-youthcouncil' ? 'btn-light' : 'btn-dark'}"
+								   th:href="@{/youthcouncils/add}"
+								   type="button">
+									Create YC
+								</a>
+							</div>
+							<div>
+								<a class="dropdown-item"
+								   th:classappend="${page == 'youthcouncils' ? 'btn-light' : 'btn-dark'}"
+								   th:href="@{/youthcouncils}"
+								   type="button">
+									YC List
+								</a>
+							</div>
+							<div>
+								<a class="dropdown-item"
+								   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+								   th:classappend="${page == 'all-users' ? 'btn-light' : 'btn-dark'}"
+								   th:href="@{/users}"
+								   type="button">
+									All Users
+								</a>
+							</div>
+							<div>
+								<a class="dropdown-item"
+								   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+								   th:classappend="${page == 'general-statistics' ? 'btn-light' : 'btn-dark'}"
+								   th:href="@{/user-management}">
+									User Management
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="dropdown btn btn-secondary"
+						 sec:authorize="isAuthenticated() && !hasRole('ROLE_GENERAL_ADMIN')">
 						<a aria-expanded="false"
 						   class="nav-link dropdown-toggle"
 						   data-bs-toggle="dropdown"
@@ -89,23 +101,26 @@
 						   role="button">
 							My Youthcouncils
 						</a>
-						<ul class="dropdown-menu dropdown-menu-dark">
-							<li th:each="subscription: ${user.getYouthCouncilSubscriptions()}">
+						<div class="dropdown-menu dropdown-menu-dark">
+							<div th:each="subscription: ${user.getYouthCouncilSubscriptions()}">
 								<a class="dropdown-item"
 								   th:href="@{/youthcouncils/{municipality}(municipality=${subscription.getYouthCouncil().getMunicipality()})}"
 								   th:text="${subscription.getYouthCouncil().getCouncilName()}">
 									Youthcouncil
 								</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<form class="d-flex" role="search">
-					<input aria-label="Search" class="form-control me-2" placeholder="Search" type="search">
-					<button class="btn btn-danger" type="submit">Search</button>
-				</form>
-				<ul class="navbar-nav justify-content-end align-items-center flex-grow-1 py-lg-0 py-3">
-					<li>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="nav-item d-flex justify-content-start align-items-center">
+					<form class="d-flex gap-2" role="search">
+						<input aria-label="Search" class="form-control" placeholder="Search" type="search">
+						<button class="btn btn-danger" type="submit">Search</button>
+					</form>
+				</div>
+				<div class="navbar-nav justify-content-end align-items-center gap-2 flex-grow-1 py-lg-0 py-3">
+					<div class="mb-1 me-1">
 						<a class="btn"
 						   sec:authorize="!isAuthenticated()"
 						   th:classappend="${page == 'login' ? 'btn-light' : 'btn-dark'}"
@@ -113,8 +128,8 @@
 						   type="button">
 							Log in
 						</a>
-					</li>
-					<li>
+					</div>
+					<div class="mb-1 me-1">
 						<a class="btn"
 						   sec:authorize="!isAuthenticated()"
 						   th:classappend="${page == 'register' ? 'btn-light' : 'btn-dark'}"
@@ -122,8 +137,8 @@
 						   type="button">
 							Register
 						</a>
-					</li>
-					<li>
+					</div>
+					<div class="mb-1 me-1">
 						<div class="btn-group dropstart "
 							 sec:authorize="isAuthenticated()">
 							<button aria-expanded="false"
@@ -143,13 +158,18 @@
 							</div>
 						</div>
 
-					</li>
-					<li>
+					</div>
+					<div class="mb-1 me-1">
+						<a class="btn btn-info d-flex justify-content-center align-items-center" href="/profile">
+							<i class="bi bi-person-circle"></i>
+						</a>
+					</div>
+					<div class="mb-1 me-1">
 						<form sec:authorize="isAuthenticated()" th:action="@{/logout}" th:method="post">
 							<button class="btn btn-secondary" type="submit">Log out</button>
 						</form>
-					</li>
-				</ul>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

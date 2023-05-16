@@ -44,6 +44,8 @@ function handleNotificationClick(response) {
 
 // geneva convention? more like, geneva suggestion
 
+// I think i will get a tattoo of this xD
+
 if (loggedIn) {
 	privateStompClient = Stomp.over(new SockJS("/ws"));
 	privateStompClient.connect({}, frame => {
