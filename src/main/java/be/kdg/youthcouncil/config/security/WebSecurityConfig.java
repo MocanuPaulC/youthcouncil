@@ -120,13 +120,15 @@ public class WebSecurityConfig {
 						/***********************/
 						.antMatchers(
 								HttpMethod.GET,
-								"/api/idea-reaction/*/*"
+								"/api/idea-reaction/*/*",
+								"/api/action-point-reaction/*/*" // this line here
 						).hasRole("USER")
 						.antMatchers(
 								HttpMethod.POST,
 								"/api/media/upload",
 								"/api/actionpoints/subscribe/*/*",
 								"/api/idea-reaction/react",
+								"/api/action-point-reaction/react", // and this one
 								"/api/ideas"
 						).hasRole("USER")
 						.antMatchers(

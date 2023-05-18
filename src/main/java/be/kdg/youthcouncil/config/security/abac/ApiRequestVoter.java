@@ -56,6 +56,10 @@ public class ApiRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		              .anyMatch(a -> "permitAll".equals(a.toString()))) {
 			return ACCESS_GRANTED;
 		}
+		if (collection.stream()
+		              .anyMatch(a -> "denyAll".equals(a.toString()))) {
+			return ACCESS_DENIED;
+		}
 
 		CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
@@ -73,10 +77,25 @@ public class ApiRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 			try {
 				YouthCouncilSubscription subscription = youthCouncilSubscriptionService.findAllByUserIdAndYouthCouncilId(user.getUserId(), youthCouncilId);
 				if (subscription.isBlocked() || subscription.isDeleted()) return ACCESS_DENIED;
-				if (subscription.getRole().equals(SubscriptionRole.valueOf(collectionRoleRequest))) {
-					return ACCESS_GRANTED;
-				} else {
-					return ACCESS_DENIED;
+				switch (collectionRoleRequest) {
+					case "USER" -> {
+						if (subscription.getRole().equals(SubscriptionRole.USER) || subscription.getRole()
+						                                                                        .equals(SubscriptionRole.MODERATOR) || subscription.getRole()
+						                                                                                                                           .equals(SubscriptionRole.COUNCIL_ADMIN))
+							return ACCESS_GRANTED;
+					}
+					case "MODERATOR" -> {
+						if (subscription.getRole().equals(SubscriptionRole.MODERATOR) || subscription.getRole()
+						                                                                             .equals(SubscriptionRole.COUNCIL_ADMIN))
+							return ACCESS_GRANTED;
+					}
+					case "COUNCIL_ADMIN" -> {
+						if (subscription.getRole().equals(SubscriptionRole.COUNCIL_ADMIN))
+							return ACCESS_GRANTED;
+					}
+					default -> {
+						return ACCESS_DENIED;
+					}
 				}
 			} catch (YouthCouncilSubscriptionNotFoundException e) {
 				logger.debug(e.getMessage());
@@ -93,5 +112,6 @@ public class ApiRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 				return ACCESS_DENIED;
 			}
 		}
+		return ACCESS_DENIED;
 	}
 }
