@@ -18,6 +18,14 @@ spring:
             name: admin
             password: admin
             roles: MEMBER
+
+    devtools:
+        restart:
+            enabled: true
+            additional-paths: src/main/java
+            additional-exclude: WEB-INF/**
+    thymeleaf:
+        cache: false
 #logging:
 #    level:
 #        root: debug
