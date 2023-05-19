@@ -1,7 +1,5 @@
 import csrfHeader from "./csrfHeader.js";
 
-const youthCouncilID = +document.querySelector("body").dataset.youthcouncil_id;
-
 const usernameDisplay = document.getElementById("username-display");
 const usernameSubmit = document.getElementById("username-submit");
 const usernameEditButton = document.getElementById("username-edit-button");
@@ -47,7 +45,6 @@ function handleUsernameEditSave(event) {
 		headers: {
 			"Accept": "application/json",
 			"Content-Type": "application/json",
-			"youthCouncilID": youthCouncilID,
 			[name]: value
 		},
 		body: JSON.stringify({

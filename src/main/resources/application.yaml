@@ -16,7 +16,7 @@ spring:
                             - email
                             - public_profile
     profiles:
-        active: postgres # options: dev, prod, postgres (local postgres)
+        active: ${ACTIVE_SPRING_PROFILE} # options: dev, prod, postgres (local postgres)
     jpa:
         show-sql: false
         open-in-view: false
@@ -56,4 +56,4 @@ logging:
         be.kdg.youthcouncil: debug
         #        root: debug
         #        sql: debug
-        org.springframework.security: error
+        org.springframework.security: debug
