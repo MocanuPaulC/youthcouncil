@@ -1,5 +1,6 @@
 package be.kdg.youthcouncil.domain.youthcouncil;
 
+import be.kdg.youthcouncil.domain.Municipality;
 import be.kdg.youthcouncil.domain.media.Image;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Announcement;
@@ -26,7 +27,9 @@ public class YouthCouncil {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private long youthCouncilId;
 	private String councilName;
-	private String municipality;
+	@OneToOne
+	@JoinColumn (name = "municipality_nis")
+	private Municipality municipality;
 	private String description;
 	@OneToOne
 	private Image councilLogo;
@@ -48,7 +51,7 @@ public class YouthCouncil {
 	@ToString.Exclude
 	private List<CallForIdea> callForIdeas = new ArrayList<>();
 
-	public YouthCouncil(String councilName, String municipality, String description, Image councilLogo, boolean isAfterElection) {
+	public YouthCouncil(String councilName, Municipality municipality, String description, Image councilLogo, boolean isAfterElection) {
 		this.councilName = councilName;
 		this.municipality = municipality;
 		this.description = description;
@@ -65,10 +68,14 @@ public class YouthCouncil {
 		return actionPoints.stream()
 		                   .filter(item -> item.getActionPointId() == id)
 		                   .findFirst()
-		                   .orElseThrow(() -> {throw new ActionPointNotFoundException(id);});
+		                   .orElseThrow(() -> new ActionPointNotFoundException(id));
 	}
 
 	public void addActionPoint(ActionPoint newActionPoint) {
 		actionPoints.add(newActionPoint);
+	}
+
+	public String getMunicipality() {
+		return municipality.getName();
 	}
 }

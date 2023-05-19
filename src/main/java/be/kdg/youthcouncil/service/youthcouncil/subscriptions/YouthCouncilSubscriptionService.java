@@ -1,5 +1,6 @@
 package be.kdg.youthcouncil.service.youthcouncil.subscriptions;
 
+import be.kdg.youthcouncil.domain.Municipality;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 
@@ -19,7 +20,7 @@ public interface YouthCouncilSubscriptionService {
 
 	YouthCouncilSubscription findAllByUserIdAndYouthCouncilId(long userId, long youthCouncilId);
 
-	YouthCouncilSubscription findAllByUserIdAndYouthCouncilMunicipality(long userId, String s);
+	YouthCouncilSubscription findAllByUserIdAndYouthCouncilMunicipality(long userId, Municipality s);
 
 	void remove(long youthCouncilId, long userId);
 }

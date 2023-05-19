@@ -1,0 +1,95 @@
+include:
+    -   template: Jobs/SAST.gitlab-ci.yml
+
+stages:
+    - build
+    - test
+    - deploy
+    - deploy-app-engine
+    - destroy
+
+generate_certs:
+    image: ubuntu:latest
+    stage: build
+    script:
+        - apt-get update -y && apt-get install -y default-jdk
+        - mkdir -p src/main/resources/keystore
+        - keytool -genkeypair -alias tomcat -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -validity 3650 -keypass ${POSTGRES_PASSWORD} -storepass ${POSTGRES_PASSWORD} -dname "CN=BE, OU=YouthCouncil, O=KdG, L=Antwerp, ST=Belgium, C=Belgium"
+        - mv keystore.p12 src/main/resources/keystore/
+    artifacts:
+        when: always
+        paths:
+            - src/main/resources/keystore/*
+    only:
+        - main
+
+
+build:
+    before_script:
+        - GRADLE_USER_HOME="$(pwd)/.gradle"
+        - export GRADLE_USER_HOME
+    image: gradle:alpine
+    stage: build
+    needs: [ generate_certs ]
+    script: gradle assemble
+    artifacts:
+        when: always
+        paths:
+            - build/libs/*.jar
+    only:
+        - main
+
+
+test:
+    before_script:
+        - GRADLE_USER_HOME="$(pwd)/.gradle"
+        - export GRADLE_USER_HOME
+    image: gradle:alpine
+    stage: test
+    script: gradle check
+    artifacts:
+        when: always
+        paths:
+            - build/test-results/test
+        reports:
+            junit: build/test-results/test/**/TEST-*.xml
+
+
+deploy:
+    image: google/cloud-sdk
+    stage: deploy
+    needs: [ build, test ]
+    script:
+        - gcloud auth activate-service-account --key-file "$GOOGLE_SERVICE_ACCOUNT_FILE"
+        - cat $GOOGLE_SERVICE_ACCOUNT_FILE > key.json
+        - cat $env > .env
+        - scripts/setup_instance.sh $password $duckdns_token
+    environment: production
+    only:
+        - main
+
+
+deploy-app-engine:
+    image: google/cloud-sdk
+    stage: deploy-app-engine
+    needs: [ build, test ]
+    script:
+        - $env_variables > env_variables.yaml
+        - gcloud auth activate-service-account --key-file "$GOOGLE_SERVICE_ACCOUNT_FILE"
+        - gcloud app deploy app.yaml --project "$GOOGLE_PROJECT_ID"
+    environment: production
+    when: manual
+    only:
+        - main
+
+
+destroy:
+    image: google/cloud-sdk
+    stage: destroy
+    needs: [ deploy ]
+    script:
+        - gcloud auth activate-service-account --key-file "$GOOGLE_SERVICE_ACCOUNT_FILE"
+        - scripts/destroy.sh
+    when: manual
+    only:
+        - main

@@ -24,13 +24,12 @@ public class RestMunicipalityController {
 	private final MunicipalityService municipalityService;
 	private final UserService userService;
 
-	@GetMapping ()
-	public ResponseEntity<Map<Integer, MunicipalityStatus>> getMunicipalities(Principal principal) {
+	@GetMapping
+	public ResponseEntity<Map<Long, MunicipalityStatus>> getMunicipalities(Principal principal) {
 		if (principal == null) {
 			return ResponseEntity.ok(municipalityService.getStatuses(Optional.empty()));
 		}
+
 		return ResponseEntity.ok(municipalityService.getStatuses(Optional.of(userService.findUserByUsername(principal.getName()))));
 	}
-
-
 }

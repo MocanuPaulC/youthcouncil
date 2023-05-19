@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.4'
+    id 'org.springframework.boot' version '2.7.8'
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
@@ -50,6 +50,8 @@ dependencies {
     implementation 'org.webjars:sockjs-client:1.0.2'
     implementation 'org.webjars:stomp-websocket:2.3.3'
     implementation 'org.webjars:jquery:3.6.2'
+    runtimeOnly 'org.springframework.cloud:spring-cloud-gcp-starter-sql-postgresql:1.2.8.RELEASE'
+    implementation 'com.google.cloud.sql:postgres-socket-factory:1.2.2'
 }
 
 test {
