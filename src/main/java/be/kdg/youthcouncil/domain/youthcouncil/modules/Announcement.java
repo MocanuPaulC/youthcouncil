@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
@@ -39,4 +40,7 @@ public class Announcement {
 		this.moduleStatus = moduleStatus;
 	}
 
+	public String getDateInFormat(String format) {
+		return announcementTime.format(DateTimeFormatter.ofPattern(format));
+	}
 }

@@ -188,6 +188,7 @@ public class YouthCouncilController {
 
 	@GetMapping ("/{municipality}/announcements")
 	public String getAnnouncements(Model model, @PathVariable String municipality) {
+		model.addAttribute("municipality", municipality);
 		model.addAttribute("announcements", announcementService.findAll(municipality));
 		return "announcements";
 	}
