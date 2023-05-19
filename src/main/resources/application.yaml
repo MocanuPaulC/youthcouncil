@@ -21,13 +21,6 @@ spring:
         show-sql: false
         open-in-view: false
         defer-datasource-initialization: true
-    devtools:
-        restart:
-            enabled: true
-            additional-paths: src/main/java
-            additional-exclude: WEB-INF/**
-    thymeleaf:
-        cache: false
     sql:
         init:
             mode: never

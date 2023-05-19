@@ -11,13 +11,15 @@ spring:
     jpa:
         database: postgresql
         hibernate:
-            ddl-auto: validate
+            ddl-auto: update
         defer-datasource-initialization: true
     datasource:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://34.76.189.78:5432/YouthCouncil
         username: postgres
         password: ${POSTGRES_PASSWORD}
+    devtools:
+        add-properties: false
 server:
     port: 443
     servlet:
