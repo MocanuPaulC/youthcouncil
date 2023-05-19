@@ -23,6 +23,7 @@ buttons.forEach(button => {
 const reactionBtn = document.querySelectorAll("button[id^=\"expandBtn\"]");
 
 reactionBtn.forEach(btn => btn.addEventListener("click", () => {
+	getUser(true);
 	fetchReactions(event, "action-point");
 }));
 

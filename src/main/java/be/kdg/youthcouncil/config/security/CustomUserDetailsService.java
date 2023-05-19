@@ -40,7 +40,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 					new SimpleGrantedAuthority("ROLE_GENERAL_ADMIN"),
 					new SimpleGrantedAuthority("ROLE_COUNCIL_ADMIN"),
 					new SimpleGrantedAuthority("ROLE_MODERATOR"),
-					new SimpleGrantedAuthority("ROLE_USER")
+					new SimpleGrantedAuthority("ROLE_USER"),
+					new SimpleGrantedAuthority("ROLE_OWNER")
 			));
 		} else {
 			AtomicBoolean isCA = new AtomicBoolean(false);
@@ -87,6 +88,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		}
 
 		authorities.add(new SimpleGrantedAuthority(String.format("OWNER@%s", username)));
+		authorities.add(new SimpleGrantedAuthority("ROLE_OWNER"));
 		logger.debug("User found");
 		logger.debug("User: " + user.getUsername() + " " + user.getPassword());
 		logger.debug("Authorities: " + authorities);

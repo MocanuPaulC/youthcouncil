@@ -55,7 +55,8 @@ public class MappingConfiguration {
 
 		modelMapper.createTypeMap(Idea.class, IdeaDTO.class)
 		           .addMapping(idea -> idea.getImage().getPath(), IdeaDTO::setImagePath)
-		           .addMapping(idea -> idea.getUser().getUsername(), IdeaDTO::setUsername);
+		           .addMapping(idea -> idea.getUser().getUsername(), IdeaDTO::setUsername)
+		           .addMapping(Idea::getIdeaId, IdeaDTO::setIdeaId);
 
 		modelMapper.createTypeMap(NewSubscriptionDTO.class, YouthCouncilSubscription.class)
 		           .addMapping(NewSubscriptionDTO::getUserId, YouthCouncilSubscription::setSubscriber)

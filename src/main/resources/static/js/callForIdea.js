@@ -62,7 +62,17 @@ async function handlePost(response) {
 	 * @type {{idea: string, imagePath: string | null, username:string}}
 	 */
 	const data = await response.json();
-
+	const btnToAdd = document.querySelector(".dropup");
+	const newBtn = btnToAdd.cloneNode(true);
+	newBtn.getElementsByTagName("div")[0].id = "entity_" + data.ideaId;
+	newBtn.getElementsByTagName("span")[0].id = "reaction_count_" + data.ideaId;
+	newBtn.getElementsByTagName("span")[0].innerText = "0";
+	let newBtns = newBtn.getElementsByTagName("button");
+	for (let i = 1; i < newBtns.length; i++) {
+		newBtns[i].addEventListener("click", () => {
+			addReaction(event, "idea");
+		});
+	}
 	const newIdeaElement = document.createElement("div");
 	ideas.append(newIdeaElement);
 	newIdeaElement.classList.add("idea");
@@ -76,5 +86,6 @@ async function handlePost(response) {
 	usernameElement.append(spanElement);
 	const ideaElement = document.createElement("p");
 	newIdeaElement.append(ideaElement);
+	newIdeaElement.append(newBtn);
 	ideaElement.innerText = data.idea;
 }

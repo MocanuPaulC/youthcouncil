@@ -50,10 +50,10 @@ export function fetchReactions(event, entity) {
 
 
 export function addReaction(event, entity) {
+	getNeededElements(event);
 	const reaction = event.target.id.substring(event.target.id.indexOf("-") + 1).toUpperCase();
 	const reactionCount = document.getElementById("reaction_count_" + entityId);
 	const reactionPad = entity + "-reaction";
-	getNeededElements(event);
 	userId = getUser(true);
 	fetch(`/api/${reactionPad}/react`, {
 		method: "POST",
