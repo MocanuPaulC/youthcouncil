@@ -44,9 +44,10 @@ public class ApiRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		String uri = filterInvocation.getRequest().getRequestURI();
 		String youthCouncilIdHeader = filterInvocation.getHttpRequest().getHeader("youthCouncilID");
 
-		if (!uri.contains("api") || collection.toString().equals("[authenticated]")) {
+		if (!uri.contains("api") || collection.toString().contains("ROLE_OWNER")) {
 			return ACCESS_ABSTAIN;
 		}
+
 		if (youthCouncilIdHeader == null && !uri.contains("notifications")) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "youthCouncilID header is missing");
 		}
@@ -71,6 +72,7 @@ public class ApiRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		if ((user.isGa() && "GENERAL_ADMIN".equals(collectionRoleRequest))) return ACCESS_GRANTED;
 
 		logger.debug("Request for {} permission received", collectionRoleRequest);
+		logger.debug(youthCouncilIdHeader);
 		if (youthCouncilIdHeader != null) {
 			int youthCouncilId = Integer.parseInt(youthCouncilIdHeader);
 
