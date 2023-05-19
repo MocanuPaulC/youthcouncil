@@ -109,7 +109,7 @@ public class WebSecurityConfig {
 								HttpMethod.PATCH,
 								"/api/actionpoints/*/*",
 								"/api/call-for-ideas/*/set-display",
-								"/api/annoucements/*/set-display"
+								"/api/announcements/*/set-display"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
 								HttpMethod.PUT,
@@ -151,7 +151,7 @@ public class WebSecurityConfig {
 								"/youthcouncils/*/informativepages", "/youthcouncils/*/informativepages/*", "/informativepages/*",
 								"/youthcouncils/*/actionpoints", "/youthcouncils/*/actionpoints/*",
 								"/youthcouncils/*/callforideas/*",
-								"/youthcouncils/*/annoucements", "/youthcouncils/*/annoucements/*",
+								"/youthcouncils/*/announcements", "/youthcouncils/*/announcements/*",
 								"/api/municipalities", "/api/informativepages/blocktypes",
 								"/api/media/imagename", "/ws/**"
 

@@ -3,6 +3,65 @@
 <thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
 <body>
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'home')}"></th:block>
-<div th:each="a : ${announcements}" th:text="${a.title}"></div>
+<section>
+	<div class="container">
+		<div class="row no-gutters">
+			<div class="col-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 container-fluid">
+				<div class="row mb-2">
+					<div class="col-10">
+						<h2 class="mb-0"><a th:href="@{/youthcouncils/{municipality}/announcements(municipality=${municipality})}">Announcements</a></h2>
+					</div>
+					<div class="col-2 d-flex justify-content-end align-items-center">
+						<a class="btn btn-dark"
+						   th:href="@{/youthcouncils/{municipality}/announcements/add(municipality=${municipality})}"
+						   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + municipality + ''')')}">
+							+
+						</a>
+					</div>
+				</div>
+				<div class="d-flex flex-wrap gap-2 row">
+					<div class="col-12">
+						<div class="card mb-2"
+							 th:each="announcement: ${announcements}">
+							<div class="row g-0">
+								<div class="col-3">
+									<img class="img-fluid placeholder h-100 w-100 rounded-start"
+										 th:alt="${announcement.getTitle()}">
+								</div>
+								<div class="col-9">
+									<div class="card-body">
+										<h5>
+											<a class="card-title"
+											   th:href="@{/youthcouncils/{municipality}/announcements/{announcementId}(municipality=${municipality}, announcementId=${announcement.getAnnouncementId()})}"
+											   th:text="${announcement.getTitle()}">Card title
+											</a>
+										</h5>
+										<p class="card-text" th:text="${announcement.getDescription()}">
+											Some quick example text to build on the card title and make up the bulk of
+											the
+											card's
+											content.
+										</p>
+									</div>
+									<div class="card-footer">
+										<div class="d-flex flex-row-reverse">
+											<div th:text="${announcement.getDateInFormat('HH:mm:ss dd/MM/yyyy')}">
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</section>
+
 </body>
 </html>
