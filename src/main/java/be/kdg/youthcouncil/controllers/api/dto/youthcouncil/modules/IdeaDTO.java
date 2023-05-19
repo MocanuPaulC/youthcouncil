@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class IdeaDTO {
+	private long ideaId;
 	private String idea;
 	private String imagePath;
 	private String username;

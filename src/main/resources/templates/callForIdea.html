@@ -18,7 +18,7 @@
 <input class="form-control mb-3" id="idea-text" type="text">
 
 <div class="input-group mb-3">
-	<button class="btn btn-outline-danger submit-idea" type="button">Submit idea</button>
+	<button class="btn btn-outline-danger submit-idea" id="submit-idea" type="button">Submit idea</button>
 	<select aria-label="Select a subtheme" class="form-select" id="subtheme" name="subtheme">
 		<option disabled selected>Choose...</option>
 		<option th:each="subtheme: ${callForIdea.getTheme().getSubThemes()}"
