@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface AnnouncementRepository extends JpaRepository<Announcement, Long> {
-    @Query(
-            "SELECT a FROM Announcement a WHERE a.owningYouthCouncil.municipality = :municipality"
-    )
-    List<Announcement> findByMunicipality(String municipality);
+	@Query (
+			"SELECT a FROM Announcement a WHERE a.owningYouthCouncil.municipality.name = :municipality"
+	)
+	List<Announcement> findByMunicipality(String municipality);
 }

@@ -7,13 +7,5 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface MunicipalityService {
-
-	Map<Integer, String> findAll();
-
-	String getNameFromNIS(int nis);
-
-	int getNISFromName(String name);
-
-	Map<Integer, MunicipalityStatus> getStatuses(Optional<PlatformUser> user);
-
+	Map<Long, MunicipalityStatus> getStatuses(Optional<PlatformUser> user);
 }

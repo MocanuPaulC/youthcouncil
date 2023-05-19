@@ -1,13 +1,11 @@
 package be.kdg.youthcouncil.persistence.youthcouncil;
 
-import java.util.Map;
+import be.kdg.youthcouncil.domain.Municipality;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.Optional;
 
-public interface MunicipalityRepository {
+public interface MunicipalityRepository extends JpaRepository<Municipality, Long> {
+	Optional<Municipality> findByName(String name);
 
-	Map<Integer, String> findAll();
-
-	Optional<String> findByNIS(int nis);
-
-	Optional<Integer> findByName(String name);
 }

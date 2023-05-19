@@ -1,5 +1,6 @@
 package be.kdg.youthcouncil.persistence.youthcouncil.subscriptions;
 
+import be.kdg.youthcouncil.domain.Municipality;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
@@ -22,7 +23,7 @@ public interface YouthCouncilSubscriptionRepository extends JpaRepository<YouthC
 
 	@Query (
 			"SELECT s.subscriber FROM YouthCouncilSubscription s " +
-					"WHERE s.youthCouncil.municipality = :municipality"
+					"WHERE s.youthCouncil.municipality.name = :municipality"
 	)
 	List<PlatformUser> findSubscribersByMunicipality(String municipality);
 
@@ -46,16 +47,14 @@ public interface YouthCouncilSubscriptionRepository extends JpaRepository<YouthC
 			         WHERE s.subscriber = :user
 			         AND s.deleted=false
 			""")
-	List<String> findSubscribedMunicipalitiesByUser(PlatformUser user);
+	List<Municipality> findSubscribedMunicipalitiesByUser(PlatformUser user);
 
 	Optional<YouthCouncilSubscription> findBySubscriberAndYouthCouncil(PlatformUser subscriber, YouthCouncil youthCouncil);
 
 	Optional<YouthCouncilSubscription> findBySubscriber_userIdAndYouthCouncil_YouthCouncilId(long userId, long youthCouncilId);
 
 
-	Optional<YouthCouncilSubscription> findBySubscriber_userIdAndYouthCouncil_Municipality(long userId, String s);
+	Optional<YouthCouncilSubscription> findBySubscriber_userIdAndYouthCouncil_Municipality(long userId, Municipality s);
 
 	void deleteBySubscriber_userIdAndYouthCouncil_YouthCouncilId(long userId, long youthCouncilId);
 }
-
-

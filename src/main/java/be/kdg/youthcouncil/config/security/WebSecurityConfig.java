@@ -39,6 +39,7 @@ public class WebSecurityConfig {
 	private final RequestVoter requestVoter;
 	private final UserRequestVoter userRequestVoter;
 
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		logger.debug("filterChain setup");
@@ -55,9 +56,9 @@ public class WebSecurityConfig {
 						.permitAll()
 						.antMatchers(HttpMethod.POST, "/register")
 						.permitAll()
-						/***********************/
-						/***      OWNER      ***/
-						/***********************/
+						//----------------------/
+						//---      OWNER     ---/
+						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
 								"/profile"
@@ -66,9 +67,9 @@ public class WebSecurityConfig {
 								HttpMethod.POST,
 								"/api/users/*/password", "/api/users/*/username"
 						).hasRole("OWNER")
-						/***********************/
-						/***  GENERAL ADMIN  ***/
-						/***********************/
+						//----------------------/
+						//---  GENERAL ADMIN ---/
+						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
 								"/statistics", "/users",
@@ -87,9 +88,9 @@ public class WebSecurityConfig {
 								HttpMethod.PUT,
 								"/api/informativepages/*"
 						).hasRole("GENERAL_ADMIN")
-						/***********************/
-						/***  COUNCIL_ADMIN  ***/
-						/***********************/
+						//----------------------/
+						//---  COUNCIL_ADMIN ---/
+						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
 								"/youthcouncils/*/edit", "/youthcouncils/*/statistics",
@@ -115,9 +116,9 @@ public class WebSecurityConfig {
 								"/api/informativepages/*/*",
 								"/api/actionpoints/*/*"
 						).hasRole("COUNCIL_ADMIN")
-						/***********************/
-						/***       USER      ***/
-						/***********************/
+						//----------------------/
+						//---       USER     ---/
+						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
 								"/api/idea-reaction/*/*",
@@ -142,9 +143,9 @@ public class WebSecurityConfig {
 								"/api/actionpoints/subscribe/*/*"
 						)
 						.hasRole("USER")
-						/***********************/
-						/***        ALL      ***/
-						/***********************/
+						//----------------------/
+						//---        ALL     ---/
+						//----------------------/
 						.antMatchers(HttpMethod.GET,
 								"/youthcouncils", "/youthcouncils/*", "/api/municipalities/",
 								"/youthcouncils/*/informativepages", "/youthcouncils/*/informativepages/*", "/informativepages/*",
@@ -192,6 +193,4 @@ public class WebSecurityConfig {
 		decisionVoters.add(userRequestVoter);
 		return new UnanimousBased(decisionVoters);
 	}
-
-
 }

@@ -1,10 +1,38 @@
 spring:
+    cloud:
+        gcp:
+            project-id: ${PROJECT_ID}
+            sql:
+                enabled: true
+                instance-connection-name: ${SQL_INSTANCE_NAME}
+                database-name: ${POSTGRES_DB}
+                credentials:
+                    location: file:${GOOGLE_SERVICE_ACCOUNT_FILE}
     jpa:
         database: postgresql
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: validate
+        defer-datasource-initialization: true
     datasource:
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/YouthCouncil
+        url: jdbc:postgresql://34.76.189.78:5432/YouthCouncil
         username: postgres
         password: ${POSTGRES_PASSWORD}
+server:
+    port: 443
+    servlet:
+        context-path: /
+    ssl:
+        enabled: true
+        key-alias: tomcat
+        key-store: classpath:keystore/keystore.p12
+        key-store-type: PKCS12
+        key-store-password: ${POSTGRES_PASSWORD}
+        key-password: ${POSTGRES_PASSWORD}
+
+logging:
+    level:
+        be.kdg.youthcouncil: error
+        org.springframework.security: error
+        org.springframework.web: error
+        org.hibernate.SQL: error

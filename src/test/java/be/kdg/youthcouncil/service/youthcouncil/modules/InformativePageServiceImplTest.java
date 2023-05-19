@@ -5,7 +5,6 @@ import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePageBlock;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.BlockType;
 import be.kdg.youthcouncil.exceptions.InformativePageNotFoundException;
-import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.InformativePageBlockRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.InformativePageRepository;
@@ -29,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestInstance (TestInstance.Lifecycle.PER_CLASS)
 class InformativePageServiceImplTest {
 
-	private Logger logger = LoggerFactory.getLogger(InformativePageServiceImplTest.class);
+	private final Logger logger = LoggerFactory.getLogger(InformativePageServiceImplTest.class);
 	@Autowired
 	private InformativePageBlockRepository blockRepository;
 
@@ -90,7 +89,7 @@ class InformativePageServiceImplTest {
 
 	@Test
 	void findInfoPageBlocksByTitle() {
-		assertThrows(MunicipalityNotFoundException.class, () -> informativePageService.findInfoPage("test", Optional.of("test")));
+		assertThrows(InformativePageNotFoundException.class, () -> informativePageService.findInfoPage("test", Optional.of("test")));
 		assertThrows(InformativePageNotFoundException.class, () -> informativePageService.findDefaultInfoPage("test1"));
 		//		assertEquals(2, informativePageService.findInfoPageBlocksByTitle("test", "Mortsel").size());
 		//		assertTrue()

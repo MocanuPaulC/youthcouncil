@@ -17,7 +17,7 @@ public interface InformativePageRepository extends JpaRepository<InformativePage
 			SELECT i 
 			FROM InformativePage i 
 			WHERE i.title = :title 
-			AND i.owningYouthCouncil.municipality = :municipality
+			AND i.owningYouthCouncil.municipality.name = :municipality
 			AND i.isDefault = false
 			""")
 	Optional<InformativePage> findByTitleAndMunicipality(String title, String municipality);
@@ -26,7 +26,7 @@ public interface InformativePageRepository extends JpaRepository<InformativePage
 			select i
 			from InformativePage i
 			where i.title = :title
-			and i.isDefault = true 
+			and i.isDefault = true
 			""")
 	Optional<InformativePage> findDefaultByTitle(String title);
 
@@ -36,7 +36,7 @@ public interface InformativePageRepository extends JpaRepository<InformativePage
 	@Query ("""
 			select i.infoPageBlocks 
 			from InformativePage i 
-			where i.owningYouthCouncil.municipality = :municipality 
+			where i.owningYouthCouncil.municipality.name = :municipality 
 			and i.title = :title
 			and i.isDefault = false
 			""")

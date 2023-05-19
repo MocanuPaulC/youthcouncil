@@ -1,5 +1,6 @@
 package be.kdg.youthcouncil.exceptions;
 
+import be.kdg.youthcouncil.domain.Municipality;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -13,7 +14,7 @@ public class YouthCouncilSubscriptionNotFoundException extends RuntimeException 
 		super(String.format("Subscription to youthCouncil: %d for user : %d, not found", userId, youthCouncilId));
 	}
 
-	public YouthCouncilSubscriptionNotFoundException(long userId, String municipality) {
-		super(String.format("Subscription to youthCouncil: %s for user : %d, not found", municipality, userId));
+	public YouthCouncilSubscriptionNotFoundException(long userId, Municipality municipality) {
+		super(String.format("Subscription to youthCouncil: %s for user : %d, not found", municipality.getName(), userId));
 	}
 }

@@ -3,7 +3,9 @@ package be.kdg.youthcouncil.config.security.abac;
 import be.kdg.youthcouncil.config.security.CustomUserDetails;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
+import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.exceptions.YouthCouncilSubscriptionNotFoundException;
+import be.kdg.youthcouncil.persistence.youthcouncil.MunicipalityRepository;
 import be.kdg.youthcouncil.service.users.UserService;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.subscriptions.YouthCouncilSubscriptionService;
@@ -26,6 +28,7 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 	private final UserService userService;
 	private final YouthCouncilService youthCouncilService;
 	private final YouthCouncilSubscriptionService youthCouncilSubscriptionService;
+	private final MunicipalityRepository municipalityRepository;
 
 	@Override
 	public boolean supports(ConfigAttribute attribute) {
@@ -52,9 +55,12 @@ public class RequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		              .anyMatch(a -> "permitAll".equals(a.toString()))) {
 			logger.debug("quick exit");
 			if (uri.contains("youthcouncils/") && authentication.getPrincipal() instanceof CustomUserDetails user) {
-				String[] splitUri = uri.split("/");
+				String municipality = uri.split("/")[2];
 				try {
-					YouthCouncilSubscription subscription = youthCouncilSubscriptionService.findAllByUserIdAndYouthCouncilMunicipality(user.getUserId(), splitUri[2]);
+					YouthCouncilSubscription subscription =
+							youthCouncilSubscriptionService.findAllByUserIdAndYouthCouncilMunicipality(
+									user.getUserId(), municipalityRepository.findByName(municipality)
+									                                        .orElseThrow(() -> new MunicipalityNotFoundException(municipality)));
 					if (subscription.isBlocked()) {
 						return ACCESS_DENIED;
 					}

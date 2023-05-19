@@ -1,0 +1,13 @@
+[Unit]
+Description=Starts the youthcouncil application
+
+[Service]
+User=root
+WorkingDirectory=/root
+ExecStart=/usr/bin/java -jar /root/build/libs/youthcouncil-0.0.1-SNAPSHOT.jar
+Restart=always
+EnvironmentFile=/root/.env
+Environment=GOOGLE_SERVICE_ACCOUNT_FILE=/root/key.json
+
+[Install]
+WantedBy=multi-user.target

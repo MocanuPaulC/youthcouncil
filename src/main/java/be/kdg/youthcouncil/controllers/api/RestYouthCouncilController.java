@@ -45,7 +45,8 @@ public class RestYouthCouncilController {
 
 		//		logger.info("User {} is joining youth council {}", securityContext.getAuthentication().getPrincipal().getName(), youthCouncilId);
 		youthCouncilSubscriptionService.create(youthCouncilId, userId);
-		String youthCouncilMunicipality = youthCouncilService.getYouthCouncil(youthCouncilId).getMunicipality();
+		String youthCouncilMunicipality = youthCouncilService.getYouthCouncil(youthCouncilId)
+		                                                     .getMunicipality();
 
 		Authentication auth = securityContext.getAuthentication();
 

@@ -1,5 +1,6 @@
 package be.kdg.youthcouncil.service.youthcouncil.subscriptions;
 
+import be.kdg.youthcouncil.domain.Municipality;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
@@ -82,10 +83,9 @@ public class YouthCouncilSubscriptionServiceImpl implements YouthCouncilSubscrip
 	}
 
 	@Override
-	public YouthCouncilSubscription findAllByUserIdAndYouthCouncilMunicipality(long userId, String s) {
+	public YouthCouncilSubscription findAllByUserIdAndYouthCouncilMunicipality(long userId, Municipality s) {
 		return youthCouncilSubscriptionRepository.findBySubscriber_userIdAndYouthCouncil_Municipality(userId, s)
-		                                         .orElseThrow(
-				                                         () -> new YouthCouncilSubscriptionNotFoundException(userId, s));
+		                                         .orElseThrow(() -> new YouthCouncilSubscriptionNotFoundException(userId, s));
 	}
 
 	@Override
