@@ -37,9 +37,8 @@
 	<option th:each="status : ${labels}" th:text="${status}"></option>
 </select>
 <button class="save btn btn-primary"
-		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + youthCouncil.getMunicipality()+ ''')')}"
-
->Save
+		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + youthCouncil.getMunicipality()+ ''')')}">
+	Save
 </button>
 
 </body>

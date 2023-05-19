@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Setter
 @Getter
 @ToString
-public class InformativePageBlockDto {
+public class BlockDto {
 	private int orderNumber;
 	@NotEmpty (message = "Blocks need to contain content, please remove them if they are empty!")
 	@Size (max = 10000, message = "The content cannot size cannot exceed 10.000 letters and must be at least 1 letters long.")

@@ -1,17 +1,18 @@
 import csrfHeader from "./csrfHeader.js";
+import {sendMessage} from "./notifications.js";
 
 const {name, value} = csrfHeader();
 const youthCouncilID = +document.querySelector("body").dataset.youthcouncil_id;
-console.log("youthCouncilID: " + youthCouncilID);
 
 const errorStyles = ["is-invalid", "border-3", "border-danger"];
 
 const add_block_buttons = document.querySelectorAll(".add-block-button");
-const info_page_container = document.getElementById("info-page-container");
-const info_page_type = info_page_container.getAttribute("infopage-type");
-const block_selection_overlay = document.getElementById("info-page-creation-overlay");
+const action_point_container = document.getElementById("action-point-container");
+const action_point_type = action_point_container.getAttribute("actionPoint-type");
+const block_selection_overlay = document.getElementById("action-point-creation-overlay");
+const subtheme_select = document.getElementById("subtheme-select");
 const block_type_buttons = await fetchBlockTypes();
-const info_page_submit = document.querySelector("button[button-type='submit']");
+const action_point_submit = document.querySelector("button[button-type='submit']");
 
 const icons = {
 	up: `<i class="bi bi-arrow-up-circle-fill">`,
@@ -50,9 +51,9 @@ for (let button of block_type_buttons) {
 }
 
 
-if (info_page_submit.getAttribute("submit-type") === "edit") {
+if (action_point_submit.getAttribute("submit-type") === "edit") {
 
-	const type = info_page_type === "default";
+	const type = action_point_type === "default";
 
 	const municipality = type
 		? null
@@ -62,8 +63,8 @@ if (info_page_submit.getAttribute("submit-type") === "edit") {
 		: window.location.pathname.split("/")[4];
 
 	const path = type
-		? `/api/informativepages/informativepageblocks/${title}`
-		: `/api/informativepages/informativepageblocks/${municipality}/${title}`;
+		? `/api/actionpoints/actionpointblocks/${title}`
+		: `/api/actionpoints/actionpointblocks/${municipality}/${title}`;
 
 	const response = await fetch(path, {
 		method: "GET",
@@ -102,20 +103,20 @@ if (info_page_submit.getAttribute("submit-type") === "edit") {
 }
 
 
-info_page_submit.addEventListener("click", handleFormSubmit);
+action_point_submit.addEventListener("click", handleFormSubmit);
 
 function addBlockEventHandler(event) {
 	console.log(event.target);
 	console.log(event.target.getAttribute("block-position") === "end");
-	console.log(info_page_container.lastChild.isEqualNode(event.target.closest(".info-page-block")));
+	console.log(action_point_container.lastChild.isEqualNode(event.target.closest(".action-point-block")));
 	console.log(event.target.closest("button").getAttribute("block-position") === "end" ||
-		info_page_container.lastChild.isEqualNode(event.target.closest(".info-page-block")));
+		action_point_container.lastChild.isEqualNode(event.target.closest(".action-point-block")));
 	if (
 		event.target.closest("button").getAttribute("block-position") === "end" ||
-		info_page_container.lastChild.isEqualNode(event.target.closest(".info-page-block"))) {
+		action_point_container.lastChild.isEqualNode(event.target.closest(".action-point-block"))) {
 		block_add_state.location = null;
 	} else {
-		block_add_state.location = event.target.closest(".info-page-block").nextSibling;
+		block_add_state.location = event.target.closest(".action-point-block").nextSibling;
 	}
 	block_selection_overlay.style.display = "block";
 }
@@ -132,12 +133,12 @@ async function addNewBlock() {
 
 	let new_node = document.createElement("div");
 	if (loc == null) {
-		info_page_container.appendChild(new_node);
+		action_point_container.appendChild(new_node);
 	} else {
-		info_page_container.insertBefore(new_node, loc);
+		action_point_container.insertBefore(new_node, loc);
 	}
 	new_node.classList.add("row");
-	new_node.classList.add("info-page-block");
+	new_node.classList.add("action-point-block");
 	new_node.setAttribute("node-type", type);
 
 	let inner_node = document.createElement("input");
@@ -251,7 +252,7 @@ function createBlockControls(parent_node) {
 	}
 
 	del_button.addEventListener("click", event => {
-		event.target.closest(".info-page-block").remove();
+		event.target.closest(".action-point-block").remove();
 	});
 	del_button.classList.add("btn-danger");
 
@@ -259,7 +260,7 @@ function createBlockControls(parent_node) {
 	add_button.classList.add("btn-primary");
 
 	up_button.addEventListener("click", event => {
-		const parent = event.target.closest(".info-page-block");
+		const parent = event.target.closest(".action-point-block");
 		const sibling = parent.previousSibling;
 		if (sibling) parent.parentElement.insertBefore(parent, sibling);
 	});
@@ -379,16 +380,16 @@ async function handleFormSubmit(event) {
 	document.querySelectorAll(".invalid-feedback").forEach(error => error.remove());
 
 
-	const title_element = document.getElementById("info-page-title");
+	const title_element = document.getElementById("action-point-title");
 	const page_title = title_element.nodeName === "INPUT"
 		? title_element.value.toString().replace(" ", "-")
 		: title_element.innerText.replace(" ", "-");
 
-	const is_create_type = info_page_submit.getAttribute("submit-type") === "create";
+	const is_create_type = action_point_submit.getAttribute("submit-type") === "create";
 	const call_type = is_create_type ? "POST" : "PUT";
 
-	const blocks = document.querySelectorAll(".info-page-block");
-	let infoPageBlocks = [];
+	const blocks = document.querySelectorAll(".action-point-block");
+	let actionPointBlocks = [];
 
 	for (let i = 0; i < blocks.length; i++) {
 		const type = blocks[i].getAttribute("node-type");
@@ -415,7 +416,7 @@ async function handleFormSubmit(event) {
 		}
 
 
-		infoPageBlocks.push({
+		actionPointBlocks.push({
 			"orderNumber": i,
 			"content": content,
 			"type": blocks[i].getAttribute("node-type")
@@ -424,10 +425,17 @@ async function handleFormSubmit(event) {
 
 	const municipality = window.location.pathname.split("/")[2];
 
-	const path = info_page_type === "default"
-		? `/api/informativepages/${page_title}`
-		: `/api/informativepages/${municipality}/${page_title}`;
-
+	const path = action_point_type === "default"
+		? `/api/actionpoints/${page_title}`
+		: `/api/actionpoints/create/${municipality}/${page_title}/${subtheme_select.value}`;
+	if (call_type === "PUT") {
+		let label = document.querySelector(".ownsubtheme");
+		if (label !== null && label.id !== subtheme_select.value) {
+			sendMessage("actionPoint", page_title, label.innerText, subtheme_select.value, "status");
+		} else {
+			sendMessage("actionPoint", page_title, "", "", "not-status");
+		}
+	}
 
 	const response = await fetch(path, {
 		method: call_type,
@@ -437,7 +445,7 @@ async function handleFormSubmit(event) {
 			"Accept": "application/json",
 			[name]: value
 		},
-		body: JSON.stringify(infoPageBlocks)
+		body: JSON.stringify(actionPointBlocks)
 	});
 
 	if (response.status > 399) {
@@ -448,10 +456,10 @@ async function handleFormSubmit(event) {
 			const regex = /(?<=\[)[0-9]+(?=])/g;
 			for (let error in json_err) {
 				const errorFaultIndex = error.match(regex).at(0);
-				addErrors(document.querySelectorAll(".info-page-block")[errorFaultIndex], json_err[error]);
+				addErrors(document.querySelectorAll(".action-point-block")[errorFaultIndex], json_err[error]);
 			}
 		} else if (response.status === 409) {
-			alert("InformativePage with this title already exists for this YouthCouncil, please use a different name!");
+			alert("actionpoint with this title already exists for this YouthCouncil, please use a different name!");
 		}
 
 
@@ -459,14 +467,15 @@ async function handleFormSubmit(event) {
 	}
 	/**
 	 * @type{{
+	 *     actionPointId: number,
 	 *     title: String
 	 * }}
 	 */
 	const json_res = await response.json();
 
-	window.location.href = info_page_type === "default"
-		? `/informativepages/${json_res.title}`
-		: `/youthcouncils/${municipality}/informativepages/${json_res.title}`;
+	window.location.href = action_point_type === "default"
+		? `/action-points/${json_res.title}`
+		: `/youthcouncils/${municipality}/actionpoints/${json_res.actionPointId}`;
 
 }
 

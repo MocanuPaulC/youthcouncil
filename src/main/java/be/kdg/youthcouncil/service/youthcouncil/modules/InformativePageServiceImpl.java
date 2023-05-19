@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.service.youthcouncil.modules;
 
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.InformativePageBlockDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePageBlock;
 import be.kdg.youthcouncil.exceptions.InformativePageNotFoundException;
@@ -27,13 +27,13 @@ public class InformativePageServiceImpl implements InformativePageService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final InformativePageRepository informativePageRepository;
 	private final YouthCouncilRepository youthCouncilRepository;
-	private final InformativePageBlockRepository blockRepository;
+	private final InformativePageBlockRepository informativePageBlockRepository;
 	private ModelMapper modelMapper;
 
 
 	@Override
 	@Transactional
-	public void save(String title, boolean isDefault, List<InformativePageBlockDto> infoPageBlocksDto, Optional<String> municipality) {
+	public void save(String title, boolean isDefault, List<BlockDto> infoPageBlocksDto, Optional<String> municipality) {
 
 		if (isDefault && municipality.isPresent()) {
 			throw new InformativePageSetupMismatchException(municipality.get(), title);
@@ -50,7 +50,7 @@ public class InformativePageServiceImpl implements InformativePageService {
 		                                          ));
 
 
-		blockRepository.deleteAll(newInfoPage.getInfoPageBlocks());
+		informativePageBlockRepository.deleteAll(newInfoPage.getInfoPageBlocks());
 
 
 		informativePageRepository.save(newInfoPage);
@@ -58,7 +58,7 @@ public class InformativePageServiceImpl implements InformativePageService {
 		newInfoPage.setInfoPageBlocks(infoPageBlocksDto.stream().map(blockDto -> {
 			InformativePageBlock block = modelMapper.map(blockDto, InformativePageBlock.class);
 			block.setOwningInformativePage(newInfoPage);
-			blockRepository.save(block);
+			informativePageBlockRepository.save(block);
 			return block;
 		}).toList());
 	}
@@ -84,7 +84,7 @@ public class InformativePageServiceImpl implements InformativePageService {
 	}
 
 	@Override
-	public List<InformativePageBlockDto> findInfoPageBlocks(Optional<String> municipality, String title) {
+	public List<BlockDto> findInfoPageBlocks(Optional<String> municipality, String title) {
 		List<InformativePageBlock> blocks;
 		if (municipality.isEmpty()) {
 			blocks = informativePageRepository.findInfoPageBlocks(title);
@@ -92,7 +92,7 @@ public class InformativePageServiceImpl implements InformativePageService {
 			blocks = informativePageRepository.findInfoPageBlocks(municipality.get(), title);
 		}
 		return blocks.stream()
-		             .map(block -> modelMapper.map(block, InformativePageBlockDto.class))
+		             .map(block -> modelMapper.map(block, BlockDto.class))
 		             .toList();
 	}
 

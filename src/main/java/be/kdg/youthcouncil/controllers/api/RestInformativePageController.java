@@ -1,6 +1,6 @@
 package be.kdg.youthcouncil.controllers.api;
 
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.InformativePageBlockDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.InformativePageDto;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.BlockType;
 import be.kdg.youthcouncil.service.youthcouncil.modules.BlockService;
@@ -31,7 +31,7 @@ public class RestInformativePageController {
 	@PostMapping ("/{title}")
 	public ResponseEntity<InformativePageDto> createDefaultInfoPage(
 			@PathVariable String title,
-			@RequestBody @Valid List<@Valid InformativePageBlockDto> infoPageBlocks
+			@RequestBody @Valid List<@Valid BlockDto> infoPageBlocks
 	) {
 		if (informativePageService.exists(Optional.empty(), title)) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -44,7 +44,7 @@ public class RestInformativePageController {
 	@PutMapping ("/{title}")
 	public ResponseEntity<InformativePageDto> editYouthCouncilInfoPage(
 			@PathVariable String title,
-			@RequestBody @Valid List<@Valid InformativePageBlockDto> infoPageBlocks
+			@RequestBody @Valid List<@Valid BlockDto> infoPageBlocks
 	) {
 
 		informativePageService.save(title, true, infoPageBlocks, Optional.empty());
@@ -55,7 +55,7 @@ public class RestInformativePageController {
 	public ResponseEntity<InformativePageDto> createYouthCouncilInfoPage(
 			@PathVariable String title,
 			@PathVariable String municipality,
-			@RequestBody @Valid List<@Valid InformativePageBlockDto> infoPageBlocks
+			@RequestBody @Valid List<@Valid BlockDto> infoPageBlocks
 	) {
 		if (informativePageService.exists(Optional.of(municipality), title)) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -69,7 +69,7 @@ public class RestInformativePageController {
 	public ResponseEntity<InformativePageDto> editYouthCouncilInfoPage(
 			@PathVariable String title,
 			@PathVariable String municipality,
-			@RequestBody @Valid List<@Valid InformativePageBlockDto> infoPageBlocks
+			@RequestBody @Valid List<@Valid BlockDto> infoPageBlocks
 	) {
 
 		informativePageService.save(title, false, infoPageBlocks, Optional.ofNullable(municipality));
@@ -77,7 +77,7 @@ public class RestInformativePageController {
 	}
 
 	@GetMapping ("/informativepageblocks/{municipality}/{title}")
-	public ResponseEntity<List<InformativePageBlockDto>> getInformativePageBlocks(
+	public ResponseEntity<List<BlockDto>> getInformativePageBlocks(
 			@PathVariable String municipality,
 			@PathVariable String title
 	) {
@@ -85,10 +85,10 @@ public class RestInformativePageController {
 	}
 
 	@GetMapping ("/informativepageblocks/{title}")
-	public ResponseEntity<List<InformativePageBlockDto>> getInformativePageBlocks(
+	public ResponseEntity<List<BlockDto>> getInformativePageBlocks(
 			@PathVariable String title
 	) {
-		List<InformativePageBlockDto> list = informativePageService.findInfoPageBlocks(Optional.empty(), title);
+		List<BlockDto> list = informativePageService.findInfoPageBlocks(Optional.empty(), title);
 		logger.debug(list.toString());
 		return ResponseEntity.ok(list);
 	}

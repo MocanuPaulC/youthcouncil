@@ -76,6 +76,7 @@ function processActionPointEdit() {
 		if (tag.textContent !== initialValuesArray[i]) {
 			isChanged = true;
 			if (tag.id !== "title") {
+				sendMessage("actionPoint", title, label.innerText, labelInput.value, "");
 				sendMessage("actionPoint", title, initialValuesArray[i], tag.textContent, tag.id);
 			}
 		}

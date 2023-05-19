@@ -30,7 +30,7 @@ class InformativePageServiceImplTest {
 
 	private final Logger logger = LoggerFactory.getLogger(InformativePageServiceImplTest.class);
 	@Autowired
-	private InformativePageBlockRepository blockRepository;
+	private InformativePageBlockRepository informativePageBlockRepository;
 
 	@Autowired
 	private InformativePageRepository informativePageRepository;
@@ -59,7 +59,7 @@ class InformativePageServiceImplTest {
 		informativePage.setTitle("test");
 		informativePage.setDefault(true);
 		informativePage.setInfoPageBlocks(blocks);
-		blockRepository.saveAll(blocks);
+		informativePageBlockRepository.saveAll(blocks);
 		informativePageRepository.save(informativePage);
 		logger.debug(informativePageRepository.findAll().toString());
 	}

@@ -9,5 +9,9 @@ public class ActionPointNotFoundException extends RuntimeException {
 		super(String.format("Action Point %d not found", id));
 	}
 
+	public ActionPointNotFoundException(String title) {
+		super(String.format("Action Point %s not found", title));
+	}
+
 
 }

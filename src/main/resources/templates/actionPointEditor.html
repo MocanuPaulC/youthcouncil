@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Adding informative page</title>
+	<title>Adding action point</title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
-	<link rel="stylesheet" th:href="@{/css/addInformativePage.css}">
-	<script defer src="/js/createInformativePage.js" type="module"></script>
+	<link rel="stylesheet" th:href="@{/css/addActionPoint.css}">
+	<script defer src="/js/createActionPoint.js" type="module"></script>
 </head>
 <body class="m-3" th:attr="data-youthcouncil_id=${youthCouncil.getYouthCouncilId()}">
-<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'adding-informative-page')}"></th:block>
+<input id="actionPointId" th:value="${actionPointId}" type="hidden">
+
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'adding-action-point-page')}"></th:block>
 <section class="container">
 	<div class="row">
-		<div class="col-12">
-			<h1>New InformativePage:</h1>
-			<input class="h1" id="info-page-title" th:if="${editorType.equals('create')}" type="text">
+		<div class="col-12 flex justify-content-between">
+			<h1 th:if="${editorType.equals('create')}">New Action Point:</h1>
+			<input class="h1" id="action-point-title" th:if="${editorType.equals('create')}" type="text">
 			<h1 class="h1"
-				id="info-page-title"
+				id="action-point-title"
 				th:if="${editorType.equals('edit')}"
 				th:text="${title.replaceAll('-', ' ')}"></h1>
+			<select aria-label="Select a theme" class="form-select" id="subtheme-select" name="subtheme-select">
+				<option th:each="subtheme: ${themes}" th:selected="(${ownsubtheme==subtheme.getSubTheme()})"
+						th:text="${subtheme.getSubTheme()}"
+						th:value="${subtheme.getSubTheme()}"></option>
+			</select>
 		</div>
-		<div id="info-page-creation-overlay">
+		<div id="action-point-creation-overlay">
 			<div class="card block-selection">
 				<div class="card-body">
 					<button class="btn btn-primary" id="block-type"></button>
@@ -26,10 +33,10 @@
 			</div>
 		</div>
 		<div class="col-12 form-control form">
-			<div class="container-fluid" id="info-page-container" th:infopage-type="${infoPageType}">
+			<div class="container-fluid" id="action-point-container" th:action-point-type="${actionPointType}">
 			</div>
 			<div class="container-fluid">
-				<div class="row info-page-footer">
+				<div class="row action-point-footer">
 					<div class="col-10">
 						<button block-position="end" class="btn btn-primary add-block-button" type="button">
 							<svg class="bi bi-plus-circle-fill"

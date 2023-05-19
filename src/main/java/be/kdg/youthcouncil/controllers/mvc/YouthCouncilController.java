@@ -3,9 +3,13 @@ package be.kdg.youthcouncil.controllers.mvc;
 
 import be.kdg.youthcouncil.config.security.BCryptConfig;
 import be.kdg.youthcouncil.config.security.CustomUserDetails;
-import be.kdg.youthcouncil.controllers.mvc.viewModels.*;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.CouncilAdminViewModel;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.NewAnnoucementViewModel;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.ActionPointStatus;
 import be.kdg.youthcouncil.service.EmailService;
@@ -164,23 +168,20 @@ public class YouthCouncilController {
 	@GetMapping ("/{municipality}/actionpoints/{actionpointid}")
 	public String getActionPointsOfYouthCouncil(@PathVariable String municipality, @PathVariable long actionpointid, Model model, Authentication authentication) {
 		//TODO: change this to get the actionpoint by id from the actionPointService directly
+		ActionPoint actionPoint = actionPointService.findById(actionpointid);
+		model.addAttribute("actionPoint", actionPoint);
+		model.addAttribute("labels", ActionPointStatus.values());
+
+
 		YouthCouncil youthCouncil = youthCouncilService.findByMunicipalityWithActionPointsDisplayed(municipality);
-		try {
-			model.addAttribute("actionPoint", youthCouncil.getActionPoint(actionpointid));
-			model.addAttribute("labels", ActionPointStatus.values());
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			//			model.addAttribute("youthCouncil", youthCouncil);
-			return "redirect:/";
-		}
 		model.addAttribute("youthCouncil", youthCouncil);
-		model.addAttribute("actionPointModelView", new EditActionPointModelView());
+
 		if (authentication != null) {
 			model.addAttribute("userHasSubscription", userService.hasSubscriptionToActionPoint(((CustomUserDetails) authentication.getPrincipal()).getUserId(), actionpointid));
 		} else {
 			model.addAttribute("userHasSubscription", false);
 		}
-		return "actionPoint";
+		return "newActionPoint";
 
 
 	}

@@ -66,6 +66,13 @@
 						type="button">
 					Launch call for ideas
 				</button>
+				<a class="btn btn-primary"
+				   th:href="@{/youthcouncils/{municipality}/actionpoints/create(municipality=${ycWithActionPoints.getMunicipality()})}"
+				   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}"
+				   type="button">
+					Create action point
+				</a>
+
 				<div aria-hidden="true"
 					 aria-labelledby="launch-call-for-ideas-modalLabel"
 					 class="modal fade"
@@ -123,7 +130,11 @@
 				<div class="mb-4">
 					<div class="row mb-2">
 						<div class="col-10">
-							<h2 class="mb-0"><a th:href="@{/youthcouncils/{municipality}/actionpoints(municipality=${ycWithActionPoints.getMunicipality()})}">Where we are taking action:</a></h2>
+							<h2 class="mb-0">
+								<a th:href="@{/youthcouncils/{municipality}/actionpoints(municipality=${ycWithActionPoints.getMunicipality()})}">
+									Where we are taking action:
+								</a>
+							</h2>
 						</div>
 						<div class="col-2 d-flex justify-content-end align-items-center">
 
@@ -144,7 +155,7 @@
 											<h5>
 												<a class="card-title"
 												   th:href="@{/youthcouncils/{municipality}/actionpoints/{actionpointid}(municipality=${ycWithActionPoints.getMunicipality()}, actionpointid=${actionpoint.getActionPointId()})}"
-												   th:text="${actionpoint.getTitle()}">Card title
+												   th:text="${actionpoint.getTitle().replace('-',' ')}">Card title
 												</a>
 											</h5>
 											<p class="card-text" th:text="${actionpoint.getDescription()}">
@@ -192,7 +203,11 @@
 				<div class="mb-4">
 					<div class="row mb-2">
 						<div class="col-10">
-							<h2 class="mb-0"><a th:href="@{/youthcouncils/{municipality}/callforideas(municipality=${ycWithActionPoints.getMunicipality()})}">Share your ideas with us:</a></h2>
+							<h2 class="mb-0">
+								<a th:href="@{/youthcouncils/{municipality}/callforideas(municipality=${ycWithActionPoints.getMunicipality()})}">
+									Share your ideas with us:
+								</a>
+							</h2>
 						</div>
 						<div class="col-2 d-flex justify-content-end align-items-center">
 							<button class="btn btn-dark"
@@ -229,14 +244,17 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
 			<div class="d-none d-lg-block col-12 col-lg-4 container-fluid">
 				<div class="row mb-2">
 					<div class="col-10">
-						<h2 class="mb-0"><a th:href="@{/youthcouncils/{municipality}/announcements(municipality=${ycWithActionPoints.getMunicipality()})}">Announcements</a></h2>
+						<h2 class="mb-0">
+							<a th:href="@{/youthcouncils/{municipality}/announcements(municipality=${ycWithActionPoints.getMunicipality()})}">
+								Announcements
+							</a>
+						</h2>
 					</div>
 					<div class="col-2 d-flex justify-content-end align-items-center">
 						<a class="btn btn-dark"
