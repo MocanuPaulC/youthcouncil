@@ -12,6 +12,7 @@ import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscrip
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,6 @@ public class ActionPoint implements Defaultable {
 	private List<Image> images;
 	@OneToOne
 	private Video video;
-
 	@Column (nullable = false)
 	private ActionPointStatus status;
 	@OneToMany (fetch = FetchType.LAZY)
@@ -48,20 +48,28 @@ public class ActionPoint implements Defaultable {
 	@ManyToOne
 	@JoinColumn (nullable = false)
 	private YouthCouncil owningYouthCouncil;
-
 	@OneToMany (fetch = FetchType.LAZY)
 	private List<ActionPointShare> shares;
-
 	@OneToMany (fetch = FetchType.LAZY)
 	@JoinColumn (name = "action_point_reacted_on")
 	private List<ActionPointReaction> reactions;
-
 	private ModuleStatus moduleStatus;
-
 	@Setter (AccessLevel.NONE)
 	@Getter (AccessLevel.NONE)
 	private boolean isDefault;
 	private boolean isDisplayed = false;
+
+	@OneToMany (fetch = FetchType.EAGER)
+	private List<ActionPointBlock> actionPointBlocks = new ArrayList<>();
+
+	public ActionPoint(String title, SubTheme theme, boolean isDefault, YouthCouncil owningYouthCouncil) {
+		this.title = title;
+		this.isDefault = isDefault;
+		this.theme = theme;
+		this.owningYouthCouncil = owningYouthCouncil;
+		this.status = ActionPointStatus.NEW;
+		this.moduleStatus = ModuleStatus.DISPLAYED;
+	}
 
 	public ActionPoint(String title, String description, SubTheme theme, ActionPointStatus status, YouthCouncil owningYouthCouncil, ModuleStatus moduleStatus) {
 		this.title = title;

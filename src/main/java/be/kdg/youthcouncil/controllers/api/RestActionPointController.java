@@ -1,7 +1,10 @@
 package be.kdg.youthcouncil.controllers.api;
 
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.ActionPointDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.UpdateDisplayStatusDTO;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.ActionPointService;
 import lombok.AllArgsConstructor;
@@ -9,10 +12,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -44,6 +50,45 @@ public class RestActionPointController {
 		actionPointService.subscribe(userId, actionPointId);
 		return ResponseEntity.ok("Subscribed");
 	}
+
+
+	@PostMapping ("/create/{municipality}/{title}/{theme}")
+	public ResponseEntity<ActionPointDto> createYouthCouncilActionPoint(
+			@PathVariable String title,
+			@PathVariable String municipality,
+			@PathVariable String theme,
+			@RequestBody @Valid List<@Valid BlockDto> actionPointBlocks
+	) {
+		if (actionPointService.existsByTitle(Optional.of(municipality), title)) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		ActionPoint newAp = actionPointService.save(title, false, actionPointBlocks, Optional.ofNullable(municipality), theme);
+		return ResponseEntity.ok(new ActionPointDto(newAp.getActionPointId(), title));
+	}
+
+	@GetMapping ("/actionpointblocks/{municipality}/{actionPointId}")
+	public ResponseEntity<List<BlockDto>> getActionPointBlock(
+			@PathVariable String municipality,
+			@PathVariable long actionPointId
+	) {
+		return ResponseEntity.ok(actionPointService.findActionPointBlocks(Optional.of(municipality), actionPointId));
+	}
+
+
+	@PutMapping ("/create/{municipality}/{title}/{theme}")
+	public ResponseEntity<ActionPointDto> editYouthCouncilActionPoint(
+			@PathVariable String title,
+			@PathVariable String municipality,
+			@PathVariable String theme,
+			@RequestBody @Valid List<@Valid BlockDto> actionPointBlocks
+	) {
+
+		ActionPoint newAp = actionPointService.save(title, false, actionPointBlocks, Optional.ofNullable(municipality), theme);
+
+		return ResponseEntity.ok(new ActionPointDto(newAp.getActionPointId(), title));
+
+	}
+
 
 	@DeleteMapping ("/subscribe/{userId}/{actionPointId}")
 	public ResponseEntity<String> unsubscribe(@PathVariable long userId, @PathVariable long actionPointId) {

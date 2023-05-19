@@ -39,7 +39,6 @@ public class WebSecurityConfig {
 	private final RequestVoter requestVoter;
 	private final UserRequestVoter userRequestVoter;
 
-
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		logger.debug("filterChain setup");
@@ -75,6 +74,7 @@ public class WebSecurityConfig {
 								"/statistics", "/users",
 								"/youthcouncils/add",
 								"/youthcouncils/*/create-council-admin",
+
 								"/informativepages/create", "/informativepages/*/edit",
 								"/api/informativepages/informativepageblocks/*"
 						).hasRole("GENERAL_ADMIN")
@@ -96,14 +96,21 @@ public class WebSecurityConfig {
 								"/youthcouncils/*/edit", "/youthcouncils/*/statistics",
 								"/youthcouncils/*/announcements/add",
 								"/youthcouncils/*/informativepages/create", "/youthcouncils/*/informativepages/*/edit",
-								"/api/informativepages/informativepageblocks/*/*"
+								"/api/informativepages/informativepageblocks/*/*",
+								"/youthcouncils/*/actionpoints/create",
+								"/youthcouncils/*/actionpoints/*/edit",
+								"/api/actionpoints/actionpointblocks/*/*"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
+								//								http://localhost:8081/api/action-points/blocktypes
 								HttpMethod.POST,
 								"/youthcouncils/*/announcements/add",
 								"/api/informativepages/*/*",
+								"/api/actionpoints/*/*",
+								"/api/actionpoints/create/*/*/*",
 								"/api/youthcouncils/*/callforideas",
-								"/api/ideas"
+								"/api/ideas", "youthcouncils/*/action-points/create",
+								"youthcouncils/*/action-points/edit"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
 								HttpMethod.PATCH,
@@ -114,6 +121,8 @@ public class WebSecurityConfig {
 						.antMatchers(
 								HttpMethod.PUT,
 								"/api/informativepages/*/*",
+								"/api/actionpoints/create/*/*/*",
+								"/api/actionpoints/*/*/*/PUT",
 								"/api/actionpoints/*/*"
 						).hasRole("COUNCIL_ADMIN")
 						//----------------------/
@@ -130,7 +139,8 @@ public class WebSecurityConfig {
 								"/api/actionpoints/subscribe/*/*",
 								"/api/idea-reaction/react",
 								"/api/action-point-reaction/react", // and this one
-								"/api/ideas"
+								"/api/ideas",
+								"/api/actionpoints/subscribe/*/*"
 						).hasRole("USER")
 						.antMatchers(
 								HttpMethod.PATCH,

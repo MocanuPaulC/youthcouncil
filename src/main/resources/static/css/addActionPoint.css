@@ -1,0 +1,83 @@
+#action-point-title {
+    width: 100%;
+}
+
+#action-point-creation-overlay {
+    display: none;
+    position: absolute;
+    width: 100vw;
+    height: 100vw;
+    top: 0;
+    left: 0;
+    background-color: var(--c-semi-transparent-bg);
+}
+
+#action-point-creation-overlay .block-selection {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
+
+#action-point-creation-overlay .block-selection .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#action-point-creation-overlay button {
+    width: 200px;
+}
+
+#action-point-container {
+    padding: 0;
+}
+
+#action-point-container .action-point-block {
+    margin: 10px 0;
+}
+
+#action-point-container .action-point-block[node-type="IMAGE"] > .input-field {
+    display: flex;
+    justify-content: center;
+}
+
+#action-point-container .action-point-block img {
+    max-height: 400px;
+}
+
+.action-point-block .block-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 5px 5px;
+    margin: auto 0;
+    padding: 0 12px;
+}
+
+.action-point-block .block-controls > * {
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.block-controls > .del-button {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.block-controls > .up-button {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.block-controls > .down-button {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.action-point-footer > div > * {
+    width: 100%;
+}

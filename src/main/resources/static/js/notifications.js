@@ -79,11 +79,14 @@ function showMessageOutput(messageOutput) {
 
 }
 
+// sendMessage("actionPoint", page_title);
 export function sendMessage(entityType, title, oldValue, newValue, field) {
 	let entityId = null;
+	if (oldValue === null) oldValue = "";
+	if (newValue === null) newValue = "";
 
 	if (entityType === "actionPoint") {
-		entityId = +document.querySelector(".actionPointId").id.split("_")[1];
+		entityId = +document.getElementById("actionPointId").value;
 	}
 
 	privateStompClient.send("/app/private", {}, JSON.stringify({
@@ -95,3 +98,4 @@ export function sendMessage(entityType, title, oldValue, newValue, field) {
 		entityId
 	}));
 }
+

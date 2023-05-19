@@ -19,8 +19,8 @@ public class NotificationServiceImpl implements NotificationService {
 			notificationMessage = String.format("The %s %s has been updated from %s to %s", message.getEntityType()
 			                                                                                       .toLowerCase(), message.getTitle(), message.getOldValue(), message.getNewValue());
 		} else {
-			notificationMessage = String.format("The %s %s has received changes to its %s", message.getEntityType()
-			                                                                                       .toLowerCase(), message.getTitle(), message.getField());
+			notificationMessage = String.format("The %s %s has received changes to its content", message.getEntityType()
+			                                                                                            .toLowerCase(), message.getTitle());
 		}
 		return notificationRepository.save(new Notification(notificationMessage));
 	}

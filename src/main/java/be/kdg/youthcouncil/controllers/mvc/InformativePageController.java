@@ -39,6 +39,7 @@ public class InformativePageController {
 	public String getAddInformativePage(Model model, @PathVariable String municipality) {
 		model.addAttribute("informativePage", new NewInformativePageViewModel());
 		model.addAttribute("municipality", municipality);
+		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality));
 		model.addAttribute("editorType", "create");
 		model.addAttribute("infoPageType", "youthcouncil");
 		return "informativePageEditor";
@@ -56,6 +57,7 @@ public class InformativePageController {
 	public String editYouthCouncilInfoPage(@PathVariable String municipality, @PathVariable String title, Model model) {
 		if (!informativePageService.exists(Optional.of(municipality), title))
 			throw new InformativePageNotFoundException(title, municipality);
+		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality));
 		model.addAttribute("editorType", "edit");
 		model.addAttribute("infoPageType", "youthcouncil");
 		return "informativePageEditor";

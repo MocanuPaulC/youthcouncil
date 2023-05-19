@@ -1,9 +1,9 @@
 package be.kdg.youthcouncil.config;
 
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.ReactionDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.IdeaDTO;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.InformativePageBlockDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.NewIdeaDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.NewSubscriptionDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.SubscriptionDTO;
@@ -11,10 +11,7 @@ import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaReaction;
-import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
-import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
-import be.kdg.youthcouncil.domain.youthcouncil.modules.Idea;
-import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePageBlock;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.*;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
@@ -86,10 +83,14 @@ public class MappingConfiguration {
 		           .addMapping(IdeaReaction::getIdeaReactedOn, ReactionDto::setEntityReactedOnId)
 		           .addMapping(IdeaReaction::getReactingUser, ReactionDto::setReactingUserId)
 		           .addMapping(IdeaReaction::getReactionId, ReactionDto::setReactionId);
-		modelMapper.createTypeMap(InformativePageBlockDto.class, InformativePageBlock.class)
-		           .addMapping(InformativePageBlockDto::getType, InformativePageBlock::setType)
-		           .addMapping(InformativePageBlockDto::getContent, InformativePageBlock::setContent)
-		           .addMapping(InformativePageBlockDto::getOrderNumber, InformativePageBlock::setOrderNumber);
+		modelMapper.createTypeMap(BlockDto.class, InformativePageBlock.class)
+		           .addMapping(BlockDto::getType, InformativePageBlock::setType)
+		           .addMapping(BlockDto::getContent, InformativePageBlock::setContent)
+		           .addMapping(BlockDto::getOrderNumber, InformativePageBlock::setOrderNumber);
+		modelMapper.createTypeMap(BlockDto.class, ActionPointBlock.class)
+		           .addMapping(BlockDto::getType, ActionPointBlock::setType)
+		           .addMapping(BlockDto::getContent, ActionPointBlock::setContent)
+		           .addMapping(BlockDto::getOrderNumber, ActionPointBlock::setOrderNumber);
 
 		return modelMapper;
 	}

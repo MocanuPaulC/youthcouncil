@@ -1,16 +1,22 @@
 package be.kdg.youthcouncil.service.youthcouncil.modules;
 
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointBlock;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 import be.kdg.youthcouncil.exceptions.ActionPointNotFoundException;
+import be.kdg.youthcouncil.exceptions.InformativePageSetupMismatchException;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointBlockRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.ThemeRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.ActionPointSubscriptionRepository;
 import be.kdg.youthcouncil.utility.Notification;
 import lombok.AllArgsConstructor;
@@ -23,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -32,6 +39,8 @@ public class ActionPointServiceImpl implements ActionPointService {
 	private final ModelMapper modelMapper;
 	private final YouthCouncilRepository youthCouncilRepository;
 	private final ActionPointRepository actionPointRepository;
+	private final ActionPointBlockRepository actionPointBlockRepository;
+	private final ThemeRepository themeRepository;
 	private final UserRepository userRepository;
 	private final ActionPointSubscriptionRepository actionPointSubscriptionRepository;
 
@@ -66,15 +75,71 @@ public class ActionPointServiceImpl implements ActionPointService {
 	}
 
 	@Override
-	public EditActionPointDto updateDefault(long actionPointId, EditActionPointDto editActionPointDto) {
-		//FIXME implement me!
-		return new EditActionPointDto();
+	@Transactional
+	public ActionPoint save(String title, boolean isDefault, List<BlockDto> infoPageBlocksDto, Optional<String> municipality, String theme) {
+
+		if (isDefault && municipality.isPresent()) {
+			throw new InformativePageSetupMismatchException(municipality.get(), title);
+		}
+		SubTheme st = themeRepository.findAll()
+		                             .stream()
+		                             .flatMap(t -> t.getSubThemes().stream())
+		                             .filter(s -> s.getSubTheme().equals(theme))
+		                             .findFirst()
+		                             .orElse(null);
+
+		YouthCouncil owningYouthCouncil = youthCouncilRepository.findByMunicipalityName(municipality.get())
+		                                                        .orElseThrow(() -> new MunicipalityNotFoundException(municipality.get()));
+
+		ActionPoint newActionPoint = municipality.map(m -> actionPointRepository.findByTitleAndMunicipality(title, m))
+		                                         .orElseGet(() -> actionPointRepository.findDefaultByTitle(title))
+		                                         .orElse(new ActionPoint(
+				                                         title,
+				                                         st,
+				                                         isDefault,
+				                                         owningYouthCouncil
+		                                         ));
+
+
+		actionPointBlockRepository.deleteAll(newActionPoint.getActionPointBlocks());
+
+
+		ActionPoint apToReturn = actionPointRepository.save(newActionPoint);
+
+		newActionPoint.setActionPointBlocks(infoPageBlocksDto.stream().map(blockDto -> {
+			ActionPointBlock block = modelMapper.map(blockDto, ActionPointBlock.class);
+			block.setOwningActionPoint(newActionPoint);
+			actionPointBlockRepository.save(block);
+			return block;
+		}).toList());
+		owningYouthCouncil.addActionPoint(newActionPoint);
+		youthCouncilRepository.save(owningYouthCouncil);
+		return apToReturn;
 	}
 
 	@Override
-	public ActionPoint findById(long actionPointReactedOnId) {
-		return actionPointRepository.findById(actionPointReactedOnId)
-		                            .orElseThrow(() -> new ActionPointNotFoundException(actionPointReactedOnId));
+	public List<BlockDto> findActionPointBlocks(Optional<String> municipality, long actionPointId) {
+		List<ActionPointBlock> blocks;
+		if (municipality.isEmpty()) {
+			blocks = actionPointRepository.findActionPointBlocks(actionPointId);
+		} else {
+			blocks = actionPointRepository.findActionPointBlocks(municipality.get(), actionPointId);
+		}
+		return blocks.stream()
+		             .map(block -> modelMapper.map(block, BlockDto.class))
+		             .toList();
+	}
+
+	@Override
+	public boolean existsByTitle(Optional<String> municipality, String title) {
+		return municipality.map(s -> actionPointRepository.findByTitleAndMunicipality(title, s).isPresent())
+		                   .orElseGet(() -> actionPointRepository.findDefaultByTitle(title).isPresent());
+	}
+
+	@Override
+	public ActionPoint findById(long actionPointId) {
+		return actionPointRepository.findById(actionPointId)
+		                            .orElseThrow(() -> new ActionPointNotFoundException(actionPointId));
 	}
 
 	@Override
