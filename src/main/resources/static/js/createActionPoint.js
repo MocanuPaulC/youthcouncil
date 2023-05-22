@@ -464,19 +464,62 @@ async function handleFormSubmit(event) {
 
 
 		return;
+	} else {
+		let uri = location.href.toString();
+		if (uri.includes("callforideas")) {
+			let cfiId = uri.split("/")[6];
+			const ideas = document.getElementById("ideas");
+
+			let ids = [];
+			let nodes = ideas.getElementsByTagName("tr");
+			for (let i = 0; i < nodes.length; i++) {
+				let ideaTr = nodes[i];
+				if (ideaTr.children[0].children[0].checked === true) {
+					console.log(ideaTr.id + " is checked");
+					ids.push({"ideaId": ideaTr.id});
+
+				}
+			}
+			console.log(ids);
+
+			fetch(`/api/actionpoints/${page_title}/linkideas/${cfiId}/${youthCouncilID}`,
+				{
+					method: "PATCH",
+					headers: {
+						"youthCouncilID": youthCouncilID,
+						"Content-Type": "application/json",
+						"Accept": "application/json",
+						[name]: value
+					}, body: JSON.stringify(ids)
+				})
+				.then(async response => {
+					if (response.status > 399) {
+						console.error("Bad Response");
+						throw new Error("Bad Response");
+					} else {
+						/**
+						 * @type{{
+						 *     actionPointId: number,
+						 *     title: String
+						 * }}
+						 */
+						const json_res = await response.json();
+
+						window.location.href = action_point_type === "default"
+							? `/action-points/${json_res.title}`
+							: `/youthcouncils/${municipality}/actionpoints/${json_res.actionPointId}`;
+
+					}
+				});
+
+		}
 	}
-	/**
-	 * @type{{
-	 *     actionPointId: number,
-	 *     title: String
-	 * }}
-	 */
-	const json_res = await response.json();
 
-	window.location.href = action_point_type === "default"
-		? `/action-points/${json_res.title}`
-		: `/youthcouncils/${municipality}/actionpoints/${json_res.actionPointId}`;
 
+}
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function resizeTextArea(target) {

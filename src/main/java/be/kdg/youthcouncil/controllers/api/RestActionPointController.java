@@ -1,9 +1,6 @@
 package be.kdg.youthcouncil.controllers.api;
 
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.ActionPointDto;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.UpdateDisplayStatusDTO;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.*;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.ActionPointService;
@@ -64,6 +61,21 @@ public class RestActionPointController {
 		}
 		ActionPoint newAp = actionPointService.save(title, false, actionPointBlocks, Optional.ofNullable(municipality), theme);
 		return ResponseEntity.ok(new ActionPointDto(newAp.getActionPointId(), title));
+	}
+
+	@PatchMapping ("{title}/linkideas/{cfiId}/{youthCouncilID}")
+	public ResponseEntity<ActionPointDto> linkIdeaToActionPoint(
+			@PathVariable long cfiId,
+			@PathVariable long youthCouncilID,
+			@PathVariable String title,
+			@RequestBody List<IdeaIdDto> ideaIdDtoList) {
+		logger.debug("in linkIdeaToActionPoint");
+		logger.debug("cfiId: " + cfiId);
+		logger.debug("youthCouncilID: " + youthCouncilID);
+		logger.debug(ideaIdDtoList.toString());
+		ActionPointDto toReturn = actionPointService.linkIdeaToActionPoint(title, cfiId, youthCouncilID, ideaIdDtoList);
+
+		return ResponseEntity.ok(toReturn);
 	}
 
 	@GetMapping ("/actionpointblocks/{municipality}/{actionPointId}")

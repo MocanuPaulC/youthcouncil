@@ -1,7 +1,9 @@
 package be.kdg.youthcouncil.service.youthcouncil.modules;
 
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.ActionPointDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.IdeaIdDto;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 
@@ -27,4 +29,8 @@ public interface ActionPointService {
 	void unsubscribe(long userId, long actionPointId);
 
 	List<BlockDto> findActionPointBlocks(Optional<String> municipality, long actionPointId);
+
+	ActionPointDto linkIdeaToActionPoint(String title, long cfiId, long youthCouncilID, List<IdeaIdDto> ideaIdDtoList);
+
+	ActionPoint findByIdWithIdeas(long l);
 }

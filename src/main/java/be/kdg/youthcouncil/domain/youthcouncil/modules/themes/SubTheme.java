@@ -3,6 +3,7 @@ package be.kdg.youthcouncil.domain.youthcouncil.modules.themes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table (name = "sub_themes")
 public class SubTheme {
 	@Id

@@ -1,9 +1,11 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewActionPointViewModel;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.ThemeRepository;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.ActionPointService;
+import be.kdg.youthcouncil.service.youthcouncil.modules.CallForIdeaService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ public class ActionPointController {
 	private final YouthCouncilService youthCouncilService;
 	private final ActionPointService actionPointService;
 	private final ThemeRepository themeRepository;
+	private final CallForIdeaService callForIdeaService;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
@@ -52,6 +55,21 @@ public class ActionPointController {
 		                                            .toArray());
 		model.addAttribute("editorType", "edit");
 		model.addAttribute("actionPointType", "youthcouncil");
+		return "actionPointEditor";
+	}
+
+
+	@GetMapping ("/youthcouncils/{municipality}/callforideas/{cfiID}/createactionpoint")
+	public String getActionPointPageFromCallForIdeas(Model model, @PathVariable String municipality, @PathVariable long cfiID) {
+		CallForIdea cfi = callForIdeaService.findWithIdeas(cfiID);
+		model.addAttribute("informativePage", new NewActionPointViewModel());
+		model.addAttribute("municipality", municipality);
+		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality));
+		model.addAttribute("themes", cfi.getTheme().getSubThemes());
+		model.addAttribute("ideas", cfi.getIdeas().toArray());
+		model.addAttribute("callForIdeasId", cfiID);
+		model.addAttribute("editorType", "create");
+		model.addAttribute("actionPointType", "callforideas");
 		return "actionPointEditor";
 	}
 

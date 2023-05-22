@@ -176,7 +176,8 @@ public class YouthCouncilController {
 	@GetMapping ("/{municipality}/actionpoints/{actionpointid}")
 	public String getActionPointsOfYouthCouncil(@PathVariable String municipality, @PathVariable long actionpointid, Model model, Authentication authentication) {
 		//TODO: change this to get the actionpoint by id from the actionPointService directly
-		ActionPoint actionPoint = actionPointService.findById(actionpointid);
+
+		ActionPoint actionPoint = actionPointService.findByIdWithIdeas(actionpointid);
 		model.addAttribute("actionPoint", actionPoint);
 		model.addAttribute("labels", ActionPointStatus.values());
 
@@ -188,6 +189,9 @@ public class YouthCouncilController {
 			model.addAttribute("userHasSubscription", userService.hasSubscriptionToActionPoint(((CustomUserDetails) authentication.getPrincipal()).getUserId(), actionpointid));
 		} else {
 			model.addAttribute("userHasSubscription", false);
+		}
+		if (actionPoint.getInspiredBy().size() > 0) {
+			model.addAttribute("ideas", actionPoint.getInspiredBy());
 		}
 		return "newActionPoint";
 

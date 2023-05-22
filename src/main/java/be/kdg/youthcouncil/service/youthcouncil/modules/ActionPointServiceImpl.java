@@ -1,21 +1,26 @@
 package be.kdg.youthcouncil.service.youthcouncil.modules;
 
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.ActionPointDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.IdeaIdDto;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPointBlock;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.Idea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 import be.kdg.youthcouncil.exceptions.ActionPointNotFoundException;
+import be.kdg.youthcouncil.exceptions.IdeaNotFoundException;
 import be.kdg.youthcouncil.exceptions.InformativePageSetupMismatchException;
 import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointBlockRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.IdeaRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.ThemeRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.ActionPointSubscriptionRepository;
 import be.kdg.youthcouncil.utility.Notification;
@@ -41,6 +46,7 @@ public class ActionPointServiceImpl implements ActionPointService {
 	private final ActionPointRepository actionPointRepository;
 	private final ActionPointBlockRepository actionPointBlockRepository;
 	private final ThemeRepository themeRepository;
+	private final IdeaRepository ideaRepository;
 	private final UserRepository userRepository;
 	private final ActionPointSubscriptionRepository actionPointSubscriptionRepository;
 
@@ -128,6 +134,26 @@ public class ActionPointServiceImpl implements ActionPointService {
 		return blocks.stream()
 		             .map(block -> modelMapper.map(block, BlockDto.class))
 		             .toList();
+	}
+
+	@Override
+	@Transactional
+	public ActionPointDto linkIdeaToActionPoint(String title, long cfiId, long youthCouncilID, List<IdeaIdDto> ideaIdDtoList) {
+		ActionPoint actionPoint = actionPointRepository.findByTitleAndOwningYouthCouncil_youthCouncilId(title, youthCouncilID)
+		                                               .orElseThrow(() -> new ActionPointNotFoundException(title));
+		ideaIdDtoList.forEach(ideaID -> {
+			Idea idea = ideaRepository.findById(ideaID.getIdeaId())
+			                          .orElseThrow(() -> new IdeaNotFoundException(ideaID.getIdeaId()));
+			actionPoint.addIdea(idea);
+		});
+
+		return modelMapper.map(actionPointRepository.save(actionPoint), ActionPointDto.class);
+	}
+
+	@Override
+	public ActionPoint findByIdWithIdeas(long id) {
+		return actionPointRepository.findByActionPointIdWithIdeas(id)
+		                            .orElseThrow(() -> new ActionPointNotFoundException(id));
 	}
 
 	@Override

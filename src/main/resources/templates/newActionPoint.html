@@ -43,6 +43,26 @@
 				</video>
 			</div>
 		</div>
+		<h1>Linked Ideas</h1>
+		<div th:if="${ideas!=null}">
+			<table class="table table-light table-hover table-striped">
+				<thead>
+				<tr>
+					<th scope="col">User</th>
+					<th scope="col">Subtheme</th>
+					<th scope="col">Idea</th>
+				</tr>
+				</thead>
+				<tbody id="ideas">
+				<tr th:each="idea: ${ideas}" th:id="${idea.getIdeaId()}">
+					<td th:text="${idea.getUser().getUsername()}"></td>
+					<td th:text="${idea.getSubTheme().getSubTheme()}"></td>
+					<td th:text="${idea.getIdea()}"></td>
+				</tr>
+				</tbody>
+			</table>
+
+		</div>
 	</div>
 </section>
 
