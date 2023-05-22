@@ -41,6 +41,7 @@ public class Idea {
 	@JoinColumn (name = "idea_reacted_on")
 	@ToString.Exclude
 	private List<IdeaReaction> reactions;
+	private String fullName;
 
 	public Idea(String idea, SubTheme subTheme, Image image, PlatformUser user, CallForIdea callForIdeas) {
 		this.idea = idea;
@@ -54,4 +55,11 @@ public class Idea {
 		reactions.add(reaction);
 	}
 
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 }

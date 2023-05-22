@@ -5,15 +5,23 @@ import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.Idea;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.exceptions.CallForIdeaNotFoundException;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.CallForIdeaRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.IdeaRepository;
 import lombok.AllArgsConstructor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +32,7 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 	private final CallForIdeaRepository callForIdeaRepository;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final ModelMapper modelMapper;
+	private final IdeaRepository ideaRepository;
 
 	@Override
 	public CallForIdea create(CallForIdeasDTO callForIdeasDTO) {
@@ -72,6 +81,48 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 		logger.debug("list is here");
 		logger.debug(list.toString());
 		return list;
+	}
+
+	@Override
+	public boolean processCSVUpload(MultipartFile file, long callForIdeaId) {
+		CallForIdea callForIdea = callForIdeaRepository.findWithIdeas(callForIdeaId)
+		                                               .orElseThrow(() -> new CallForIdeaNotFoundException(callForIdeaId));
+		return isCSVFile(file, callForIdea);
+
+	}
+
+	private boolean isCSVFile(MultipartFile file, CallForIdea callForIdea) {
+		try (CSVParser csvParser = CSVFormat.DEFAULT.parse(new InputStreamReader(file.getInputStream()))) {
+			// Iterate over the parsed CSV rows if needed
+			List<CSVRecord> records = csvParser.getRecords();
+			int size = records.size();
+			records = records.subList(1, size);
+			List<Idea> ideas = new ArrayList<>();
+			List<SubTheme> subThemes = callForIdea.getTheme().getSubThemes();
+
+			for (CSVRecord record : records) {
+				SubTheme subTheme = subThemes
+						.stream()
+						.filter(st -> st.getSubTheme().equals(record.get(1)))
+						.findFirst()
+						.orElse(null);
+
+				Idea idea = new Idea();
+				idea.setCallForIdeas(callForIdea);
+				idea.setIdea(record.get(2));
+				idea.setFullName(record.get(0));
+				idea.setSubTheme(subTheme);
+				ideas.add(idea);
+				callForIdea.addIdea(idea);
+			}
+			ideaRepository.saveAll(ideas);
+			callForIdeaRepository.save(callForIdea);
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 
