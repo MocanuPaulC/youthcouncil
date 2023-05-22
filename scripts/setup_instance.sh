@@ -118,7 +118,7 @@ done
 echo "Copying files to VM..."
 gcloud compute scp --recurse build $name:~/ --zone $zone
 gcloud compute scp --recurse key.json $name:~/key.json --zone $zone
-glcoud compute scp --recurse java-key.json $name:~/java-key.json --zone $zone
+gcloud compute scp --recurse java-key.json $name:~/java-key.json --zone $zone
 gcloud compute scp --recurse .env $name:~/.env --zone $zone
 echo "Files copied"
 
