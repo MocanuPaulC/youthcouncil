@@ -126,6 +126,7 @@ public class WebSecurityConfig {
 						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
+								"/profile",
 								"/api/idea-reaction/*/*",
 								"/api/action-point-reaction/*/*" // this line here
 						).hasRole("USER")
@@ -153,11 +154,10 @@ public class WebSecurityConfig {
 						//---        ALL     ---/
 						//----------------------/
 						.antMatchers(HttpMethod.GET,
-								"/profile",
 								"/youthcouncils", "/youthcouncils/*", "/api/municipalities/",
 								"/youthcouncils/*/informativepages", "/youthcouncils/*/informativepages/*", "/informativepages/*",
 								"/youthcouncils/*/actionpoints", "/youthcouncils/*/actionpoints/*",
-								"/youthcouncils/*/callforideas/*",
+								"/youthcouncils/*/callforideas", "/youthcouncils/*/callforideas/*",
 								"/youthcouncils/*/announcements", "/youthcouncils/*/announcements/*",
 								"/api/municipalities", "/api/informativepages/blocktypes",
 								"/api/media/imagename", "/ws/**"

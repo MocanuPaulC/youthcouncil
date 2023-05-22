@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface AnnouncementService {
 
+	Announcement findByIdAndMunicipality(String municipality, long id);
+
 	List<Announcement> findAll();
 
 	List<Announcement> findAll(String municipality);

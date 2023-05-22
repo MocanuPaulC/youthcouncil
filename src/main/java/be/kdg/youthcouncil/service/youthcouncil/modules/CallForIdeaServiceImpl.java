@@ -66,6 +66,14 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 		return callForIdea;
 	}
 
+	@Override
+	public List<CallForIdea> findAllByMunicipalityNameWithIdeas(String municipality) {
+		List<CallForIdea> list = callForIdeaRepository.findAllByMunicipalityNameWithIdeas(municipality);
+		logger.debug("list is here");
+		logger.debug(list.toString());
+		return list;
+	}
+
 
 	public void addIdeaReactions(List<Idea> ideas) {
 		ideas.forEach(actionPoint -> addReactions(actionPoint, actionPoint.getReactions(), new ArrayList<IdeaReaction>()));

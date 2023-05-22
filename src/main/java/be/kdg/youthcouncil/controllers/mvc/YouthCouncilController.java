@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -90,7 +91,7 @@ public class YouthCouncilController {
 		YouthCouncil ycWithActionPoints = youthCouncilService.findByMunicipalityWithActionPointsDisplayed(municipality);
 		model.addAttribute("ycWithActionPoints", ycWithActionPoints);
 		model.addAttribute("userReactions", actionPointReactionService.findAllUserReactionsToActionPoints(ycWithActionPoints.getActionPoints(), user));
-
+		model.addAttribute("ycInfoPages", informativePageService.findAllByMunicipalityName(municipality));
 
 		return "youthCouncil";
 	}
@@ -121,6 +122,13 @@ public class YouthCouncilController {
 		return "userManagement";
 	}
 
+	@GetMapping ("/{municipality}/callforideas")
+	public String callForIdeas(Model model, @PathVariable String municipality) {
+		List<CallForIdea> callForIdeas = callForIdeaService.findAllByMunicipalityNameWithIdeas(municipality);
+
+		model.addAttribute("callForIdeas", callForIdeas);
+		return "callForIdeas";
+	}
 	@GetMapping ("/{municipality}/callforideas/{callForIdeaId}")
 	public String youthCouncilCallForAction(Model model, @PathVariable String municipality, @PathVariable long callForIdeaId) {
 		CallForIdea callForIdea = callForIdeaService.findByIdWithIdeasWithReactions(callForIdeaId);
@@ -192,6 +200,13 @@ public class YouthCouncilController {
 		model.addAttribute("municipality", municipality);
 		model.addAttribute("announcements", announcementService.findAll(municipality));
 		return "announcements";
+	}
+
+	@GetMapping ("/{municipality}/announcements/{annoucementsid}")
+	public String getAnnouncements(Model model, @PathVariable String municipality, @PathVariable long annoucementsid) {
+		model.addAttribute("municipality", municipality);
+		model.addAttribute("announcement", announcementService.findByIdAndMunicipality(municipality, annoucementsid));
+		return "announcement";
 	}
 
 	@GetMapping ("/{municipality}/announcements/add")

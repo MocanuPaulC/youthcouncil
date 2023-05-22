@@ -35,12 +35,9 @@ public class UserRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 	public int vote(Authentication authentication, FilterInvocation filterInvocation, Collection<ConfigAttribute> collection) {
 		String uri = filterInvocation.getRequest().getRequestURI();
 
-		logger.debug("we are getting in here");
-		logger.debug(collection.toString());
 		if (!collection.toString().contains("ROLE_OWNER")) {
 			return ACCESS_ABSTAIN;
 		}
-
 
 		try {
 			String collectionRoleRequest = collection.stream().findFirst()

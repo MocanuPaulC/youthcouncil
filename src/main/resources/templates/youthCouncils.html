@@ -3,6 +3,7 @@
 <head>
 	<title>Youth Platform</title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
+	<script defer th:src="@{/js/youthcouncilListView.js}" type="module"></script>
 </head>
 <body class="m-3">
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'youthcouncils')}"></th:block>
@@ -11,15 +12,21 @@
 		<div class="col-12">
 			<h1>Youth Councils</h1>
 		</div>
-		<div class="col-12">
-			<ul>
-				<li th:each="council : ${councils}">
-					<a th:href="@{/youthcouncils/{municipality}(municipality=${council.municipality})}"
-					   th:text="|${council.getCouncilName()}|"></a>
-				</li>
-			</ul>
+		<div class="col-12 row">
+			<div class="col-12 mb-2" th:each="council : ${councils}">
+				<a class="card yc-card" th:href="@{/youthcouncils/{municipality}(municipality=${council.municipality})}" th:name="${council.getMunicipality()}">
+					<div class="card-body d-flex align-items-center gap-4">
+						<div class="yc-map-container"></div>
+						<h3 th:text="${council.getCouncilName()}"></h3>
+						<h5 th:text="${council.getMunicipality()}"></h5>
+					</div>
+				</a>
+			</div>
 		</div>
 	</div>
+</section>
+<section class="d-none">
+	<th:block th:insert="~{includes/map::map}"></th:block>
 </section>
 </body>
 </html>

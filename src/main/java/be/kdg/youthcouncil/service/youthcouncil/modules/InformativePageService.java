@@ -12,6 +12,7 @@ public interface InformativePageService {
 
 	void save(String title, boolean isDefault, List<BlockDto> infoPageBlocks, Optional<String> municipality);
 
+	List<InformativePage> findAllByMunicipalityName(String municipality);
 
 	InformativePage findInfoPage(String title, Optional<String> municipality);
 

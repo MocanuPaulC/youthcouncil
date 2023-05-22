@@ -8,23 +8,32 @@
 <body class="m-3">
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin},  'informative-pages')}"></th:block>
 <section class="container-fluid">
-	<div class="row" th:each="page : ${informativePages}">
-		<div class="col-3">
-			<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title}"
-			   th:text="${page.title.replaceAll('-', ' ')}"></a>
+	<div class="row">
+		<div class="col-8">
+			<h1>Informative pages:</h1>
 		</div>
-		<div class="col-6">
-			<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title} + '/edit'"
-			   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + municipality + ''')')}">
-				edit page
-			</a>
-		</div>
-	</div>
-	<div class="row" th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + municipality + ''')')}">
-		<div class="col-12">
+		<div class="col-4 d-flex justify-content-end align-items-center gap-1"
+			 th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + municipality + ''')')}">
 			<a class="btn btn-primary" th:href="'/youthcouncils/' + ${municipality} + '/informativepages/create'">+</a>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-6 col-md-4 col-xl-3" th:each="page : ${informativePages}">
+			<div class="card">
+				<div class="card-body">
+					<h2><a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title}"
+						   th:text="${page.title.replaceAll('-', ' ')}"></a></h2>
+				</div>
+				<div class="card-footer">
+					<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title} + '/edit'"
+					   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + municipality + ''')')}">
+						edit page
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </section>
 </body>
 </html>
