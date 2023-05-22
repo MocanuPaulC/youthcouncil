@@ -14,6 +14,12 @@
 <input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
 
 <h1 th:text="${callForIdea.getTitle()}"></h1>
+<a class="btn btn-primary"
+   th:href="'/youthcouncils/' + ${municipality} + '/callforideas/' + ${callForIdea.getCallForIdeaId()} + '/createactionpoint'"
+   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + callForIdea.getOwningYouthCouncil().getMunicipality()+ ''')')}"
+   type="button">
+	Create action point
+</a>
 
 <input class="form-control mb-3" id="idea-text" type="text">
 

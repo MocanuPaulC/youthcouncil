@@ -5,10 +5,7 @@ import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaShare;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table (name = "ideas")
+@ToString
 public class Idea {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -37,11 +35,12 @@ public class Idea {
 	private CallForIdea callForIdeas;
 
 	@OneToMany (fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List<IdeaShare> shares;
 	@OneToMany (fetch = FetchType.LAZY)
 	@JoinColumn (name = "idea_reacted_on")
+	@ToString.Exclude
 	private List<IdeaReaction> reactions;
-
 
 	public Idea(String idea, SubTheme subTheme, Image image, PlatformUser user, CallForIdea callForIdeas) {
 		this.idea = idea;

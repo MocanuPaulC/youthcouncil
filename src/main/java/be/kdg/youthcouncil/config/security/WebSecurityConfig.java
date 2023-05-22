@@ -90,12 +90,14 @@ public class WebSecurityConfig {
 						.antMatchers(
 								HttpMethod.GET,
 								"/youthcouncils/*/edit", "/youthcouncils/*/statistics",
+								"/youthcouncils/*/callforideas/*/createactionpoint",
 								"/youthcouncils/*/announcements/add",
 								"/youthcouncils/*/informativepages/create", "/youthcouncils/*/informativepages/*/edit",
 								"/api/informativepages/informativepageblocks/*/*",
 								"/youthcouncils/*/actionpoints/create",
 								"/youthcouncils/*/actionpoints/*/edit",
-								"/api/actionpoints/actionpointblocks/*/*"
+								"/api/actionpoints/actionpointblocks/*/*",
+								"/youhtcouncils/*/callforideas/*/createactionpoint"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
 								//								http://localhost:8081/api/action-points/blocktypes
@@ -106,10 +108,12 @@ public class WebSecurityConfig {
 								"/api/actionpoints/create/*/*/*",
 								"/api/youthcouncils/*/callforideas",
 								"/api/ideas", "youthcouncils/*/action-points/create",
-								"youthcouncils/*/action-points/edit"
+								"/youthcouncils/*/action-points/edit",
+								"/api/actionpoints/createwithideas/*/*/*"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
 								HttpMethod.PATCH,
+								"/api/actionpoints/*/linkideas/*/*",
 								"/api/actionpoints/*/*",
 								"/api/call-for-ideas/*/set-display",
 								"/api/announcements/*/set-display"
@@ -161,6 +165,7 @@ public class WebSecurityConfig {
 								"/youthcouncils/*/announcements", "/youthcouncils/*/announcements/*",
 								"/api/municipalities", "/api/informativepages/blocktypes",
 								"/api/media/imagename", "/ws/**"
+
 
 						)
 						.permitAll()

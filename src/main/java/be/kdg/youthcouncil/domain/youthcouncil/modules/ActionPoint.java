@@ -108,4 +108,8 @@ public class ActionPoint implements Defaultable {
 	public void addReaction(ActionPointReaction reaction) {
 		reactions.add(reaction);
 	}
+
+	public void addIdea(Idea idea) {
+		inspiredBy.add(idea);
+	}
 }

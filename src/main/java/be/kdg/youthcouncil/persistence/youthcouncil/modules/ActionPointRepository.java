@@ -61,4 +61,13 @@ public interface ActionPointRepository extends JpaRepository<ActionPoint, Long> 
 			""")
 	List<ActionPointBlock> findActionPointBlocks(long actionPointId);
 
+	Optional<ActionPoint> findByTitleAndOwningYouthCouncil_youthCouncilId(String title, long youthCouncilID);
+
+	@Query ("""
+			select a
+			from ActionPoint a
+			left join fetch a.inspiredBy
+			where a.actionPointId = :actionPointId
+			""")
+	Optional<ActionPoint> findByActionPointIdWithIdeas(long actionPointId);
 }
