@@ -27,6 +27,11 @@ public class AnnouncmentServiceImpl implements AnnouncementService {
 	private ModelMapper modelMapper;
 
 	@Override
+	public Announcement findByIdAndMunicipality(String municipality, long id) {
+		return announcementRepository.findByIdAndMunicipality(municipality, id).map(a -> a).orElseThrow(() -> new AnnouncementNotFoundException(id));
+	}
+
+	@Override
 	public List<Announcement> findAll() {
 		return announcementRepository.findAll();
 	}

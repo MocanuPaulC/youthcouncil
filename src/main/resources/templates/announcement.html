@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<thymeleaf-meta th:replace="includes :: head_fragment"></thymeleaf-meta>
+<body>
+<th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'home')}"></th:block>
+<section>
+	<div class="container">
+		<div class="row no-gutters">
+			<div class="col-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 container-fluid">
+				<div class="row mb-2">
+					<div class="col-10">
+						<h2 class="mb-0" th:text="${announcement.title}"></h2>
+					</div>
+					<div th:text="${'Annouced at: ' + announcement.getDateInFormat('HH:mm:ss dd/MM/yyyy')}"></div>
+				</div>
+				<div class="d-flex flex-wrap gap-2 row">
+					<div class="col-12">
+						<div>
+							<p th:text="${announcement.description}"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</section>
+
+</body>
+</html>

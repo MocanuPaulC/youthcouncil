@@ -46,12 +46,12 @@
 			</div>
 
 			<div class="col-12 mb-2">
-				<a class="btn btn-dark"
+				<a class="btn btn-dark mb-2"
 				   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
 				   th:href="@{/youthcouncils/{municipality}/create-council-admin(municipality=${ycWithActionPoints.getMunicipality()})}">
 					Create council admin
 				</a>
-				<a class="btn btn-dark"
+				<a class="btn btn-dark mb-2"
 				   th:href="@{/youthcouncils/{municipality}/user-management(municipality=${ycWithActionPoints.getMunicipality()})}"
 				   th:if="${#authorization.expression(
 		'hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+''')'
@@ -59,14 +59,14 @@
 					User management
 				</a>
 
-				<button class="btn btn-primary"
+				<button class="btn btn-primary mb-2"
 						data-bs-target="#launch-call-for-ideas-modal"
 						data-bs-toggle="modal"
 						th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}"
 						type="button">
 					Launch call for ideas
 				</button>
-				<a class="btn btn-primary"
+				<a class="btn btn-primary mb-2"
 				   th:href="@{/youthcouncils/{municipality}/actionpoints/create(municipality=${ycWithActionPoints.getMunicipality()})}"
 				   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}"
 				   type="button">
@@ -107,25 +107,45 @@
 			</div>
 
 			<div class="col-12 mb-2">
-				<a class="btn btn-dark"
+				<a class="btn btn-dark mb-2"
 				   th:href="@{/youthcouncils/{municipality}/callforideas(municipality=${ycWithActionPoints.getMunicipality()})}">
 					&#128161; Call for ideas
 				</a>
-				<a class="btn btn-dark"
+				<a class="btn btn-dark mb-2"
 				   th:href="@{/youthcouncils/{municipality}/actionpoints(municipality=${ycWithActionPoints.getMunicipality()})}">
 					&#128203; Action Points
 				</a>
-				<a class="btn btn-dark"
+				<a class="btn btn-dark mb-2"
 				   th:href="@{/youthcouncils/{municipality}/announcements(municipality=${ycWithActionPoints.getMunicipality()})}">
 					&#128226; Announcements
 				</a>
-				<a class="btn btn-dark"
+				<a class="btn btn-dark mb-2"
 				   th:href="@{/youthcouncils/{municipality}/informativepages(municipality=${ycWithActionPoints.getMunicipality()})}">
 					&#128209; Informative pages
 				</a>
 
 
 			</div>
+
+			<div class="col-12 mb-2">
+				<div class="d-flex flex-wrap gap-2">
+					<a style="width: 200px; height: 100px;"
+						class="btn btn-secondary d-flex justify-content-center align-items-center text-start"
+						th:each="infopage: ${ycInfoPages}"
+						th:href="@{/youthcouncils/{municipality}/informativepages/{title}(municipality=${ycWithActionPoints.getMunicipality()},title=${infopage.title})}"
+					>
+						<h3 th:text="${infopage.title}"></h3>
+					</a>
+					<a class="btn btn-dark d-flex justify-content-center align-items-center text-start"
+					   th:href="@{/youthcouncils/{municipality}/informativepages/create(municipality=${ycWithActionPoints.getMunicipality()})}"
+					   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + ycWithActionPoints.getMunicipality()+ ''')')}"
+					>
+						+
+					</a>
+				</div>
+
+			</div>
+
 			<div class="col-12 col-lg-8">
 				<div class="mb-4">
 					<div class="row mb-2">
@@ -167,8 +187,8 @@
 											</p>
 										</div>
 										<div class="card-footer">
-											<div class="row">
-												<div class="col-4 d-flex justify-content-start align-items-center gap-1">
+											<div class="d-flex flex-wrap">
+												<div class="btn btn-light d-flex justify-content-start align-items-center gap-1">
 													<div role="group"
 														 th:id="${'actionPoint_' + actionpoint.getActionPointId()}">
 														<button aria-expanded="false"
@@ -176,7 +196,7 @@
 																id="expandBtn"
 																style="all: unset;"
 																type="button">
-															<i class="bi bi-hand-thumbs-up"></i>
+															&#128077;
 														</button>
 														<div class="dropdown-menu"
 															 style="--bs-dropdown-min-width: 16rem"

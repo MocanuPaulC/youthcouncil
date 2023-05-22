@@ -2,6 +2,14 @@ import csrfHeader from "./csrfHeader.js";
 
 const paths = document.querySelectorAll("path[nis]");
 const overlay = document.getElementById("map-belgium-overlay");
+const overlay_container = overlay.querySelector(".overlay-container");
+overlay_container.addEventListener("click", function() {
+	if (event.target.nodeType === "A" || event.target.nodeType === "BUTTON") {
+		console.log("exiting early")
+		return;
+	}
+	overlay.style.display = "none";
+});
 
 const l = parseInt(getComputedStyle(overlay.parentElement).getPropertyValue("--pointer-height").slice(0, -2));
 overlay.parentElement.style.setProperty("--pointer-sqrt", `${Math.sqrt(Math.pow(l, 2) * 2) / 2}px`);
@@ -9,8 +17,8 @@ overlay.parentElement.style.setProperty("--pointer-sqrt", `${Math.sqrt(Math.pow(
 getMunicipaityData();
 
 
-for (const muncilipality of paths) {
-	muncilipality.addEventListener("click", mapSelectMunicipality);
+for (const municipality of paths) {
+	municipality.addEventListener("click", mapSelectMunicipality);
 }
 
 /*
@@ -48,7 +56,8 @@ function mapSelectMunicipality(event) {
 		if (sorry) sorry.style.display = "block";
 	}
 
-	const overlay_container = overlay.querySelector(".overlay-container");
+
+
 	overlay_container.style.left = '';
 
 	if (overlay.getBoundingClientRect().left < 0) {

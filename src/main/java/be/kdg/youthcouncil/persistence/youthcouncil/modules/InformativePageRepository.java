@@ -49,4 +49,10 @@ public interface InformativePageRepository extends JpaRepository<InformativePage
 			and i.isDefault = true
 			""")
 	List<InformativePageBlock> findInfoPageBlocks(String title);
+
+	@Query("""
+		select i from InformativePage i
+		where i.owningYouthCouncil.municipality.name = :name
+""")
+	List<InformativePage> findAllByMunicipalityName(String name);
 }

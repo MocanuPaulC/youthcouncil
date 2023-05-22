@@ -327,3 +327,5 @@ gradle-app.setting
 /db
 !.idea/codeStyles
 /builds/
+
+key.json

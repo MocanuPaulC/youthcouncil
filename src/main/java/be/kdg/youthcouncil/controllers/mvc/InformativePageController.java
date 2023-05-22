@@ -31,6 +31,7 @@ public class InformativePageController {
 	@GetMapping ("/youthcouncils/{municipality}/informativepages")
 	public String informativePages(Model model, @PathVariable String municipality) {
 		List<InformativePage> pages = youthCouncilService.getAllInformativePages(municipality);
+		model.addAttribute("municipality", municipality);
 		model.addAttribute("informativePages", pages);
 		return "informativePages";
 	}

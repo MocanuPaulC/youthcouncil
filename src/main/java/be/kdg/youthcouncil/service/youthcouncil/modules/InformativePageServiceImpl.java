@@ -63,6 +63,11 @@ public class InformativePageServiceImpl implements InformativePageService {
 		}).toList());
 	}
 
+	@Override
+	public List<InformativePage> findAllByMunicipalityName(String municipality) {
+		return informativePageRepository.findAllByMunicipalityName(municipality);
+	}
+
 
 	@Override
 	public InformativePage findInfoPage(String title, Optional<String> municipality) {
