@@ -69,4 +69,8 @@ public class CallForIdea implements Defaultable {
 	public void setIsDefault(boolean isDefault) {
 		this.isDefault = isDefault;
 	}
+
+	public void addIdea(Idea idea) {
+		ideas.add(idea);
+	}
 }

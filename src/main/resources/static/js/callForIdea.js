@@ -12,10 +12,13 @@ let userId = undefined;
 const callForIdeaId = +bodyElement.dataset.callForIdeaId;
 const ideas = document.querySelector(".ideas");
 const subThemeElement = document.querySelector("#subtheme");
+const submitCSVbtn = document.getElementById("submit-csv-btn");
 
+const submitAnyway = document.getElementById("submit-anyway");
+submitAnyway.addEventListener("click", () => sendCSVFile(convertToCSV(validRows)));
 
 submitIdea.addEventListener("click", handleIdeaSubmission);
-
+submitCSVbtn.addEventListener("click", handleCSVSubmission);
 const buttons = document.querySelectorAll("button[id^=\"reaction-\"]");
 buttons.forEach(button => {
 	button.addEventListener("click", () => {
@@ -88,4 +91,129 @@ async function handlePost(response) {
 	newIdeaElement.append(ideaElement);
 	newIdeaElement.append(newBtn);
 	ideaElement.innerText = data.idea;
+}
+
+function parseCSV(file) {
+	const reader = new FileReader();
+
+	return new Promise((resolve, reject) => {
+		reader.onload = () => {
+			const csvData = reader.result;
+			const lines = csvData.split("\n");
+			const headers = lines[0].split(",");
+			const data = [];
+
+			for (let i = 1; i < lines.length - 1; i++) {
+				const values = lines[i].split(",");
+				const row = {};
+
+				for (let j = 0; j < headers.length; j++) {
+					row[headers[j]] = values[j];
+				}
+
+				data.push(row);
+			}
+
+			resolve(data);
+		};
+
+		reader.onerror = () => {
+			reject(reader.error);
+		};
+
+		reader.readAsText(file);
+	});
+}
+
+let validRows = [];
+
+function handleCSVSubmission() {
+	const input = document.getElementById("csv-to-submit");
+	const file = input.files[0];
+	let subthemes = [];
+	let invalidRows = [];
+	validRows = [];
+	let rowNumber = 2;
+	fetch(`/api/ideas/${callForIdeaId}/subthemes`, {
+		method: "GET",
+		headers: {
+			youthCouncilID,
+			[name]: value
+		}
+	}).then(response => response.json())
+		.then(data => {
+			subthemes = data;
+			parseCSV(file)
+				.then(parsedData => {
+					parsedData.forEach(row => {
+						const noneMatch = subthemes.every(subtheme => subtheme !== row.SubTheme);
+						if (noneMatch) {
+							invalidRows.push(rowNumber);
+						} else {
+							validRows.push(row);
+						}
+						rowNumber++;
+					});
+					handlePartialSubmission(invalidRows, parsedData);
+				})
+				.catch(error => {
+					console.error("Error parsing CSV:", error);
+				});
+
+		})
+		.catch(error => {
+			console.error("Error:", error);
+		});
+
+}
+
+
+function handlePartialSubmission(invalidRows, parsedData) {
+	const errorParagraph = document.getElementById("csv-error");
+	if (invalidRows.length > 0) {
+		errorParagraph.hidden = false;
+		errorParagraph.innerText = `${validRows.length} out of ${invalidRows.length + validRows.length} rows correctly imported \n
+ 								The following rows have issues with the subtheme: ${invalidRows.join(", ")}`;
+		submitAnyway.hidden = false;
+		submitCSVbtn.innerText = "Reupload";
+		submitCSVbtn.classList.remove("btn-primary");
+		submitCSVbtn.classList.add("btn-danger");
+	} else {
+		errorParagraph.hidden = true;
+		submitAnyway.hidden = true;
+		submitCSVbtn.innerText = "Upload";
+		submitCSVbtn.classList.add("btn-primary");
+		submitCSVbtn.classList.remove("btn-danger");
+		sendCSVFile(convertToCSV(parsedData));
+	}
+}
+
+
+function sendCSVFile(file) {
+	const formData = new FormData();
+	formData.append("file", file); // Append the file to FormData
+	fetch(`/api/ideas/${callForIdeaId}/uploadFile`, {
+		method: "POST",
+		headers: {
+			youthCouncilID,
+			[name]: value
+		},
+		body: formData
+	})
+		.then(response => response.text())
+		.then(data => {
+			location.reload();
+		})
+		.catch(error => {
+			console.error("Error:", error);
+		});
+}
+
+
+function convertToCSV(objects) {
+	const headers = Object.keys(objects[0]);
+	const rows = objects.map(obj => headers.map(header => obj[header]));
+	rows.unshift(headers);
+	const csv = rows.map(row => row.join(",")).join("\n");
+	return new Blob([csv], {type: "text/csv"});
 }

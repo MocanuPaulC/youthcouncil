@@ -97,7 +97,8 @@ public class WebSecurityConfig {
 								"/youthcouncils/*/actionpoints/create",
 								"/youthcouncils/*/actionpoints/*/edit",
 								"/api/actionpoints/actionpointblocks/*/*",
-								"/youhtcouncils/*/callforideas/*/createactionpoint"
+								"/youhtcouncils/*/callforideas/*/createactionpoint",
+								"/api/ideas/*/subthemes"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
 								//								http://localhost:8081/api/action-points/blocktypes
@@ -109,7 +110,8 @@ public class WebSecurityConfig {
 								"/api/youthcouncils/*/callforideas",
 								"/api/ideas", "youthcouncils/*/action-points/create",
 								"/youthcouncils/*/action-points/edit",
-								"/api/actionpoints/createwithideas/*/*/*"
+								"/api/actionpoints/createwithideas/*/*/*",
+								"/api/ideas/*/uploadFile"
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
 								HttpMethod.PATCH,

@@ -20,6 +20,56 @@
    type="button">
 	Create action point
 </a>
+<!-- Button trigger modal -->
+<button class="btn btn-primary"
+		data-bs-target="#submitCSV"
+		data-bs-toggle="modal"
+		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + callForIdea.getOwningYouthCouncil().getMunicipality()+ ''')')}"
+		type="button">
+	Submit ideas from CSV
+</button>
+
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="submitCSVLabel" class="modal fade" id="submitCSV" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="submitCSVLabel">Upload ideas as CSV</h5>
+				<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+			</div>
+			<div class="modal-body">
+				<h5>Please structure your CSV file like this</h5>
+				<h5>Including the headers</h5>
+				<table class="table table-striped">
+					<tr>
+						<th>Full name</th>
+						<th>SubTheme</th>
+						<th>Idea</th>
+					</tr>
+					<tr>
+						<td>John doe</td>
+						<td>b theme subtheme 1</td>
+						<td>grate ide</td>
+					</tr>
+					<tr>
+						<td>Jane doe</td>
+						<td>b theme subtheme 2</td>
+						<td>grate</td>
+					</tr>
+				</table>
+				<form enctype="multipart/form-data" method="post">
+					<input id="csv-to-submit" name="file" type="file"/>
+				</form>
+				<p hidden id="csv-error"></p>
+				<button class="btn btn-primary" hidden id="submit-anyway" type="button">Submit Anyway</button>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+				<button class="btn btn-primary" id="submit-csv-btn" type="button">Upload</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <input class="form-control mb-3" id="idea-text" type="text">
 
@@ -36,7 +86,8 @@
 <section class="ideas">
 	<div class="idea" th:each="idea: ${callForIdea.getIdeas()}">
 		<p class="text-muted mb-1">
-			<th:block th:text="${idea.getUser().getUsername()}"></th:block>
+			<th:block th:if="${idea.getUser()!=null}" th:text="${idea.getUser().getUsername()}"></th:block>
+			<th:block th:if="${idea.getUser()==null}" th:text="${idea.getFullName()}"></th:block>
 			<span class="badge rounded-pill text-bg-info" th:text="${idea.getSubTheme().getSubTheme()}"></span>
 		</p>
 		<p th:text="${idea.getIdea()}"></p>
