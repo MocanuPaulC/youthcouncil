@@ -107,10 +107,6 @@ gcloud compute instances create "$name" \
     ufw enable
     echo \"$youthcouncil_service\" > /etc/systemd/system/youthcouncil.service
     systemctl daemon-reload
-    snap install core
-    snap refresh core
-    snap install --classic certbot
-    ln -s /snap/bin/certbot /usr/bin/certbot
     curl -k \"https://www.duckdns.org/update?domains=$domain&token=$duckdns_token&ip=\""
 
 
@@ -122,6 +118,7 @@ done
 echo "Copying files to VM..."
 gcloud compute scp --recurse build $name:~/ --zone $zone
 gcloud compute scp --recurse key.json $name:~/key.json --zone $zone
+glcoud compute scp --recurse java-key.json $name:~/java-key.json --zone $zone
 gcloud compute scp --recurse .env $name:~/.env --zone $zone
 echo "Files copied"
 

@@ -7,7 +7,7 @@ spring:
                 instance-connection-name: ${SQL_INSTANCE_NAME}
                 database-name: ${POSTGRES_DB}
                 credentials:
-                    location: file:${GOOGLE_SERVICE_ACCOUNT_FILE}
+                    location: file:${JAVA_GOOGLE_SERVICE_ACCOUNT_FILE}
     jpa:
         database: postgresql
         hibernate:

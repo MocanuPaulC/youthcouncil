@@ -62,6 +62,7 @@ deploy:
     script:
         - gcloud auth activate-service-account --key-file "$GOOGLE_SERVICE_ACCOUNT_FILE"
         - cat $GOOGLE_SERVICE_ACCOUNT_FILE > key.json
+        - cat $JAVA_GOOGLE_SERVICE_ACCOUNT_FILE > java-key.json
         - cat $env > .env
         - scripts/setup_instance.sh $password $duckdns_token
     environment: production
