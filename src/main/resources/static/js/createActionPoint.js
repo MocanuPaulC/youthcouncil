@@ -512,6 +512,8 @@ async function handleFormSubmit(event) {
 					}
 				});
 
+		} else {
+			window.location.href = "/youthcouncils/" + municipality;
 		}
 	}
 

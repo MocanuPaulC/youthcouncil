@@ -62,11 +62,15 @@ public class WebSecurityConfig {
 								HttpMethod.PATCH,
 								"/api/users/*/password", "/api/users/*/username"
 						).hasRole("OWNER")
+						.regexMatchers(HttpMethod.POST, "/api/users/\\d/password"
+						).hasRole("OWNER")
 						//----------------------/
 						//---  GENERAL ADMIN ---/
 						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
+								"/youthcouncils/add/*",
+								"/user-management",
 								"/statistics", "/users",
 								"/youthcouncils/add",
 								"/youthcouncils/*/create-council-admin",
@@ -89,6 +93,7 @@ public class WebSecurityConfig {
 						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
+								"/youthcouncils/*/user-management",
 								"/youthcouncils/*/edit", "/youthcouncils/*/statistics",
 								"/youthcouncils/*/callforideas/*/createactionpoint",
 								"/youthcouncils/*/announcements/add",
@@ -115,6 +120,8 @@ public class WebSecurityConfig {
 						).hasRole("COUNCIL_ADMIN")
 						.antMatchers(
 								HttpMethod.PATCH,
+								"/api/users/*/role",
+								"/api/users/*/blocked-status",
 								"/api/actionpoints/*/linkideas/*/*",
 								"/api/actionpoints/*/*",
 								"/api/call-for-ideas/*/set-display",
@@ -133,15 +140,13 @@ public class WebSecurityConfig {
 						.antMatchers(
 								HttpMethod.GET,
 								"/profile",
-								"/api/idea-reaction/*/*",
-								"/api/action-point-reaction/*/*" // this line here
+								"/api/idea-reaction/*/*"
 						).hasRole("USER")
 						.antMatchers(
 								HttpMethod.POST,
 								"/api/media/upload",
 								"/api/actionpoints/subscribe/*/*",
 								"/api/idea-reaction/react",
-								"/api/action-point-reaction/react", // and this one
 								"/api/ideas",
 								"/api/actionpoints/subscribe/*/*"
 						).hasRole("USER")
@@ -170,6 +175,9 @@ public class WebSecurityConfig {
 								"/api/qrcode/actionpoint/*/*"
 						)
 						.permitAll()
+						// and this one
+						.antMatchers("/api/action-point-reaction/react", "/api/action-point-reaction/*/*")
+						.authenticated()
 						.antMatchers(HttpMethod.POST, "/api/youthcouncils/*/*")
 						.permitAll()
 						.antMatchers(HttpMethod.DELETE, "/api/youthcouncils/*/*")

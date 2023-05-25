@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -28,7 +29,9 @@ public class AnnouncmentServiceImpl implements AnnouncementService {
 
 	@Override
 	public Announcement findByIdAndMunicipality(String municipality, long id) {
-		return announcementRepository.findByIdAndMunicipality(municipality, id).map(a -> a).orElseThrow(() -> new AnnouncementNotFoundException(id));
+		return announcementRepository.findByIdAndMunicipality(municipality, id)
+		                             .map(a -> a)
+		                             .orElseThrow(() -> new AnnouncementNotFoundException(id));
 	}
 
 	@Override
@@ -59,7 +62,8 @@ public class AnnouncmentServiceImpl implements AnnouncementService {
 		YouthCouncil youthCouncil = youthCouncilRepository.findByMunicipalityName(municipality)
 		                                                  .orElseThrow(() -> new MunicipalityNotFoundException("The municipality " + municipality + "could not be found!"));
 		Announcement announcement = modelMapper.map(announcementViewModel, Announcement.class);
-
+		announcement.setAnnouncementTime(LocalDateTime.now());
+		announcement.setModuleStatus(ModuleStatus.DISPLAYED);
 		youthCouncil.getAnnouncements().add(announcement); //FIXME please make me prettier
 		announcement.setOwningYouthCouncil(youthCouncil);
 

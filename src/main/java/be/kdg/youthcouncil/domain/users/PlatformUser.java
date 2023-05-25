@@ -60,7 +60,7 @@ public class PlatformUser implements Authenticable {
 	@OneToMany (fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn (name = "subscriber")
 	@ToString.Exclude
-	private List<YouthCouncilSubscription> youthCouncilSubscriptions;
+	private List<YouthCouncilSubscription> youthCouncilSubscriptions = new ArrayList<>();
 	@OneToMany (fetch = FetchType.LAZY)
 	@ToString.Exclude
 	private List<ActionPointSubscription> actionPointSubscriptions;
@@ -124,5 +124,9 @@ public class PlatformUser implements Authenticable {
 
 	public void addNotification(Notification notification) {
 		notifications.add(notification);
+	}
+
+	public void addYouthCouncilSubscription(YouthCouncilSubscription subscription) {
+		youthCouncilSubscriptions.add(subscription);
 	}
 }

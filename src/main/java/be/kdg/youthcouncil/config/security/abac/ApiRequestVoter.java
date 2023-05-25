@@ -44,11 +44,12 @@ public class ApiRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 		String uri = filterInvocation.getRequest().getRequestURI();
 		String youthCouncilIdHeader = filterInvocation.getHttpRequest().getHeader("youthCouncilID");
 
-		if (!uri.contains("api") || collection.toString().contains("ROLE_OWNER")) {
+		if (!uri.contains("api") || collection.toString().contains("ROLE_OWNER") || collection.toString()
+		                                                                                      .equals("[authenticated]")) {
 			return ACCESS_ABSTAIN;
 		}
 
-		if (youthCouncilIdHeader == null && !uri.contains("notifications")) {
+		if (youthCouncilIdHeader == null && !uri.contains("notifications") && !uri.contains("/api/users")) {
 			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "youthCouncilID header is missing");
 		}
 

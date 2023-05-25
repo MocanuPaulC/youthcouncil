@@ -4,6 +4,8 @@ import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.Reactio
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.*;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.NewSubscriptionDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.SubscriptionDTO;
+import be.kdg.youthcouncil.controllers.mvc.viewModels.NewYouthCouncilViewModel;
+import be.kdg.youthcouncil.domain.Municipality;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
@@ -15,6 +17,7 @@ import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import be.kdg.youthcouncil.exceptions.*;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.MunicipalityRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.YouthCouncilRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.CallForIdeaRepository;
@@ -40,6 +43,7 @@ public class MappingConfiguration {
 	private final YouthCouncilRepository youthCouncilRepository;
 	private final ActionPointRepository actionPointRepository;
 	private final IdeaRepository ideaRepository;
+	private final MunicipalityRepository municipalityRepository;
 
 	private final ThemeRepository themeRepository;
 
@@ -54,6 +58,9 @@ public class MappingConfiguration {
 		           .addMapping(NewIdeaDTO::getCallForIdeaId, Idea::setCallForIdeas)
 		           .addMapping(NewIdeaDTO::getSubThemeId, Idea::setSubTheme)
 		           .addMapping(NewIdeaDTO::getIdea, Idea::setIdea);
+		modelMapper.createTypeMap(NewYouthCouncilViewModel.class, YouthCouncil.class)
+		           .addMapping(NewYouthCouncilViewModel::getCouncilName, YouthCouncil::setCouncilName)
+		           .addMapping(NewYouthCouncilViewModel::getMunicipality, YouthCouncil::setMunicipality);
 
 		modelMapper.createTypeMap(Idea.class, IdeaDTO.class)
 		           .addMapping(idea -> idea.getImage().getPath(), IdeaDTO::setImagePath)
@@ -132,6 +139,16 @@ public class MappingConfiguration {
 				                            .orElseThrow(() -> new ActionPointNotFoundException(source));
 			}
 		};
+
+		Converter<String, Municipality> toMunicipality = new AbstractConverter<String, Municipality>() {
+			protected Municipality convert(String source) {
+				return municipalityRepository.findByName(source)
+				                             .orElseThrow(() -> new MunicipalityNotFoundException(source));
+			}
+		};
+		modelMapper.addConverter(toMunicipality);
+
+
 		Converter<Long, Idea> toIdea = new AbstractConverter<Long, Idea>() {
 			protected Idea convert(Long source) {
 				return ideaRepository.findById(source).orElseThrow(() -> new IdeaNotFoundException(source));

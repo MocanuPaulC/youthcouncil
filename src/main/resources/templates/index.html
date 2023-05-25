@@ -27,7 +27,9 @@
 				</h3>
 				<div class="overlay-buttons">
 					<a class="btn btn-primary link-to-yc">go to</a>
-					<a class="btn btn-danger link-yc-create" sec:authorize="hasRole('ROLE_GENERAL_ADMIN')">create</a>
+					<a class="btn btn-danger link-yc-create"
+					   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')">create
+					</a>
 				</div>
 				<p class="overlay-sorry" sec:authorize="!hasRole('ROLE_GENERAL_ADMIN')">
 					unfortunately no youthcouncil exists for the municipality

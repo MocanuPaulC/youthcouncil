@@ -5,6 +5,7 @@ import be.kdg.youthcouncil.domain.users.Authenticable;
 import be.kdg.youthcouncil.domain.users.AuthenticationType;
 import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
+import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
@@ -15,6 +16,7 @@ import be.kdg.youthcouncil.persistence.users.AdminRepository;
 import be.kdg.youthcouncil.persistence.users.UserRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.NotificationRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.YouthCouncilSubscriptionRepository;
+import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.utility.Notification;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
 	private final AdminRepository adminRepository;
 	private final YouthCouncilSubscriptionRepository youthCouncilSubscriptionRepository;
 	private final BCryptPasswordEncoder passwordEncoder;
+	private final YouthCouncilService youthCouncilService;
 	private final NotificationRepository notificationRepository;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -115,6 +118,22 @@ public class UserServiceImpl implements UserService {
 			logger.debug("Error while deleting user with id: " + userId);
 			return false;
 		}
+	}
+
+	@Override
+	@Transactional
+	public void createCouncilAdmin(UserRegisterViewModel userRegisterViewModel, String municipality) {
+		YouthCouncil youthCouncil = youthCouncilService.findByMunicipality(municipality);
+		PlatformUser user = modelMapper.map(userRegisterViewModel, PlatformUser.class);
+		YouthCouncilSubscription subscription = new YouthCouncilSubscription(
+				user,
+				youthCouncil,
+				SubscriptionRole.COUNCIL_ADMIN
+		);
+		user.addYouthCouncilSubscription(subscription);
+		youthCouncilSubscriptionRepository.save(subscription);
+		userRepository.save(user);
+
 	}
 
 
