@@ -17,8 +17,16 @@
 			<input class="form-control" id="councilName" name="councilName" required th:field="*{councilName}"
 				   type="text"/>
 			<label for="municipality">Municipality Name</label>
-			<input class="form-control" id="municipality" name="municipality" required
-				   th:field="*{municipality}" type="text"/>
+			<input class="form-control" id="municipality" name="municipality" required th:if="${municipalityName==null}"
+				   type="text" value=""/>
+			<input class="form-control"
+				   id="municipality"
+				   name="municipality"
+				   readonly
+				   required
+				   th:if="${municipalityName!=null}"
+				   th:value="${municipalityName}"
+				   type="text"/>
 			<input class="btn btn-primary" type="submit" value="Submit"/>
 		</form>
 	</div>

@@ -58,4 +58,6 @@ public interface UserService {
 	boolean updateBlockedStatus(long userId, boolean blocked, long youthCouncilId);
 
 	boolean deleteUser(long userId);
+
+	void createCouncilAdmin(UserRegisterViewModel userRegisterViewModel, String municipality);
 }

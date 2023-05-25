@@ -3,9 +3,9 @@ import csrfHeader from "./csrfHeader.js";
 const paths = document.querySelectorAll("path[nis]");
 const overlay = document.getElementById("map-belgium-overlay");
 const overlay_container = overlay.querySelector(".overlay-container");
-overlay_container.addEventListener("click", function() {
+overlay_container.addEventListener("click", function () {
 	if (event.target.nodeType === "A" || event.target.nodeType === "BUTTON") {
-		console.log("exiting early")
+		console.log("exiting early");
 		return;
 	}
 	overlay.style.display = "none";
@@ -51,14 +51,14 @@ function mapSelectMunicipality(event) {
 		if (sorry) sorry.style.display = "none";
 		link.setAttribute("href", `/youthcouncils/${municipality_name}`);
 	} else {
+		if (create) create.setAttribute("href", `/youthcouncils/add/${municipality_name}`);
 		link.style.display = "none";
 		if (create) create.style.display = "block";
 		if (sorry) sorry.style.display = "block";
 	}
 
 
-
-	overlay_container.style.left = '';
+	overlay_container.style.left = "";
 
 	if (overlay.getBoundingClientRect().left < 0) {
 		overlay_container.style.left = `${overlay.getBoundingClientRect().left * -1}px`;

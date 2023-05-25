@@ -69,6 +69,13 @@ public class YouthCouncilController {
 		return "addYouthCouncil";
 	}
 
+	@GetMapping ("/add/{municipality}")
+	public String getAddYouthCouncilForMunicipality(Model model, @PathVariable String municipality) {
+		model.addAttribute("municipalityName", municipality);
+		model.addAttribute("youthCouncil", new NewYouthCouncilViewModel());
+		return "addYouthCouncil";
+	}
+
 	@PostMapping ("/add")
 	public String addYouthCouncil(@Valid @ModelAttribute ("youthCouncil") NewYouthCouncilViewModel viewModel, BindingResult errors, HttpServletRequest request) {
 		logger.debug(viewModel.toString() + " in postMapping of addYouthCouncil");
@@ -157,14 +164,13 @@ public class YouthCouncilController {
 			HttpServletRequest request) {
 
 		if (errors.hasErrors()) {
-
 			return "createCouncilAdmin";
 		} else {
 			UserRegisterViewModel userRegisterViewModel = new UserRegisterViewModel();
 			userRegisterViewModel.setEmail(viewModel.getEmail());
 			userRegisterViewModel.setUsername(viewModel.getEmail());
 			userRegisterViewModel.setPassword(bCryptConfig.passwordEncoder().encode(viewModel.getPassword()));
-			userService.save(userRegisterViewModel);
+			userService.createCouncilAdmin(userRegisterViewModel, municipality);
 			emailService.sendSimpleMessage(viewModel.getEmail(), "Youth Council Admin", "You have been added as an admin to the youth council of " + municipality + ".\n" +
 					"Your username is: " + viewModel.getEmail() + "\n" +
 					"Your password is: " + viewModel.getPassword() + "\n" +

@@ -32,7 +32,7 @@ function handleResetOnclick(event) {
 
 	const {name, value} = csrfHeader();
 
-	fetch("/api/users/" + userId + "/password", {
+	fetch(`/api/users/${userId}/password`, {
 		method: "POST",
 		headers: {
 			"Accept": "application/json",
