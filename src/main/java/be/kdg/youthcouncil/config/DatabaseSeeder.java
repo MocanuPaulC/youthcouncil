@@ -6,6 +6,7 @@ import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.*;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.ActionPointStatus;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.BlockType;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.Theme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
@@ -23,7 +24,9 @@ import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.ActionPointSub
 import be.kdg.youthcouncil.persistence.youthcouncil.subscriptions.YouthCouncilSubscriptionRepository;
 import be.kdg.youthcouncil.utility.Notification;
 import lombok.AllArgsConstructor;
+import net.datafaker.Faker;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +34,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 @Component
@@ -38,6 +42,7 @@ import java.util.stream.IntStream;
 @AllArgsConstructor
 public class DatabaseSeeder {
 
+	private final Faker faker = new Faker();
 	BCryptPasswordEncoder encoder;
 	UserRepository userRepository;
 	AdminRepository adminRepository;
@@ -49,18 +54,60 @@ public class DatabaseSeeder {
 	ThemeRepository themeRepository;
 	SubThemeRepository subThemeRepository;
 	InformativePageRepository informativePageRepository;
+	InformativePageBlockRepository informativePageBlockRepository;
 	ActionPointRepository actionPointRepository;
 	YouthCouncilSubscriptionRepository youthCouncilSubscriptionRepository;
 	ActionPointSubscriptionRepository actionPointSubscriptionRepository;
 	NotificationRepository notificationRepository;
 	MunicipalityRepository municipalityJpaRepository;
 
+	Environment env;
+
 	@PostConstruct
 	public void loadData() {
+		final boolean LONG_FORMAT = Boolean.parseBoolean(
+				env.getProperty("config.seeding.additional.active") != null
+						? env.getProperty("config.seeding.additional.active")
+						: "false"
+		);
+		final int NUM_USERS = Integer.parseInt(
+				env.getProperty("config.seeding.additional.users") != null
+						? env.getProperty("config.seeding.additional.users")
+						: "300"
+		);
+		final int MAX_ANN = Integer.parseInt(
+				env.getProperty("config.seeding.additional.max.annoucements") != null
+						? env.getProperty("config.seeding.additional.max.annoucements")
+						: "30"
+		);
+		final int MAX_AC = Integer.parseInt(
+				env.getProperty("config.seeding.additional.max.actionpoints") != null
+						? env.getProperty("config.seeding.additional.max.actionpoints")
+						: "5"
+		);
+		final int MAX_CFI = Integer.parseInt(
+				env.getProperty("config.seeding.additional.max.callforideas.cfi") != null
+						? env.getProperty("config.seeding.additional.max.callforideas.cfi")
+						: "3"
+		);
+		final int MAX_IDEAS = Integer.parseInt(
+				env.getProperty("config.seeding.additional.max.callforideas.ideas") != null
+						? env.getProperty("config.seeding.additional.max.callforideas.ideas")
+						: "50"
+		);
+		final int MAX_INFO_PAGES = Integer.parseInt(
+				env.getProperty("config.seeding.additional.max.infopages.ip") != null
+						? env.getProperty("config.seeding.additional.max.infopages.ip")
+						: "5"
+		);
+		final int MAX_INFO_PAGE_BLOCKS = Integer.parseInt(
+				env.getProperty("config.seeding.additional.max.infopages.infopageblocks") != null
+						? env.getProperty("config.seeding.additional.max.infopages.infopageblocks")
+						: "15"
+		);
 
-		// USERS
-		//		adminRepository.save(new GeneralAdmin("gadmin", encoder.encode("gadmin")));
-		municipalityJpaRepository.saveAll(List.of(
+
+		final List<Municipality> municipalities = municipalityJpaRepository.saveAll(List.of(
 				new Municipality(21001L, "Anderlecht"),
 				new Municipality(21002L, "Oudergem"),
 				new Municipality(21003L, "Sint-Agatha-Berchem"),
@@ -390,16 +437,21 @@ public class DatabaseSeeder {
 				new Municipality(73098L, "Wellen")
 		));
 
+		// USERS
+		//		adminRepository.save(new GeneralAdmin("gadmin", encoder.encode("gadmin")));
+
+
 		List<String> userNames = List.of("cadmin1", "cadmin2", "moderator1", "moderator2", "member1", "member2", "member3");
 		List<Integer> userPostcodes = List.of(23423, 457456, 8325, 57809, 12362, 6799, 21356);
-		List<PlatformUser> userList = new ArrayList<>();
+		List<PlatformUser> tmpUserList = new ArrayList<>();
 
-		IntStream.range(0, 7).forEach(i -> {
+		tmpUserList.addAll(IntStream.range(0, 7).mapToObj(i -> {
 			String n = userNames.get(i);
-			userList.add(new PlatformUser(n, n, n + "@localhost", userPostcodes.get(0)
-			                                                                   .toString(), n, encoder.encode(n)));
-		});
-		PlatformUser ga = new PlatformUser("gadmin", "gadmin", "gadmin@localhost", "23423", "gadmin", encoder.encode("gadmin"));
+			return new PlatformUser(n, n, n + "@localhost", userPostcodes.get(0)
+			                                                             .toString(), n, encoder.encode(n));
+		}).toList());
+
+
 		PlatformUser notifiedUser = new PlatformUser("notified", "notified", "notified@localhost", "23423", "notified", encoder.encode("notified"));
 		Notification seenNotification = new Notification("seen notification");
 		notificationRepository.save(seenNotification);
@@ -408,10 +460,26 @@ public class DatabaseSeeder {
 		notificationRepository.save(unseenNotification);
 		notifiedUser.addNotification(seenNotification);
 		notifiedUser.addNotification(unseenNotification);
+		tmpUserList.add(notifiedUser);
+
+
+		PlatformUser ga = new PlatformUser("gadmin", "gadmin", "gadmin@localhost", "23423", "gadmin", encoder.encode("gadmin"));
 		ga.setGA(true);
-		userList.add(ga);
-		userList.add(notifiedUser);
-		userRepository.saveAll(userList);
+		tmpUserList.add(ga);
+
+		if (LONG_FORMAT) {
+			tmpUserList.addAll(IntStream.range(0, NUM_USERS).mapToObj(n -> new PlatformUser(
+					faker.name().firstName(),
+					faker.name().lastName(),
+					faker.internet().emailAddress(),
+					municipalities.get(faker.number().numberBetween(0, municipalities.size())).getId().toString(),
+					faker.name().username(),
+					faker.internet().password()
+			)).toList());
+		}
+
+		final List<PlatformUser> userList = userRepository.saveAll(tmpUserList);
+
 
 		//THEMES
 
@@ -419,7 +487,7 @@ public class DatabaseSeeder {
 		Theme theme2 = new Theme("b theme");
 		Theme theme3 = new Theme("c theme");
 
-		themeRepository.saveAll(List.of(theme1, theme2, theme3));
+		final List<Theme> themes = themeRepository.saveAll(List.of(theme1, theme2, theme3));
 
 		SubTheme subTheme1a = new SubTheme("a theme subtheme 1", theme1);
 		SubTheme subTheme2a = new SubTheme("a theme subtheme 2", theme1);
@@ -428,7 +496,7 @@ public class DatabaseSeeder {
 		SubTheme subTheme1c = new SubTheme("c theme subtheme 1", theme3);
 		SubTheme subTheme2c = new SubTheme("c theme subtheme 2", theme3);
 
-		subThemeRepository.saveAll(List.of(subTheme1b, subTheme1a, subTheme1c, subTheme2c, subTheme2b, subTheme2a));
+		final List<SubTheme> subThemes = subThemeRepository.saveAll(List.of(subTheme1b, subTheme1a, subTheme1c, subTheme2c, subTheme2b, subTheme2a));
 
 		//MEDIA
 		Image councilLogo1 = new Image("my/council/logo1.jpg");
@@ -443,13 +511,42 @@ public class DatabaseSeeder {
 
 		mediaRepository.saveAll(List.of(councilLogo1, councilLogo2, image1, image2, image3, image4, image5, image6, image7));
 
+		ArrayList<Long> tmpYouthCounilsId = new ArrayList<>();
+		tmpYouthCounilsId.addAll(List.of(11029L, 24054L));
+
 		//YOUTHCOUNCILS
-		YouthCouncil youthCouncil1 = new YouthCouncil("youthcouncil1", municipalityJpaRepository.findById(11029L)
+		YouthCouncil youthCouncil1 = new YouthCouncil("youthcouncil1", municipalityJpaRepository.findById(tmpYouthCounilsId.get(0))
 		                                                                                        .orElseThrow(), "youthcouncil_description", councilLogo1, false);
-		YouthCouncil youthCouncil2 = new YouthCouncil("youthcouncil2", municipalityJpaRepository.findById(24054L)
+		YouthCouncil youthCouncil2 = new YouthCouncil("youthcouncil2", municipalityJpaRepository.findById(tmpYouthCounilsId.get(1))
 		                                                                                        .orElseThrow(), "youthcouncil_description", councilLogo2, true);
 
-		youthCouncilRepository.saveAll(List.of(youthCouncil1, youthCouncil2));
+		List<YouthCouncil> tmpYouthCouncils = new ArrayList<>();
+		tmpYouthCouncils.addAll(List.of(youthCouncil1, youthCouncil2));
+
+		if (LONG_FORMAT) {
+			tmpYouthCouncils.addAll(userList.subList(9, userList.size())
+			                                .stream()
+			                                .map(user -> Long.parseLong(user.getPostcode()))
+			                                .distinct()
+			                                .map(m -> {
+				                                if (tmpYouthCounilsId.contains(m)) {
+					                                return null;
+				                                }
+				                                return new YouthCouncil(
+						                                faker.company().name(),
+						                                municipalities.stream()
+						                                              .filter(mO -> Objects.equals(mO.getId(), m))
+						                                              .findFirst()
+						                                              .get(),
+						                                faker.lorem().maxLengthSentence(254),
+						                                image4,
+						                                faker.bool().bool()
+				                                );
+			                                })
+			                                .filter(Objects::nonNull)
+			                                .toList());
+		}
+		final List<YouthCouncil> youthCouncils = youthCouncilRepository.saveAll(tmpYouthCouncils);
 
 		YouthCouncilSubscription youthCouncilSubscription1 = new YouthCouncilSubscription(userList.get(0), youthCouncil1, SubscriptionRole.COUNCIL_ADMIN);
 		YouthCouncilSubscription youthCouncilSubscription3 = new YouthCouncilSubscription(userList.get(2), youthCouncil1, SubscriptionRole.MODERATOR);
@@ -463,7 +560,26 @@ public class DatabaseSeeder {
 		YouthCouncilSubscription youthCouncilSubscription8 = new YouthCouncilSubscription(userList.get(0), youthCouncil2, SubscriptionRole.USER);
 		YouthCouncilSubscription youthCouncilSubscription10 = new YouthCouncilSubscription(userList.get(userList.size() - 1), youthCouncil2, SubscriptionRole.USER);
 
-		youthCouncilSubscriptionRepository.saveAll(List.of(youthCouncilSubscription1, youthCouncilSubscription2, youthCouncilSubscription3, youthCouncilSubscription4, youthCouncilSubscription5, youthCouncilSubscription6, youthCouncilSubscription7, youthCouncilSubscription8, youthCouncilSubscription9, youthCouncilSubscription10));
+		List<YouthCouncilSubscription> tmpSubscriptions = new ArrayList<>(List.of(youthCouncilSubscription1, youthCouncilSubscription2, youthCouncilSubscription3, youthCouncilSubscription4, youthCouncilSubscription5, youthCouncilSubscription6, youthCouncilSubscription7, youthCouncilSubscription8, youthCouncilSubscription9, youthCouncilSubscription10));
+
+		// 9 base users
+		if (LONG_FORMAT) {
+			tmpSubscriptions.addAll(userList.subList(9, userList.size()).stream().map(user -> {
+				List<YouthCouncil> countils = youthCouncils.stream()
+				                                           .filter(yc -> yc.getMunicipality()
+				                                                           .equals(municipalities.stream()
+				                                                                                 .filter(m -> m.getId() == Integer.parseInt(user.getPostcode()))
+				                                                                                 .findFirst()
+				                                                                                 .get()
+				                                                                                 .getName())).toList();
+				return new YouthCouncilSubscription(
+						user,
+						countils.get(faker.number().numberBetween(0, countils.size())),
+						faker.number().randomDouble(2, 0, 1) > 0.75 ? SubscriptionRole.MODERATOR : SubscriptionRole.USER
+				);
+			}).toList());
+		}
+		final List<YouthCouncilSubscription> subscriptions = youthCouncilSubscriptionRepository.saveAll(tmpSubscriptions);
 
 		//ANNOUNCEMENTS
 		Announcement announcement1 = new Announcement("Happening AB", "annoucement description", LocalDateTime.now(), youthCouncil1, ModuleStatus.DISPLAYED);
@@ -473,31 +589,22 @@ public class DatabaseSeeder {
 		Announcement announcement5 = new Announcement("Activity2", "annoucement description", LocalDateTime.now(), youthCouncil2, ModuleStatus.DISPLAYED);
 		Announcement announcement6 = new Announcement("Happening UT", "annoucement description", LocalDateTime.now(), youthCouncil2, ModuleStatus.DISPLAYED);
 
-		announcementRepository.saveAll(List.of(announcement1, announcement2, announcement3, announcement4, announcement5, announcement6));
+		List<Announcement> tmpAnnoucements = new ArrayList<>(List.of(announcement1, announcement2, announcement3, announcement4, announcement5, announcement6));
 
 		//CALL FOR IDEAS and IDEAS
 
 		CallForIdea callForIdea1 = new CallForIdea("call for very good ideas!", youthCouncil1, theme1, ModuleStatus.DISPLAYED, false);
 		CallForIdea callForIdea2 = new CallForIdea("call for very very bad ideas!", youthCouncil2, theme2, ModuleStatus.DISPLAYED, false);
 
-		callForIdeaRepository.saveAll(List.of(callForIdea1, callForIdea2));
+		List<CallForIdea> tmpCallForIdeas = new ArrayList<>(List.of(callForIdea1, callForIdea2));
 
-		//IDEAS
-		Idea idea11 = new Idea("very brilliant idea 1", subTheme1a, image3, userList.get(4), callForIdea1);
-		Idea idea12 = new Idea("very not brilliant idea 2", subTheme2a, image2, userList.get(5), callForIdea1);
-		Idea idea21 = new Idea("very brilliant idea 3", subTheme2c, image1, userList.get(6), callForIdea2);
-		Idea idea22 = new Idea("very very brilliant idea 4", subTheme1c, image5, userList.get(5), callForIdea2);
-
-		ideaRepository.saveAll(List.of(idea11, idea12, idea21, idea22));
-
-		//INFORMATIVE PAGE
 		InformativePage informativePage1 = new InformativePage("info-page-title-1", false, youthCouncil1);
 		InformativePage informativePage2 = new InformativePage("info-page-title-2", false, youthCouncil1);
 		InformativePage informativePage3 = new InformativePage("info-page-title-3", false, youthCouncil2);
 		InformativePage informativePage4 = new InformativePage("info-page-title-4", false, youthCouncil2);
 		InformativePage informativePage5 = new InformativePage("default-info-page", true, null);
 
-		informativePageRepository.saveAll(List.of(informativePage1, informativePage2, informativePage3, informativePage4));
+		List<InformativePage> tmpInformativePages = new ArrayList<>(List.of(informativePage1, informativePage2, informativePage3, informativePage4));
 
 		// ACTION POINTS
 		ActionPoint actionPoint1 = new ActionPoint("action point title 1", "description", subTheme1a, ActionPointStatus.NEW, youthCouncil1, ModuleStatus.DISPLAYED);
@@ -505,7 +612,106 @@ public class DatabaseSeeder {
 		ActionPoint actionPoint3 = new ActionPoint("action point title 3", "description", subTheme2b, ActionPointStatus.NEW, youthCouncil2, ModuleStatus.DISPLAYED);
 		ActionPoint actionPoint4 = new ActionPoint("action point title 4", "description", subTheme2c, ActionPointStatus.REALISED, youthCouncil2, ModuleStatus.DISPLAYED);
 
-		actionPointRepository.saveAll(List.of(actionPoint1, actionPoint2, actionPoint3, actionPoint4));
+		List<ActionPoint> tmpActionPoints = new ArrayList<>(List.of(actionPoint1, actionPoint2, actionPoint3, actionPoint4));
+
+		if (LONG_FORMAT) {
+			youthCouncils.subList(2, youthCouncils.size()).forEach(yc -> {
+				tmpAnnoucements.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_ANN))
+				                                .mapToObj(n -> new Announcement(
+						                                faker.lorem().maxLengthSentence(50),
+						                                faker.lorem().maxLengthSentence(254),
+						                                faker.date().birthday().toLocalDateTime(),
+						                                yc,
+						                                ModuleStatus.values()[faker.number().numberBetween(0, 3)]
+				                                ))
+				                                .toList());
+				tmpCallForIdeas.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_CFI))
+				                                .mapToObj(n -> new CallForIdea(
+						                                faker.lorem().maxLengthSentence(50),
+						                                yc,
+						                                themes.get(faker.number().numberBetween(0, themes.size())),
+						                                ModuleStatus.values()[faker.number().numberBetween(0, 3)],
+						                                faker.bool().bool()
+				                                ))
+				                                .toList());
+				tmpInformativePages.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_INFO_PAGES))
+				                                    .mapToObj(n -> {
+					                                    InformativePage informativePage = new InformativePage(
+							                                    faker.lorem().maxLengthSentence(20),
+							                                    false,
+							                                    yc
+					                                    );
+					                                    List<InformativePageBlock> blocks = IntStream.range(0, faker.number()
+					                                                                                                .numberBetween(0, MAX_INFO_PAGE_BLOCKS))
+					                                                                                 .mapToObj(bn -> new InformativePageBlock(
+							                                                                                 bn,
+							                                                                                 faker.lorem()
+							                                                                                      .paragraph(faker.number()
+							                                                                                                      .numberBetween(0, 10)),
+							                                                                                 List.of(
+									                                                                                     BlockType.HEADER_BIG,
+									                                                                                     BlockType.HEADER_MEDIUM,
+									                                                                                     BlockType.HEADER_SMALL,
+									                                                                                     BlockType.PARAGRAPH
+							                                                                                     )
+							                                                                                     .get(faker.number()
+							                                                                                               .numberBetween(0, 4))))
+					                                                                                 .toList();
+					                                    informativePage.setInfoPageBlocks(informativePageBlockRepository.saveAll(blocks));
+
+					                                    return informativePage;
+				                                    })
+				                                    .toList());
+				tmpActionPoints.addAll(
+						IntStream.range(0, faker.number().numberBetween(0, MAX_AC))
+						         .mapToObj(an -> new ActionPoint(
+								         faker.lorem().maxLengthSentence(20),
+								         subThemes.get(faker.number().numberBetween(0, subThemes.size())),
+								         false,
+								         yc
+						         )).toList()
+				);
+			});
+		}
+		final List<Announcement> announcements = announcementRepository.saveAll(tmpAnnoucements);
+
+		final List<CallForIdea> callForIdeas = callForIdeaRepository.saveAll(tmpCallForIdeas);
+
+		final List<InformativePage> informativePages = informativePageRepository.saveAll(tmpInformativePages);
+
+		final List<ActionPoint> actionPoints = actionPointRepository.saveAll(tmpActionPoints);
+
+		//IDEAS
+		Idea idea11 = new Idea("very brilliant idea 1", subTheme1a, image3, userList.get(4), callForIdea1);
+		Idea idea12 = new Idea("very not brilliant idea 2", subTheme2a, image2, userList.get(5), callForIdea1);
+		Idea idea21 = new Idea("very brilliant idea 3", subTheme2c, image1, userList.get(6), callForIdea2);
+		Idea idea22 = new Idea("very very brilliant idea 4", subTheme1c, image5, userList.get(5), callForIdea2);
+
+		List<Idea> tmpIdeas = new ArrayList<>(List.of(idea11, idea12, idea21, idea22));
+		if (LONG_FORMAT) {
+			callForIdeas.subList(2, callForIdeas.size()).forEach(cfi -> {
+				List<SubTheme> ideaTheme = subThemes.stream()
+				                                    .filter(st -> st.getSuperTheme().equals(cfi.getTheme()))
+				                                    .toList();
+				List<PlatformUser> ideaUser = subscriptions.stream()
+				                                           .filter(s -> s.getYouthCouncil()
+				                                                         .equals(cfi.getOwningYouthCouncil()))
+				                                           .map(YouthCouncilSubscription::getSubscriber)
+				                                           .toList();
+
+				tmpIdeas.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_IDEAS)).mapToObj(in -> new Idea(
+						faker.lorem().maxLengthSentence(254),
+						ideaTheme.get(faker.number().numberBetween(0, ideaTheme.size())),
+						image1,
+						ideaUser.get(faker.number().numberBetween(0, ideaUser.size())),
+						cfi
+				)).toList());
+			});
+		}
+		final List<Idea> ideas = ideaRepository.saveAll(tmpIdeas);
+
+		//INFORMATIVE PAGE
+
 
 		ActionPointSubscription actionPointSubscription1 = new ActionPointSubscription(userList.get(5), actionPoint1);
 		ActionPointSubscription actionPointSubscription2 = new ActionPointSubscription(userList.get(6), actionPoint3);
