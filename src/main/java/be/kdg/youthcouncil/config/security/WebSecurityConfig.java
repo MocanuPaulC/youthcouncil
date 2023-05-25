@@ -166,14 +166,13 @@ public class WebSecurityConfig {
 								"/youthcouncils/*/callforideas", "/youthcouncils/*/callforideas/*",
 								"/youthcouncils/*/announcements", "/youthcouncils/*/announcements/*",
 								"/api/municipalities", "/api/informativepages/blocktypes",
-								"/api/media/imagename", "/ws/**"
-
-
+								"/api/media/imagename", "/ws/**",
+								"/api/qrcode/actionpoint/*/*"
 						)
 						.permitAll()
-						.regexMatchers(HttpMethod.POST, "/api/youthcouncils/\\d/\\d")
+						.antMatchers(HttpMethod.POST, "/api/youthcouncils/*/*")
 						.permitAll()
-						.regexMatchers(HttpMethod.DELETE, "/api/youthcouncils/\\d/\\d")
+						.antMatchers(HttpMethod.DELETE, "/api/youthcouncils/*/*")
 						.permitAll()
 						.anyRequest()
 						.denyAll()

@@ -5,115 +5,150 @@
 	<title th:text="${callForIdea.getTitle()}"></title>
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer src="/js/callForIdea.js" type="module"></script>
-	<link rel="stylesheet" th:href="@{/css/reactions.css}">
 </head>
 
 <body class="m-3"
 	  th:attr="data-youthcouncil_id=${callForIdea.getOwningYouthCouncil().getYouthCouncilId()}, data-call-for-idea-id=${callForIdea.getCallForIdeaId()}">
 <th:block th:insert="~{includes::navbar(${authUser}, ${authAdmin}, 'login')}"></th:block>
-<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
 
-<h1 th:text="${callForIdea.getTitle()}"></h1>
-<a class="btn btn-primary"
-   th:href="'/youthcouncils/' + ${municipality} + '/callforideas/' + ${callForIdea.getCallForIdeaId()} + '/createactionpoint'"
-   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + callForIdea.getOwningYouthCouncil().getMunicipality()+ ''')')}"
-   type="button">
-	Create action point
-</a>
-<!-- Button trigger modal -->
-<button class="btn btn-primary"
-		data-bs-target="#submitCSV"
-		data-bs-toggle="modal"
-		th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + callForIdea.getOwningYouthCouncil().getMunicipality()+ ''')')}"
-		type="button">
-	Submit ideas from CSV
-</button>
 
-<!-- Modal -->
-<div aria-hidden="true" aria-labelledby="submitCSVLabel" class="modal fade" id="submitCSV" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="submitCSVLabel">Upload ideas as CSV</h5>
-				<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+<section>
+
+	<div class="container-fluid">
+		<div class="row mb-5">
+			<div class="col-12">
+				<h1 th:text="${callForIdea.getTitle()}"></h1>
 			</div>
-			<div class="modal-body">
-				<h5>Please structure your CSV file like this</h5>
-				<h5>Including the headers</h5>
-				<table class="table table-striped">
-					<tr>
-						<th>Full name</th>
-						<th>SubTheme</th>
-						<th>Idea</th>
-					</tr>
-					<tr>
-						<td>John doe</td>
-						<td>b theme subtheme 1</td>
-						<td>grate ide</td>
-					</tr>
-					<tr>
-						<td>Jane doe</td>
-						<td>b theme subtheme 2</td>
-						<td>grate</td>
-					</tr>
-				</table>
-				<form enctype="multipart/form-data" method="post">
-					<input id="csv-to-submit" name="file" type="file"/>
-				</form>
-				<p hidden id="csv-error"></p>
-				<button class="btn btn-primary" hidden id="submit-anyway" type="button">Submit Anyway</button>
+			<div class="col-12 mb-2">
+				<a class="btn btn-primary"
+				   th:href="'/youthcouncils/' + ${municipality} + '/callforideas/' + ${callForIdea.getCallForIdeaId()} + '/createactionpoint'"
+				   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + callForIdea.getOwningYouthCouncil().getMunicipality()+ ''')')}"
+				   type="button">
+					Create action point
+				</a>
+				<!-- Button trigger modal -->
+				<button class="btn btn-primary"
+						data-bs-target="#submitCSV"
+						data-bs-toggle="modal"
+						th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + callForIdea.getOwningYouthCouncil().getMunicipality()+ ''')')}"
+						type="button">
+					Submit ideas from CSV
+				</button>
+
+
+				<!-- Modal -->
+				<div aria-hidden="true"
+					 aria-labelledby="submitCSVLabel"
+					 class="modal fade"
+					 id="submitCSV"
+					 tabindex="-1">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="submitCSVLabel">Upload ideas as CSV</h5>
+								<button aria-label="Close"
+										class="btn-close"
+										data-bs-dismiss="modal"
+										type="button"></button>
+							</div>
+							<div class="modal-body">
+								<h5>Please structure your CSV file like this</h5>
+								<h5>Including the headers</h5>
+								<table class="table table-striped">
+									<tr>
+										<th>Full name</th>
+										<th>SubTheme</th>
+										<th>Idea</th>
+									</tr>
+									<tr>
+										<td>John doe</td>
+										<td>b theme subtheme 1</td>
+										<td>grate ide</td>
+									</tr>
+									<tr>
+										<td>Jane doe</td>
+										<td>b theme subtheme 2</td>
+										<td>grate</td>
+									</tr>
+								</table>
+								<form enctype="multipart/form-data" method="post">
+									<input id="csv-to-submit" name="file" type="file"/>
+								</form>
+								<p hidden id="csv-error"></p>
+								<button class="btn btn-primary" hidden id="submit-anyway" type="button">Submit Anyway
+								</button>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+								<button class="btn btn-primary" id="submit-csv-btn" type="button">Upload</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="modal-footer">
-				<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
-				<button class="btn btn-primary" id="submit-csv-btn" type="button">Upload</button>
+			<div class="col-12">
+				<div class="card text-bg-secondary" data-bs-theme="dark">
+					<div class="card-header">Submit your idea:</div>
+					<div class="card-body text-bg-light mb-1 ms-1 me-1 rounded-bottom">
+						<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
+
+						<input class="form-control mb-3" id="idea-text" type="text">
+
+						<div class="input-group mb-3">
+							<select aria-label="Select a subtheme" class="form-select" id="subtheme" name="subtheme">
+								<option disabled selected>Choose...</option>
+								<option th:each="subtheme: ${callForIdea.getTheme().getSubThemes()}"
+										th:text="${subtheme.getSubTheme()}"
+										th:value="${subtheme.getSubThemeId()}"></option>
+							</select>
+							<button class="btn btn-outline-danger submit-idea" id="submit-idea" type="button">Submit
+																											  idea
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ideas row">
+			<div class="idea col-12 col-md-6 col-xl-4 mb-2" th:each="idea: ${callForIdea.getIdeas()}">
+				<div class="card">
+					<p class="text-muted mb-1 card-header">
+						<span class="idea-user" th:text="${idea.getUser().getUsername()}"></span>
+						<span class="badge rounded-pill text-bg-info idea-theme"
+							  th:text="${idea.getSubTheme().getSubTheme()}"></span>
+					</p>
+					<p class="card-body idea-idea" th:text="${idea.getIdea()}"></p>
+					<div class="card-footer">
+						<div class="d-flex flex-wrap">
+							<div class="btn btn-light d-flex justify-content-start align-items-center gap-1">
+								<div class="idea-reaction-dropdown" role="group"
+									 th:id="${'idea_' + idea.getIdeaId()}">
+									<button aria-expanded="false"
+											class="expan-btn react-btn"
+											data-bs-toggle="dropdown"
+											style="all: unset;"
+											type="button">
+										&#128077;
+									</button>
+									<div class="dropdown-menu p-1 idea-reaction-select"
+										 th:id="${'entity_' + idea.getIdeaId()}">
+										<button class="btn" id="reaction-like">&#128077;</button>
+										<button class="btn" id="reaction-heart">&#129505;</button>
+										<button class="btn" id="reaction-rocket">&#128640;</button>
+										<button class="btn" id="reaction-poop">&#128169;</button>
+										<button class="btn" id="reaction-skeleton">&#128128;</button>
+									</div>
+								</div>
+								<span class="idea-reaction-counter" th:id="${'reaction_count_' + idea.getIdeaId()}"
+									  th:text="${idea.getReactions().size()}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<input class="form-control mb-3" id="idea-text" type="text">
-
-<div class="input-group mb-3">
-	<button class="btn btn-outline-danger submit-idea" id="submit-idea" type="button">Submit idea</button>
-	<select aria-label="Select a subtheme" class="form-select" id="subtheme" name="subtheme">
-		<option disabled selected>Choose...</option>
-		<option th:each="subtheme: ${callForIdea.getTheme().getSubThemes()}"
-				th:text="${subtheme.getSubTheme()}"
-				th:value="${subtheme.getSubThemeId()}"></option>
-	</select>
-</div>
-
-<section class="ideas">
-	<div class="idea" th:each="idea: ${callForIdea.getIdeas()}">
-		<p class="text-muted mb-1">
-			<th:block th:if="${idea.getUser()!=null}" th:text="${idea.getUser().getUsername()}"></th:block>
-			<th:block th:if="${idea.getUser()==null}" th:text="${idea.getFullName()}"></th:block>
-			<span class="badge rounded-pill text-bg-info" th:text="${idea.getSubTheme().getSubTheme()}"></span>
-		</p>
-		<p th:text="${idea.getIdea()}"></p>
-		<div class="btn-group dropup"
-			 role="group"
-			 th:id="${'idea_' + idea.getIdeaId()}">
-			<button aria-expanded="false"
-					class="btn btn-primary dropdown-toggle"
-					data-bs-toggle="dropdown"
-					id="expandBtn"
-					type="button">
-				&#128077;
-			</button>
-			<div class="dropdown-menu"
-				 style="--bs-dropdown-min-width: 16rem"
-				 th:id="${'entity_' + idea.getIdeaId()}">
-				<button class="btn" id="reaction-like">&#128077;</button>
-				<button class="btn" id="reaction-heart">&#129505;</button>
-				<button class="btn" id="reaction-rocket">&#128640;</button>
-				<button class="btn" id="reaction-poop">&#128169;</button>
-				<button class="btn" id="reaction-skeleton">&#128128;</button>
-			</div>
-			<span th:id="${'reaction_count_' + idea.getIdeaId()}"
-				  th:text="${idea.getReactions().size()}"></span>
-		</div>
-	</div>
 </section>
 </body>
 </html>

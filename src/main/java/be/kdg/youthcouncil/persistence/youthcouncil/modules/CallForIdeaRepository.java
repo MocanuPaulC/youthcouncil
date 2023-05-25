@@ -1,7 +1,6 @@
 package be.kdg.youthcouncil.persistence.youthcouncil.modules;
 
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
-import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,8 +17,8 @@ public interface CallForIdeaRepository extends JpaRepository<CallForIdea, Long> 
 			""")
 	Optional<CallForIdea> findWithIdeas(long id);
 
-	@Query("""
-			SELECT c FROM CallForIdea c
+	@Query ("""
+			SELECT DISTINCT c FROM CallForIdea c
 			LEFT JOIN FETCH c.ideas
 			WHERE c.owningYouthCouncil.municipality.name = :name
 			""")

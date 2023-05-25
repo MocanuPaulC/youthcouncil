@@ -42,11 +42,12 @@ spring:
                     starttls:
                         enable: true
 server:
+    host: ${CURRENT_DOMAIN}
     port: 8081
 logging:
     level:
         #    web: debug
         be.kdg.youthcouncil: debug
         #        root: debug
-        #        sql: debug
+        sql: debug
         org.springframework.security: debug

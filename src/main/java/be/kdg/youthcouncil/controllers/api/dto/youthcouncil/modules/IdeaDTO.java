@@ -13,5 +13,6 @@ public class IdeaDTO {
 	private String idea;
 	private String imagePath;
 	private String username;
+	private String subTheme;
 
 }
