@@ -86,6 +86,7 @@ public class YouthCouncilController {
 			user = userService.findUserByUsername(principal.getName());
 		}
 
+		model.addAttribute("themes", callForIdeaService.findAllThemes());
 		model.addAttribute("ycWithAnnouncements", youthCouncilService.findByMunicipalityWithAnnouncementsDisplayed(municipality));
 		model.addAttribute("ycWithCallsForIdeas", youthCouncilService.findByMunicipalityWithCallsForIdeasDisplayed(municipality));
 		YouthCouncil ycWithActionPoints = youthCouncilService.findByMunicipalityWithActionPointsDisplayed(municipality);
@@ -129,6 +130,7 @@ public class YouthCouncilController {
 		model.addAttribute("callForIdeas", callForIdeas);
 		return "callForIdeas";
 	}
+
 	@GetMapping ("/{municipality}/callforideas/{callForIdeaId}")
 	public String youthCouncilCallForAction(Model model, @PathVariable String municipality, @PathVariable long callForIdeaId) {
 		CallForIdea callForIdea = callForIdeaService.findByIdWithIdeasWithReactions(callForIdeaId);

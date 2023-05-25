@@ -66,8 +66,10 @@ public class RestIdeaController {
 	@PostMapping
 	public ResponseEntity<IdeaDTO> answerCFI(@Valid @RequestBody NewIdeaDTO newIdeaDTO) {
 
-		return ResponseEntity.ok()
-		                     .body(modelMapper.map(ideaService.createIdea(modelMapper.map(newIdeaDTO, Idea.class)), IdeaDTO.class));
+		Idea idea = ideaService.createIdea(modelMapper.map(newIdeaDTO, Idea.class));
+		IdeaDTO ideaDTO = modelMapper.map(idea, IdeaDTO.class);
+		logger.debug(ideaDTO.toString());
+		return ResponseEntity.ok(ideaDTO);
 
 	}
 }

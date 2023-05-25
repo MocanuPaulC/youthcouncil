@@ -26,7 +26,7 @@ buttons.forEach(button => {
 	});
 });
 
-const reactionBtn = document.querySelectorAll("button[id^=\"expandBtn\"]");
+const reactionBtn = document.querySelectorAll("button.react-btn");
 
 reactionBtn.forEach(btn => btn.addEventListener("click", () => {
 	fetchReactions(event, "idea");
@@ -58,39 +58,43 @@ async function handleIdeaSubmission() {
 
 async function handlePost(response) {
 	if (!response.ok) {
-		console.log("Something went wrong");
+		console.error(`${response.status}: Something went wrong`);
 		return;
 	}
+
 	/**
-	 * @type {{idea: string, imagePath: string | null, username:string}}
+	 * @type {{
+	 * 	ideaId: number,
+	 * 	idea: string,
+	 * 	imagePath: string | null,
+	 * 	username:string,
+	 * 	subTheme:string
+	 * }}
 	 */
 	const data = await response.json();
-	const btnToAdd = document.querySelector(".dropup");
-	const newBtn = btnToAdd.cloneNode(true);
-	newBtn.getElementsByTagName("div")[0].id = "entity_" + data.ideaId;
-	newBtn.getElementsByTagName("span")[0].id = "reaction_count_" + data.ideaId;
-	newBtn.getElementsByTagName("span")[0].innerText = "0";
-	let newBtns = newBtn.getElementsByTagName("button");
-	for (let i = 1; i < newBtns.length; i++) {
-		newBtns[i].addEventListener("click", () => {
+	console.log(data);
+	const newIdea = document.querySelector(".idea").cloneNode(true);
+	const username = newIdea.querySelector(".idea-user");
+	username.innerText = data.username;
+	const sub_theme = newIdea.querySelector(".idea-theme");
+	sub_theme.innerText = data.subTheme;
+	const idea_idea = newIdea.querySelector(".idea-idea");
+	idea_idea.innerText = data.idea;
+	const idea_reaction_dropdown = newIdea.querySelector(".idea-reaction-dropdown");
+	idea_reaction_dropdown.id = `id_${data.ideaId}`;
+	const buttons = idea_reaction_dropdown.querySelectorAll("button");
+	for (const button of buttons) {
+		button.addEventListener("click", (event) => {
 			addReaction(event, "idea");
 		});
 	}
-	const newIdeaElement = document.createElement("div");
-	ideas.append(newIdeaElement);
-	newIdeaElement.classList.add("idea");
-	const usernameElement = document.createElement("p");
-	newIdeaElement.append(usernameElement);
-	usernameElement.classList.add("text-muted", "mb-1");
-	const spanElement = document.createElement("span");
-	spanElement.classList.add("badge", "rounded-pill", "text-bg-info");
-	spanElement.innerText = subThemeElement.options[subThemeElement.selectedIndex].text;
-	usernameElement.innerText = `${data.username} `;
-	usernameElement.append(spanElement);
-	const ideaElement = document.createElement("p");
-	newIdeaElement.append(ideaElement);
-	newIdeaElement.append(newBtn);
-	ideaElement.innerText = data.idea;
+	const idea_reaction_select = newIdea.querySelector(".idea-reaction-select");
+	idea_reaction_select.id = `entity_${data.ideaId}`;
+	const idea_reaction_counter = newIdea.querySelector(".idea-reaction-counter");
+	idea_reaction_counter.id = `reaction_count_${data.ideaId}`;
+	idea_reaction_counter.innerText = "0";
+
+	ideas.appendChild(newIdea);
 }
 
 function parseCSV(file) {

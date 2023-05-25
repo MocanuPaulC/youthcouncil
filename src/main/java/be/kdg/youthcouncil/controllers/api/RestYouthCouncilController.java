@@ -84,10 +84,10 @@ public class RestYouthCouncilController {
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping ("/{id}/callforideas")
-	public ResponseEntity<CallForIdeasDTO> launchCallForIdeas(@PathVariable Long id, @Valid @RequestBody CallForIdeasDTO callForIdeasDTO, Principal principal) {
-		logger.info("User {} is launching a call for ideas for youth council {}", principal.getName(), id);
-		callForIdeaService.create(callForIdeasDTO);
+	@PostMapping ("/{youthCouncilId}/callforideas")
+	public ResponseEntity<CallForIdeasDTO> launchCallForIdeas(@PathVariable Long youthCouncilId, @Valid @RequestBody CallForIdeasDTO callForIdeasDTO, Principal principal) {
+		logger.info("User {} is launching a call for ideas for youth council {}", principal.getName(), youthCouncilId);
+		callForIdeaService.create(callForIdeasDTO, youthCouncilId);
 		return ResponseEntity.ok(callForIdeasDTO);
 	}
 }

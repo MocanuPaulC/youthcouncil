@@ -1,10 +1,7 @@
 package be.kdg.youthcouncil.config;
 
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.interactions.ReactionDto;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.BlockDto;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.EditActionPointDto;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.IdeaDTO;
-import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.NewIdeaDTO;
+import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.*;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.NewSubscriptionDTO;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.subscriptions.SubscriptionDTO;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
@@ -13,6 +10,7 @@ import be.kdg.youthcouncil.domain.youthcouncil.interactions.ActionPointReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.interactions.IdeaReaction;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.*;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.SubTheme;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.themes.Theme;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
 import be.kdg.youthcouncil.exceptions.*;
@@ -22,6 +20,7 @@ import be.kdg.youthcouncil.persistence.youthcouncil.modules.ActionPointRepositor
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.CallForIdeaRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.IdeaRepository;
 import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.SubThemeRepository;
+import be.kdg.youthcouncil.persistence.youthcouncil.modules.themes.ThemeRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
@@ -42,6 +41,8 @@ public class MappingConfiguration {
 	private final ActionPointRepository actionPointRepository;
 	private final IdeaRepository ideaRepository;
 
+	private final ThemeRepository themeRepository;
+
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
@@ -51,12 +52,14 @@ public class MappingConfiguration {
 		modelMapper.createTypeMap(NewIdeaDTO.class, Idea.class)
 		           .addMapping(NewIdeaDTO::getUserId, Idea::setUser)
 		           .addMapping(NewIdeaDTO::getCallForIdeaId, Idea::setCallForIdeas)
-		           .addMapping(NewIdeaDTO::getSubThemeId, Idea::setSubTheme);
+		           .addMapping(NewIdeaDTO::getSubThemeId, Idea::setSubTheme)
+		           .addMapping(NewIdeaDTO::getIdea, Idea::setIdea);
 
 		modelMapper.createTypeMap(Idea.class, IdeaDTO.class)
 		           .addMapping(idea -> idea.getImage().getPath(), IdeaDTO::setImagePath)
 		           .addMapping(idea -> idea.getUser().getUsername(), IdeaDTO::setUsername)
-		           .addMapping(Idea::getIdeaId, IdeaDTO::setIdeaId);
+		           .addMapping(Idea::getIdeaId, IdeaDTO::setIdeaId)
+		           .addMapping(Idea::getSubTheme, IdeaDTO::setSubTheme);
 
 		modelMapper.createTypeMap(NewSubscriptionDTO.class, YouthCouncilSubscription.class)
 		           .addMapping(NewSubscriptionDTO::getUserId, YouthCouncilSubscription::setSubscriber)
@@ -92,6 +95,10 @@ public class MappingConfiguration {
 		           .addMapping(BlockDto::getType, ActionPointBlock::setType)
 		           .addMapping(BlockDto::getContent, ActionPointBlock::setContent)
 		           .addMapping(BlockDto::getOrderNumber, ActionPointBlock::setOrderNumber);
+
+		modelMapper.createTypeMap(CallForIdeasDTO.class, CallForIdea.class)
+		           .addMapping(CallForIdeasDTO::getTitle, CallForIdea::setTitle)
+		           .addMapping(CallForIdeasDTO::getTheme, CallForIdea::setTheme);
 
 		return modelMapper;
 	}
@@ -193,6 +200,14 @@ public class MappingConfiguration {
 		};
 		modelMapper.addConverter(fromYouthCouncilToString);
 
+		Converter<Long, Theme> fromLongToTheme = new AbstractConverter<Long, Theme>() {
+			@Override
+			protected Theme convert(Long source) {
+				return themeRepository.findById(source).orElseThrow(() -> new ThemeNotFoundException(source));
+			}
+		};
+		modelMapper.addConverter(fromLongToTheme);
+
 		modelMapper.addMappings(new PropertyMap<ReactionDto, ActionPointReaction>() {
 
 			@Override
@@ -213,6 +228,15 @@ public class MappingConfiguration {
 				map().setReactionId(source.getReactionId());
 			}
 		});
+
+		Converter<SubTheme, String> fromSubThemeToString = new AbstractConverter<SubTheme, String>() {
+			@Override
+			protected String convert(SubTheme source) {
+				return source.getSubTheme();
+			}
+		};
+
+		modelMapper.addConverter(fromSubThemeToString);
 
 	}
 

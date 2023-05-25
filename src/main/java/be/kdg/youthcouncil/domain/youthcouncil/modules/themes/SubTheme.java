@@ -18,7 +18,9 @@ public class SubTheme {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private long subThemeId;
 	private String subTheme;
-	@ManyToOne
+
+	@ToString.Exclude
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "super_theme_theme_id", nullable = false)
 	private Theme superTheme;
 

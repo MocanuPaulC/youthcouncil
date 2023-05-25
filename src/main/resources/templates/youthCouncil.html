@@ -7,7 +7,6 @@
 	<th:block th:insert="~{includes::head_fragment}"></th:block>
 	<script defer th:src="@{/js/launchCallForIdeas.js}" type="module"></script>
 	<script defer th:src="@{/js/youthCouncil.js}" type="module"></script>
-	<link rel="stylesheet" th:href="@{/css/reactions.css}">
 </head>
 <body class="m-3" th:attr="data-youthcouncil_id=${ycWithActionPoints.getYouthCouncilId()}">
 <section>
@@ -89,9 +88,17 @@
 							</div>
 							<div class="modal-body">
 								<form>
-									<div class="mb-3">
+									<div class="mb-1">
 										<label class="col-form-label" for="c4i-title">Title:</label>
 										<textarea class="form-control" id="c4i-title"></textarea>
+									</div>
+									<div class="mb-3">
+										<label class="col-form-label" for="c4i-theme">Select a Theme:</label>
+										<select class="form-select" id="c4i-theme">
+											<option th:each="theme : ${themes}"
+													th:text="${theme.getTheme()}"
+													th:value="${theme.getThemeId()}"></option>
+										</select>
 									</div>
 								</form>
 							</div>
@@ -129,10 +136,10 @@
 
 			<div class="col-12 mb-2">
 				<div class="d-flex flex-wrap gap-2">
-					<a style="width: 200px; height: 100px;"
-						class="btn btn-secondary d-flex justify-content-center align-items-center text-start"
-						th:each="infopage: ${ycInfoPages}"
-						th:href="@{/youthcouncils/{municipality}/informativepages/{title}(municipality=${ycWithActionPoints.getMunicipality()},title=${infopage.title})}"
+					<a class="btn btn-secondary d-flex justify-content-center align-items-center text-start"
+					   style="width: 200px; height: 100px;"
+					   th:each="infopage: ${ycInfoPages}"
+					   th:href="@{/youthcouncils/{municipality}/informativepages/{title}(municipality=${ycWithActionPoints.getMunicipality()},title=${infopage.title})}"
 					>
 						<h3 th:text="${infopage.title}"></h3>
 					</a>
@@ -192,14 +199,13 @@
 													<div role="group"
 														 th:id="${'actionPoint_' + actionpoint.getActionPointId()}">
 														<button aria-expanded="false"
+																class="expand-btn react-btn"
 																data-bs-toggle="dropdown"
-																id="expandBtn"
 																style="all: unset;"
 																type="button">
 															&#128077;
 														</button>
-														<div class="dropdown-menu"
-															 style="--bs-dropdown-min-width: 16rem"
+														<div class="dropdown-menu p-1"
 															 th:id="${'entity_' + actionpoint.getActionPointId()}">
 															<button class="btn" id="reaction-like">&#128077;</button>
 															<button class="btn" id="reaction-heart">&#129505;</button>
@@ -212,9 +218,57 @@
 													<div th:id="${'reaction_count_' + actionpoint.getActionPointId() }"
 														 th:text="${actionpoint.getReactions().size()}"></div>
 												</div>
+												<div class="btn btn-light d-flex justify-content-start align-items-center gap-1">
+													<div role="group">
+														<button aria-expanded="false"
+																class="expand-btn share-btn"
+																data-bs-toggle="dropdown"
+																style="all: unset;"
+																type="button">
+															<i class="bi bi-box-arrow-up"></i>
+														</button>
+														<div class="dropdown-menu p-1">
+															<button class="btn copy-link-btn"
+																	th:target-link="${'/youthcouncils/' + ycWithActionPoints.getMunicipality() + '/actionpoints/' + actionpoint.getActionPointId()}">
+																&#128279;
+															</button>
+															<button class="btn get-qr-btn"
+																	data-bs-target="#action-point-qr-modal"
+																	data-bs-toggle="modal"
+																	th:ap-id="${actionpoint.getActionPointId()}"
+																	th:municipality="${ycWithActionPoints.getMunicipality()}"
+																	type="button">
+																<i class="bi bi-qr-code"></i>
+															</button>
+														</div>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div aria-hidden="true"
+						 aria-labelledby="action-point-qr-modalLabel"
+						 class="modal fade"
+						 id="action-point-qr-modal"
+						 tabindex="-1">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5" id="qr-code-modal-label">QR Code</h1>
+									<button aria-label="Close"
+											class="btn-close"
+											data-bs-dismiss="modal"
+											type="button"></button>
+								</div>
+								<div class="modal-body">
+									<img class="w-100 h-100" id="qr-code-img">
+								</div>
+								<div class="modal-footer">
+									<a class="btn btn-primary" id="qr-code-download">Download</a>
 								</div>
 							</div>
 						</div>
@@ -256,9 +310,6 @@
 												   th:text="${callforideas.getTitle()}">Card title
 												</a>
 											</h5>
-											<p class="card-text">
-												Please give us your ideas for the future of our municipality.
-											</p>
 										</div>
 									</div>
 								</div>
