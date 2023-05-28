@@ -51,6 +51,7 @@ public class InformativePageController {
 	public String getYouthCouncilInfoPage(@PathVariable String municipality, @PathVariable String title, Model model) {
 		InformativePage infopage = informativePageService.findInfoPage(title, Optional.of(municipality));
 		model.addAttribute("informativePage", infopage);
+		model.addAttribute("youthCouncil", youthCouncilService.findByMunicipality(municipality));
 		return "informativePage";
 	}
 

@@ -9,7 +9,19 @@
 <section>
 	<div class="container my-5">
 		<div class="bg-body-tertiary p-5 rounded">
-			<h1 class="display-5" th:text="${informativePage.title.replaceAll('-', ' ')}"></h1>
+			<div class="d-flex justify-content-between">
+				<div>
+					<h1 class="display-5" th:text="${informativePage.title.replaceAll('-', ' ')}"></h1>
+				</div>
+				<div>
+					<a class="btn btn-primary"
+					   th:if="${#authorization.expression('hasAuthority(''COUNCIL_ADMIN@' + youthCouncil.getMunicipality()+ ''')')}"
+					   th:href="@{/youthcouncils/{municipality}/informativepages/{id}/edit(municipality=${youthCouncil.getMunicipality()},id=${informativePage.getTitle()})}"
+					>
+						Edit
+					</a>
+				</div>
+			</div>
 			<div th:each="block : ${informativePage.infoPageBlocks}">
 				<h1 th:if="${block.type.toString().equals('HEADER_BIG')}" th:text="${block.content}"></h1>
 				<h2 th:if="${block.type.toString().equals('HEADER_MEDIUM')}" th:text="${block.content}"></h2>

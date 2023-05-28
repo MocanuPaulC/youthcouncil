@@ -239,6 +239,7 @@ public class UserServiceImpl implements UserService {
 	public PlatformUser findWithSubscriptionsAndYouthCouncils(String username) {
 		PlatformUser user = userRepository.findWithSubscriptions(username)
 		                                  .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username)));
+		user.setYouthCouncilSubscriptions(user.getYouthCouncilSubscriptions().stream().filter(s -> !s.isDeleted()).toList());
 		user.getYouthCouncilSubscriptions().forEach(s -> {
 			YouthCouncilSubscription youthCouncilSubscription = youthCouncilSubscriptionRepository.findWithYouthCouncil(s.getYouthCouncilSubscriptionId())
 			                                                                                      .orElseThrow(() -> new YouthCouncilSubscriptionNotFoundException(s.getYouthCouncilSubscriptionId()));

@@ -93,7 +93,8 @@
 						</div>
 					</div>
 					<div class="dropdown btn btn-secondary"
-						 sec:authorize="isAuthenticated() && !hasRole('ROLE_GENERAL_ADMIN')">
+						 sec:authorize="isAuthenticated() && !hasRole('ROLE_GENERAL_ADMIN')"
+						 th:if="${user.getYouthCouncilSubscriptions().size() > 0}">
 						<a aria-expanded="false"
 						   class="nav-link dropdown-toggle"
 						   data-bs-toggle="dropdown"
@@ -112,12 +113,6 @@
 						</div>
 					</div>
 
-				</div>
-				<div class="nav-item d-flex justify-content-start align-items-center">
-					<form class="d-flex gap-2" role="search">
-						<input aria-label="Search" class="form-control" placeholder="Search" type="search">
-						<button class="btn btn-danger" type="submit">Search</button>
-					</form>
 				</div>
 				<div class="navbar-nav justify-content-end align-items-center gap-2 flex-grow-1 py-lg-0 py-3">
 					<div class="mb-1 me-1">
@@ -155,11 +150,15 @@
 								<div th:class="${notification.read ? 'notification-item-seen' : 'notification-item-not-seen'} + ' dropdown-item'"
 									 th:each="notification: ${notifications}"
 									 th:text="${notification.text}"></div>
+								<div class="dropdown-item"
+									 id="notifications-blank"
+									 th:if="${notifications.size() == 0}">You have no Notifications!
+								</div>
 							</div>
 						</div>
 
 					</div>
-					<div sec:authorize="isAuthenticated()" class="mb-1 me-1">
+					<div class="mb-1 me-1" sec:authorize="isAuthenticated()">
 						<a class="btn btn-info d-flex justify-content-center align-items-center" href="/profile">
 							<i class="bi bi-person-circle"></i>
 						</a>

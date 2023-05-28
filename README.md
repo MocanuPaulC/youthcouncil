@@ -1,6 +1,6 @@
 # Youth council platform
 
-[![pipeline status](https://gitlab.com/kdg-ti/integration-2.2/2022-2023/team-4/youthcouncil/badges/peter/deployment/pipeline.svg)](https://gitlab.com/kdg-ti/integration-2.2/2022-2023/team-4/youthcouncil/-/commits/main)
+[![pipeline status](https://gitlab.com/kdg-ti/integration-2.2/2022-2023/team-4/youthcouncil/badges/main/pipeline.svg)](https://gitlab.com/kdg-ti/integration-2.2/2022-2023/team-4/youthcouncil/-/commits/main)
 
 ### Team 4
 
