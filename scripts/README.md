@@ -1,5 +1,11 @@
 # Deployment
 
+## Responsibilities
+
+Creating CI/CD: Peter Buschenreiter
+Reviewing CI/CD: Paul Mocanu
+Reviewing documentation: Thomas Ellmenreich
+
 ## Gitlab CI
 
 ### Stages
