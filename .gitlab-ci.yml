@@ -5,7 +5,6 @@ stages:
     - build
     - test
     - deploy
-    - deploy-app-engine
     - destroy
 
 generate_certs:
@@ -72,7 +71,7 @@ deploy:
 
 deploy-app-engine:
     image: google/cloud-sdk
-    stage: deploy-app-engine
+    stage: deploy
     needs: [ build, test ]
     script:
         - $env_variables > env_variables.yaml
