@@ -4,7 +4,7 @@ const size = 100;
 
 for (const council of councils) {
 	const name = council.getAttribute("name");
-	const path_result =  adjustPath(svg_map.querySelector(`path[n=${name}]`), 16);
+	const path_result =  adjustPath(svg_map.querySelector(`path[n="${name}"]`), 16);
 
 	if (path_result.error) {
 		console.error(path_result.error);
@@ -37,6 +37,9 @@ for (const council of councils) {
  * }}
  */
 function adjustPath(path_element, max_size) {
+	if (!path_element) return {error: "The passed path element is null!", node: undefined}
+	if (!max_size) return {error: "The passed max_size is null!", node: undefined}
+
 	const path_string = path_element.getAttribute("d");
 	const out_node = path_element.cloneNode(true);
 

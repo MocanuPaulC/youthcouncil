@@ -8,6 +8,8 @@ let privateStompClient = null;
 const dropdownBtn = document.getElementById("notification-dropdown");
 const notificationContainer = document.getElementById("notification-container");
 
+const notificationBlankPlaceholder = document.querySelector("#notifications-blank");
+
 if (dropdownBtn) {
 	notificationContainer.childNodes.forEach(child => {
 		if (child instanceof HTMLElement && child.classList.contains("notification-item-not-seen")) {
@@ -55,6 +57,7 @@ if (loggedIn) {
 
 
 function createNotification(messageOutput, granted) {
+	if(!notificationBlankPlaceholder.classList.contains("d-none")) notificationBlankPlaceholder.classList.add("d-none");
 	const {entityType, title, field, oldValue, newValue} = messageOutput;
 	const message = field === "status"
 		? `The ${entityType} ${title} has been updated from ${oldValue} to ${newValue}`

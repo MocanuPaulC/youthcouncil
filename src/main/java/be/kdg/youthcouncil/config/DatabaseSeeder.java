@@ -616,7 +616,7 @@ public class DatabaseSeeder {
 
 		if (LONG_FORMAT) {
 			youthCouncils.subList(2, youthCouncils.size()).forEach(yc -> {
-				tmpAnnoucements.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_ANN))
+				tmpAnnoucements.addAll(IntStream.range(1, faker.number().numberBetween(0, MAX_ANN))
 				                                .mapToObj(n -> new Announcement(
 						                                faker.lorem().maxLengthSentence(50),
 						                                faker.lorem().maxLengthSentence(254),
@@ -625,7 +625,7 @@ public class DatabaseSeeder {
 						                                ModuleStatus.values()[faker.number().numberBetween(0, 3)]
 				                                ))
 				                                .toList());
-				tmpCallForIdeas.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_CFI))
+				tmpCallForIdeas.addAll(IntStream.range(1, faker.number().numberBetween(0, MAX_CFI))
 				                                .mapToObj(n -> new CallForIdea(
 						                                faker.lorem().maxLengthSentence(50),
 						                                yc,
@@ -634,7 +634,7 @@ public class DatabaseSeeder {
 						                                faker.bool().bool()
 				                                ))
 				                                .toList());
-				tmpInformativePages.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_INFO_PAGES))
+				tmpInformativePages.addAll(IntStream.range(1, faker.number().numberBetween(0, MAX_INFO_PAGES))
 				                                    .mapToObj(n -> {
 					                                    InformativePage informativePage = new InformativePage(
 							                                    faker.lorem().maxLengthSentence(20),
@@ -663,7 +663,7 @@ public class DatabaseSeeder {
 				                                    })
 				                                    .toList());
 				tmpActionPoints.addAll(
-						IntStream.range(0, faker.number().numberBetween(0, MAX_AC))
+						IntStream.range(1, faker.number().numberBetween(0, MAX_AC))
 						         .mapToObj(an -> new ActionPoint(
 								         faker.lorem().maxLengthSentence(20),
 								         subThemes.get(faker.number().numberBetween(0, subThemes.size())),
@@ -699,7 +699,7 @@ public class DatabaseSeeder {
 				                                           .map(YouthCouncilSubscription::getSubscriber)
 				                                           .toList();
 
-				tmpIdeas.addAll(IntStream.range(0, faker.number().numberBetween(0, MAX_IDEAS)).mapToObj(in -> new Idea(
+				tmpIdeas.addAll(IntStream.range(1, faker.number().numberBetween(0, MAX_IDEAS)).mapToObj(in -> new Idea(
 						faker.lorem().maxLengthSentence(254),
 						ideaTheme.get(faker.number().numberBetween(0, ideaTheme.size())),
 						image1,

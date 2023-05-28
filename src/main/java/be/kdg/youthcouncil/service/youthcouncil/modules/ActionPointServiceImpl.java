@@ -110,7 +110,7 @@ public class ActionPointServiceImpl implements ActionPointService {
 		actionPointBlockRepository.deleteAll(newActionPoint.getActionPointBlocks());
 
 
-		ActionPoint apToReturn = actionPointRepository.save(newActionPoint);
+		actionPointRepository.save(newActionPoint);
 
 		newActionPoint.setActionPointBlocks(infoPageBlocksDto.stream().map(blockDto -> {
 			ActionPointBlock block = modelMapper.map(blockDto, ActionPointBlock.class);
@@ -118,9 +118,7 @@ public class ActionPointServiceImpl implements ActionPointService {
 			actionPointBlockRepository.save(block);
 			return block;
 		}).toList());
-		owningYouthCouncil.addActionPoint(newActionPoint);
-		youthCouncilRepository.save(owningYouthCouncil);
-		return apToReturn;
+		return newActionPoint;
 	}
 
 	@Override

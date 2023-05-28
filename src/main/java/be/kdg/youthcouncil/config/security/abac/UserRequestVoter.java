@@ -39,6 +39,10 @@ public class UserRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 			return ACCESS_ABSTAIN;
 		}
 
+		if (uri.contains("/profile")) {
+			return ACCESS_GRANTED;
+		}
+
 		try {
 			String collectionRoleRequest = collection.stream().findFirst()
 			                                         .map(ConfigAttribute::toString)
@@ -46,6 +50,7 @@ public class UserRequestVoter implements AccessDecisionVoter<FilterInvocation> {
 			                                         .orElse(null);
 			if (collectionRoleRequest.contains("OWNER")) {
 				CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+
 				Long id = Long.parseLong(uri.split("/")[3]);
 				if (user.getUserId() != id) {
 					return ACCESS_DENIED;

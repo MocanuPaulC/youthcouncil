@@ -201,7 +201,7 @@ public class YouthCouncilController {
 		if (actionPoint.getInspiredBy().size() > 0) {
 			model.addAttribute("ideas", actionPoint.getInspiredBy());
 		}
-		return "newActionPoint";
+		return "actionPoint";
 
 
 	}

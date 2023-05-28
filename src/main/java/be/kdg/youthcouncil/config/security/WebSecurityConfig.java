@@ -59,6 +59,10 @@ public class WebSecurityConfig {
 						//---      OWNER     ---/
 						//----------------------/
 						.antMatchers(
+								HttpMethod.GET,
+								"/profile"
+						).hasRole("OWNER")
+						.antMatchers(
 								HttpMethod.PATCH,
 								"/api/users/*/password", "/api/users/*/username"
 						).hasRole("OWNER")
@@ -139,7 +143,6 @@ public class WebSecurityConfig {
 						//----------------------/
 						.antMatchers(
 								HttpMethod.GET,
-								"/profile",
 								"/api/idea-reaction/*/*"
 						).hasRole("USER")
 						.antMatchers(

@@ -54,7 +54,7 @@ logging:
 config:
     seeding:
         additional:
-            active: true
+            active: false
             users: 300
             max:
                 annoucements: 30
