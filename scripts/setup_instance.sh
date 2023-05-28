@@ -3,7 +3,6 @@
 # Author: Peter Buschenreiter
 # Date: 2023-05-18
 # Description: This script creates a vm with an enabled firewall and updates a duckdns domain.
-#              It also creates a self-signed signed certificate for the domain using openssl.
 
 name="integration-instance"
 zone="europe-west1-b"
