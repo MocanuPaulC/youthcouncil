@@ -16,4 +16,10 @@ public class IndexController {
 		logger.debug("Running index controller");
 		return "index";
 	}
+
+	@GetMapping ("/statistics")
+	public String statistics() {
+		logger.debug("Running statistics controller");
+		return "statistics";
+	}
 }

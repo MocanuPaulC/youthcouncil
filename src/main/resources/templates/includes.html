@@ -90,6 +90,14 @@
 									User Management
 								</a>
 							</div>
+							<div>
+								<a class="dropdown-item"
+								   sec:authorize="hasRole('ROLE_GENERAL_ADMIN')"
+								   th:classappend="${page == 'statistics' ? 'btn-light' : 'btn-dark'}"
+								   th:href="@{/statistics}">
+									Statistics
+								</a>
+							</div>
 						</div>
 					</div>
 					<div class="dropdown btn btn-secondary"
