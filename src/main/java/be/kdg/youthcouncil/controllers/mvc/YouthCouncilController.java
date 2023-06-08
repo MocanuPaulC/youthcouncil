@@ -174,7 +174,8 @@ public class YouthCouncilController {
 			emailService.sendSimpleMessage(viewModel.getEmail(), "Youth Council Admin", "You have been added as an admin to the youth council of " + municipality + ".\n" +
 					"Your username is: " + viewModel.getEmail() + "\n" +
 					"Your password is: " + viewModel.getPassword() + "\n" +
-					"Please change your password after logging in.");
+					"Please change your password after logging in using the following link." + "\n" +
+					"https://debattle.duckdns.org/login");
 		}
 
 		return "redirect:/";
