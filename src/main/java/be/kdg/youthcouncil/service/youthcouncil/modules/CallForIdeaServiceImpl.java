@@ -44,6 +44,7 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 	public CallForIdea create(CallForIdeasDTO callForIdeasDTO, long youthCouncilId) {
 		logger.debug("Creating call for ideas");
 		CallForIdea callForIdea = modelMapper.map(callForIdeasDTO, CallForIdea.class);
+		callForIdea.setModuleStatus(ModuleStatus.DISPLAYED);
 		callForIdea.setOwningYouthCouncil(youthCouncilRepository.findById(youthCouncilId)
 		                                                        .orElseThrow(() -> new YouthCouncilIdNotFoundException(youthCouncilId)));
 		return callForIdeaRepository.save(callForIdea);

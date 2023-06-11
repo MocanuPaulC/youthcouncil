@@ -16,8 +16,8 @@
 		<div class="row">
 
 			<div class="col-6 mb-2">
-				<h1 th:text="${ycWithActionPoints.getCouncilName()}"></h1>
-				<p th:text="${ycWithActionPoints.getDescription()}"></p>
+				<h1 th:text="${ycWithActionPoints.getCouncilName()}">Council name</h1>
+				<p th:text="${ycWithActionPoints.getDescription()}">Council description</p>
 			</div>
 			<div class="col-6 mb-2 d-flex flex-wrap justify-content-end align-items-end">
 				<a class="btn btn-primary"
@@ -33,14 +33,18 @@
 			+ ' && !hasAuthority(''ROLE_GENERAL_ADMIN'')'
 			)}"
 						th:text="'Join '+${ycWithActionPoints.getCouncilName()} +'!'"
-						type="button"></button>
+						type="button">
+					Join
+				</button>
 				<button class="leave-council btn btn-danger"
 						th:if="${#authorization.expression(
 			'hasAuthority(''USER@' + ycWithActionPoints.getMunicipality()+''')'
 			+ ' && !hasAuthority(''ROLE_GENERAL_ADMIN'')'
 			)}"
 						th:text="'Leave '+${ycWithActionPoints.getCouncilName()} +'!'"
-						type="button"></button>
+						type="button">
+					Leave
+				</button>
 				<input id="authUserId" th:if="${authUser!=null}" th:value="${authUser.id}" type="hidden"/>
 			</div>
 
@@ -126,10 +130,10 @@
 				   th:href="@{/youthcouncils/{municipality}/informativepages(municipality=${ycWithActionPoints.getMunicipality()})}">
 					&#128209; Informative pages
 				</a>
-
-
 			</div>
+		</div>
 
+		<div class="row">
 			<div class="col-12 mb-2">
 				<div class="d-flex flex-wrap gap-2">
 					<a class="btn btn-secondary d-flex justify-content-center align-items-center text-start"
@@ -157,21 +161,17 @@
 								Where we are taking action:
 							</h2>
 						</div>
-						<div class="col-2 d-flex justify-content-end align-items-center">
-
-						</div>
 					</div>
 					<div class="row">
 						<div class="col-6"
 							 th:each="actionpoint: ${ycWithActionPoints.getActionPoints()}">
 							<div class="card">
 								<div class="card-header">Action point</div>
-								<div class="row g-0">
-									<div class="col-4">
-										<img class="img-fluid placeholder h-100 w-100 rounded-start"
-											 th:alt="${actionpoint.getTitle()}">
-									</div>
-									<div class="col-8">
+								<div class="d-flex">
+									<img class="img-fluid rounded-start object-fit-cover"
+										 src="https://picsum.photos/150"
+										 th:alt="${actionpoint.getTitle()}">
+									<div class="flex-grow-1">
 										<div class="card-body">
 											<h5>
 												<a class="card-title"
@@ -187,8 +187,8 @@
 												content.
 											</p>
 										</div>
-										<div class="card-footer">
-											<div class="d-flex flex-wrap">
+										<div class="card-footer bg-transparent">
+											<div class="d-flex flex-wrap justify-content-between">
 												<div class="btn btn-light d-flex justify-content-start align-items-center gap-1">
 													<div role="group"
 														 th:id="${'actionPoint_' + actionpoint.getActionPointId()}">
@@ -291,12 +291,11 @@
 						<div class="col-12">
 							<div class="card mb-3">
 								<div class="card-header">Call for Idea</div>
-								<div class="row g-0">
-									<div class="col-4">
-										<img class="img-fluid placeholder h-100 w-100 rounded-start"
-											 th:alt="${callforideas.getTitle()}">
-									</div>
-									<div class="col-8">
+								<div class="d-flex">
+									<img class="img-fluid rounded-start object-fit-cover"
+										 src="https://picsum.photos/150"
+										 th:alt="${callforideas.getTitle()}">
+									<div>
 										<div class="card-body">
 											<h5>
 												<a class="card-title"
@@ -304,6 +303,8 @@
 												   th:text="${callforideas.getTitle()}">Card title
 												</a>
 											</h5>
+											<p class="card-text"
+											   th:text="'Theme: ' + ${callforideas.getTheme().getTheme()}"></p>
 										</div>
 									</div>
 								</div>
@@ -333,12 +334,12 @@
 					<div class="col-4 col-lg-12">
 						<div class="card mb-2"
 							 th:each="announcement: ${ycWithAnnouncements.getAnnouncements()}">
-							<div class="row g-0">
-								<div class="col-lg-3">
-									<img class="img-fluid placeholder h-100 w-100 rounded-start"
-										 th:alt="${announcement.getTitle()}">
-								</div>
-								<div class="col-lg-9">
+							<div class="d-flex">
+								<img class="img-fluid rounded-start"
+									 src="https://picsum.photos/150"
+									 style="object-fit: cover !important;"
+									 th:alt="${announcement.getTitle()}">
+								<div>
 									<div class="card-body">
 										<h5>
 											<a class="card-title"

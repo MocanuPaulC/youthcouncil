@@ -42,6 +42,6 @@ function getNeededElements(event) {
 	card = event.target.parentNode.parentNode;
 	entity = card.id.substring(0, card.id.indexOf("_"));
 	entityId = card.id.substring(card.id.indexOf("_") + 1);
-	youthCouncilId = document.getElementById("youthCouncilId").value;
+	youthCouncilId = +document.querySelector("body").dataset.youthcouncil_id;
 	displayStatus = event.target.previousElementSibling;
 }
