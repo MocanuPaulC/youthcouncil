@@ -1,12 +1,22 @@
 package be.kdg.youthcouncil.controllers.mvc;
 
+import be.kdg.youthcouncil.config.security.BCryptConfig;
+import be.kdg.youthcouncil.config.security.CustomUserDetails;
+import be.kdg.youthcouncil.config.security.CustomUserDetailsService;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserLogInViewModel;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.UserRegisterViewModel;
+import be.kdg.youthcouncil.domain.users.Authenticable;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.service.users.UserService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,17 +29,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
-
+@AllArgsConstructor
 @Controller
 public class UserController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final ModelMapper modelMapper;
 	private final UserService userService;
-
-	public UserController(UserService userService, ModelMapper modelMapper) {
-		this.userService = userService;
-		this.modelMapper = modelMapper;
-	}
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	@GetMapping ("/login")
 	public ModelAndView logIn(HttpServletRequest request, ModelAndView mav) {
@@ -54,8 +60,9 @@ public class UserController {
 		if (errors.hasErrors()) {
 			return "register";
 		}
+		String password = viewModel.getPassword();
 		userService.create(viewModel);
-		request.login(viewModel.getUsername(), viewModel.getPassword());
+		request.login(viewModel.getUsername(), password);
 		return "redirect:/";
 	}
 

@@ -161,6 +161,11 @@ public class ActionPointServiceImpl implements ActionPointService {
 	}
 
 	@Override
+	public List<ActionPoint> findAllByMunicipality(String municipality) {
+		return actionPointRepository.findAllByMunicipality(municipality);
+	}
+
+	@Override
 	public ActionPoint findById(long actionPointId) {
 		return actionPointRepository.findById(actionPointId)
 		                            .orElseThrow(() -> new ActionPointNotFoundException(actionPointId));

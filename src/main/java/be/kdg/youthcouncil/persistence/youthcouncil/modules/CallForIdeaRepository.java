@@ -17,6 +17,13 @@ public interface CallForIdeaRepository extends JpaRepository<CallForIdea, Long> 
 			""")
 	Optional<CallForIdea> findWithIdeas(long id);
 
+
+	@Query ("""
+			SELECT DISTINCT c FROM CallForIdea c
+			WHERE c.owningYouthCouncil.municipality.name = :name
+			""")
+	List<CallForIdea> findAllByMunicipality(String name);
+
 	@Query ("""
 			SELECT DISTINCT c FROM CallForIdea c
 			LEFT JOIN FETCH c.ideas

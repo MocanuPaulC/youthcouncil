@@ -14,6 +14,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CallForIdeasDTO {
+
+	private long cfiId;
+
 	@NotBlank (message = "Title is required")
 	@Size (min = 3, max = 100, message = "Title should have length between 3 and 100")
 	private String title;

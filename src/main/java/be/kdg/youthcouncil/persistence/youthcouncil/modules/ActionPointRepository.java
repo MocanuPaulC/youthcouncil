@@ -70,4 +70,11 @@ public interface ActionPointRepository extends JpaRepository<ActionPoint, Long> 
 			where a.actionPointId = :actionPointId
 			""")
 	Optional<ActionPoint> findByActionPointIdWithIdeas(long actionPointId);
+
+	@Query("""
+		select distinct a from ActionPoint  a
+		left join fetch a.reactions
+		where a.owningYouthCouncil.municipality.name = :municipality
+		""")
+	List<ActionPoint> findAllByMunicipality(String municipality);
 }

@@ -26,8 +26,17 @@ button.addEventListener("click", async () => {
 		titleElement.value = "";
 		const modal = bootstrap.Modal.getInstance(document.querySelector("#launch-call-for-ideas-modal"));
 		modal.hide();
+		createCFI(data)
 		return;
 	}
 	console.log(`Error: ${res.status}
 	${await res.text()}`);
 });
+
+function createCFI(data) {
+	const template = document.querySelector(".call-for-idea").cloneNode(true);
+	const title = template.querySelector(".card-title")
+	title.innerText = data.title;
+	title.setAttribute("href", title.getAttribute("href").slice(0, -1) + data.cfiId);
+	document.querySelector("#call-for-ideas").appendChild(template);
+}

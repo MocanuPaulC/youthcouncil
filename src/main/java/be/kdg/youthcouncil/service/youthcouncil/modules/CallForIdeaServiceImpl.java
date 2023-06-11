@@ -106,6 +106,11 @@ public class CallForIdeaServiceImpl implements CallForIdeaService {
 
 	}
 
+	@Override
+	public List<CallForIdea> findAllByMunicipality(String municipality) {
+		return callForIdeaRepository.findAllByMunicipality(municipality);
+	}
+
 	private boolean isCSVFile(MultipartFile file, CallForIdea callForIdea) {
 		try (CSVParser csvParser = CSVFormat.DEFAULT.parse(new InputStreamReader(file.getInputStream()))) {
 			// Iterate over the parsed CSV rows if needed

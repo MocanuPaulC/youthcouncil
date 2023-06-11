@@ -24,6 +24,8 @@ public interface CallForIdeaService {
 
 	boolean processCSVUpload(MultipartFile file, long callForIdeaId);
 
+	List<CallForIdea> findAllByMunicipality(String municipality);
+
 	List<CallForIdea> findAllByMunicipalityNameWithIdeas(String municipality);
 
 	List<Theme> findAllThemes();
