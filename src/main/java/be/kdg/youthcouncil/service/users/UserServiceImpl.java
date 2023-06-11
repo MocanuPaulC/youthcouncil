@@ -124,12 +124,15 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void createCouncilAdmin(UserRegisterViewModel userRegisterViewModel, String municipality) {
 		YouthCouncil youthCouncil = youthCouncilService.findByMunicipality(municipality);
-		PlatformUser user = modelMapper.map(userRegisterViewModel, PlatformUser.class);
-		YouthCouncilSubscription subscription = new YouthCouncilSubscription(
-				user,
-				youthCouncil,
-				SubscriptionRole.COUNCIL_ADMIN
-		);
+		PlatformUser user = userRepository.findByEmail(userRegisterViewModel.getEmail())
+		                                  .orElse(modelMapper.map(userRegisterViewModel, PlatformUser.class));
+
+		YouthCouncilSubscription subscription = youthCouncilSubscriptionRepository.findBySubscriberAndYouthCouncil(user, youthCouncil)
+		                                                                          .orElse(new YouthCouncilSubscription(
+				                                                                          user,
+				                                                                          youthCouncil,
+				                                                                          SubscriptionRole.COUNCIL_ADMIN));
+		subscription.setRole(SubscriptionRole.COUNCIL_ADMIN);
 		user.addYouthCouncilSubscription(subscription);
 		youthCouncilSubscriptionRepository.save(subscription);
 		userRepository.save(user);
@@ -239,7 +242,10 @@ public class UserServiceImpl implements UserService {
 	public PlatformUser findWithSubscriptionsAndYouthCouncils(String username) {
 		PlatformUser user = userRepository.findWithSubscriptions(username)
 		                                  .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username)));
-		user.setYouthCouncilSubscriptions(user.getYouthCouncilSubscriptions().stream().filter(s -> !s.isDeleted()).toList());
+		user.setYouthCouncilSubscriptions(user.getYouthCouncilSubscriptions()
+		                                      .stream()
+		                                      .filter(s -> !s.isDeleted())
+		                                      .toList());
 		user.getYouthCouncilSubscriptions().forEach(s -> {
 			YouthCouncilSubscription youthCouncilSubscription = youthCouncilSubscriptionRepository.findWithYouthCouncil(s.getYouthCouncilSubscriptionId())
 			                                                                                      .orElseThrow(() -> new YouthCouncilSubscriptionNotFoundException(s.getYouthCouncilSubscriptionId()));

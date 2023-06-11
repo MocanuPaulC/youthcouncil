@@ -33,7 +33,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.4'
-    implementation 'org.webjars:bootstrap:5.2.2'
+    implementation 'org.webjars:bootstrap:5.3.0'
     implementation 'org.webjars:bootstrapvalidator:0.5.3'
     implementation 'org.springframework:spring-context-support:6.0.9'
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.0.6'
