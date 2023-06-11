@@ -32,6 +32,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -95,10 +96,10 @@ public class YouthCouncilController {
 
 		model.addAttribute("themes", callForIdeaService.findAllThemes());
 		model.addAttribute("ycWithAnnouncements", youthCouncilService.findByMunicipalityWithAnnouncementsDisplayed(municipality));
-		model.addAttribute("ycWithCallsForIdeas", youthCouncilService.findByMunicipalityWithCallsForIdeasDisplayed(municipality));
-		YouthCouncil ycWithActionPoints = youthCouncilService.findByMunicipalityWithActionPointsDisplayed(municipality);
-		model.addAttribute("ycWithActionPoints", ycWithActionPoints);
-		model.addAttribute("userReactions", actionPointReactionService.findAllUserReactionsToActionPoints(ycWithActionPoints.getActionPoints(), user));
+		model.addAttribute("callForIdeas", callForIdeaService.findAllByMunicipality(municipality));
+		List<ActionPoint> actionPoints = actionPointService.findAllByMunicipality(municipality);
+		model.addAttribute("actionPoints", actionPoints);
+		model.addAttribute("userReactions", actionPointReactionService.findAllUserReactionsToActionPoints(actionPoints, user));
 		model.addAttribute("ycInfoPages", informativePageService.findAllByMunicipalityName(municipality));
 
 		return "youthCouncil";

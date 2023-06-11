@@ -2,6 +2,7 @@ package be.kdg.youthcouncil.controllers.api;
 
 import be.kdg.youthcouncil.config.security.CustomUserDetailsService;
 import be.kdg.youthcouncil.controllers.api.dto.youthcouncil.modules.CallForIdeasDTO;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
 import be.kdg.youthcouncil.service.users.UserService;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.CallForIdeaService;
@@ -51,6 +52,9 @@ public class RestYouthCouncilController {
 		Authentication auth = securityContext.getAuthentication();
 
 		List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+		if (!updatedAuthorities.contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+			updatedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		}
 		updatedAuthorities.add(new SimpleGrantedAuthority("USER@" + youthCouncilMunicipality)); //add your role here [e.g., new SimpleGrantedAuthority("ROLE_NEW_ROLE")]
 
 		Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
@@ -76,6 +80,9 @@ public class RestYouthCouncilController {
 
 		List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
 		updatedAuthorities.remove(new SimpleGrantedAuthority("USER@" + youthCouncilMunicipality)); //add your role here [e.g., new SimpleGrantedAuthority("ROLE_NEW_ROLE")]
+		if (updatedAuthorities.stream().noneMatch(a -> a.getAuthority().contains("USER@"))) {
+			updatedAuthorities.remove(new SimpleGrantedAuthority("ROLE_USER"));
+		}
 
 		Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
 
@@ -87,7 +94,8 @@ public class RestYouthCouncilController {
 	@PostMapping ("/{youthCouncilId}/callforideas")
 	public ResponseEntity<CallForIdeasDTO> launchCallForIdeas(@PathVariable Long youthCouncilId, @Valid @RequestBody CallForIdeasDTO callForIdeasDTO, Principal principal) {
 		logger.info("User {} is launching a call for ideas for youth council {}", principal.getName(), youthCouncilId);
-		callForIdeaService.create(callForIdeasDTO, youthCouncilId);
+		CallForIdea cfi = callForIdeaService.create(callForIdeasDTO, youthCouncilId);
+		callForIdeasDTO.setCfiId(cfi.getCallForIdeaId());
 		return ResponseEntity.ok(callForIdeasDTO);
 	}
 }

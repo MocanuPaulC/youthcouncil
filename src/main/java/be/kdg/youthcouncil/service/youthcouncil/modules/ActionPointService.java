@@ -18,6 +18,8 @@ public interface ActionPointService {
 
 	boolean existsByTitle(Optional<String> municipality, String title);
 
+	List<ActionPoint> findAllByMunicipality(String municipality);
+
 	ActionPoint findById(long actionPointReactedOnId);
 
 	void setDisplay(long actionPointId, boolean isDisplayed);
