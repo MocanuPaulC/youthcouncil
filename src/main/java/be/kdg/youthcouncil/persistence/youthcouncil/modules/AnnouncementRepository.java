@@ -16,7 +16,7 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 	List<Announcement> findByMunicipality(String municipality);
 
 
-	@Query("""
+	@Query ("""
 			SELECT a FROM Announcement  a
 			WHERE a.owningYouthCouncil.municipality.name = :municipality
 			AND a.announcementId = :id
