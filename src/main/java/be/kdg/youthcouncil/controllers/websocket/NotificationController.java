@@ -40,6 +40,7 @@ public class NotificationController {
 		List<ActionPointSubscription> subscriptionsByActionPointId = actionPointService.findAllSubscriptionsByActionPointId(message.getEntityId());
 		for (ActionPointSubscription aps : subscriptionsByActionPointId) {
 
+			message.setField("content");
 			Notification notification = notificationService.create(message);
 			aps.getSubscriber().addNotification(notification);
 			userService.save(aps.getSubscriber());

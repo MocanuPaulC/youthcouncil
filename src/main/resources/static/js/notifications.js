@@ -57,7 +57,10 @@ if (loggedIn) {
 
 
 function createNotification(messageOutput, granted) {
-	if(!notificationBlankPlaceholder.classList.contains("d-none")) notificationBlankPlaceholder.classList.add("d-none");
+	try {
+		if (!notificationBlankPlaceholder.classList.contains("d-none")) notificationBlankPlaceholder.classList.add("d-none");
+	} catch (e) {
+	}
 	const {entityType, title, field, oldValue, newValue} = messageOutput;
 	const message = field === "status"
 		? `The ${entityType} ${title} has been updated from ${oldValue} to ${newValue}`
