@@ -6,6 +6,7 @@ import be.kdg.youthcouncil.domain.users.AuthenticationType;
 import be.kdg.youthcouncil.domain.users.GeneralAdmin;
 import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.ActionPointSubscription;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.SubscriptionRole;
 import be.kdg.youthcouncil.domain.youthcouncil.subscriptions.YouthCouncilSubscription;
@@ -85,7 +86,8 @@ public class UserServiceImpl implements UserService {
 		                     .orElseThrow(() -> new UserNotFoundException(userId))
 		                     .getActionPointSubscriptions()
 		                     .stream()
-		                     .map(ActionPointSubscription::getActionSubscriptionId)
+		                     .map(ActionPointSubscription::getActionPoint)
+		                     .map(ActionPoint::getActionPointId)
 		                     .anyMatch(a -> a == actionPointId);
 	}
 

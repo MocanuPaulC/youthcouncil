@@ -63,6 +63,7 @@ public class PlatformUser implements Authenticable {
 	private List<YouthCouncilSubscription> youthCouncilSubscriptions = new ArrayList<>();
 	@OneToMany (fetch = FetchType.LAZY)
 	@ToString.Exclude
+	@JoinColumn (name = "subscriber")
 	private List<ActionPointSubscription> actionPointSubscriptions;
 	@OneToMany (fetch = FetchType.LAZY)
 	@ToString.Exclude
