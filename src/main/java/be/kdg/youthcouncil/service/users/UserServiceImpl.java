@@ -129,11 +129,14 @@ public class UserServiceImpl implements UserService {
 		PlatformUser user = userRepository.findByEmail(userRegisterViewModel.getEmail())
 		                                  .orElse(modelMapper.map(userRegisterViewModel, PlatformUser.class));
 
+		userRepository.save(user);
+
 		YouthCouncilSubscription subscription = youthCouncilSubscriptionRepository.findBySubscriberAndYouthCouncil(user, youthCouncil)
 		                                                                          .orElse(new YouthCouncilSubscription(
 				                                                                          user,
 				                                                                          youthCouncil,
 				                                                                          SubscriptionRole.COUNCIL_ADMIN));
+		youthCouncilSubscriptionRepository.save(subscription);
 		subscription.setRole(SubscriptionRole.COUNCIL_ADMIN);
 		user.addYouthCouncilSubscription(subscription);
 		youthCouncilSubscriptionRepository.save(subscription);
