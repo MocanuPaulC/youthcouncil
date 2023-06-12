@@ -118,7 +118,7 @@
 									  th:text="${idea.getUser().getUsername()}"></th:block>
 							<th:block th:if="${idea.getUser()==null}" th:text="${idea.getFullName()}"></th:block>
 						</span>
-						<span class="badge rounded-pill text-bg-info"
+						<span class="badge rounded-pill text-bg-info idea-theme"
 							  th:text="${idea.getSubTheme().getSubTheme()}"></span>
 					</p>
 					<p class="card-body idea-idea" th:text="${idea.getIdea()}"></p>
