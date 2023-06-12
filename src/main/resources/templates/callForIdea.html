@@ -113,9 +113,11 @@
 			<div class="idea col-12 col-md-6 col-xl-4 mb-2" th:each="idea: ${callForIdea.getIdeas()}">
 				<div class="card">
 					<p class="text-muted mb-1 card-header">
-					<p class="text-muted mb-1">
-						<th:block th:if="${idea.getUser()!=null}" th:text="${idea.getUser().getUsername()}"></th:block>
-						<th:block th:if="${idea.getUser()==null}" th:text="${idea.getFullName()}"></th:block>
+						<span class="idea-user">
+							<th:block th:if="${idea.getUser()!=null}"
+									  th:text="${idea.getUser().getUsername()}"></th:block>
+							<th:block th:if="${idea.getUser()==null}" th:text="${idea.getFullName()}"></th:block>
+						</span>
 						<span class="badge rounded-pill text-bg-info"
 							  th:text="${idea.getSubTheme().getSubTheme()}"></span>
 					</p>
