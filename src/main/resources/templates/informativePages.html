@@ -17,12 +17,14 @@
 			<a class="btn btn-primary" th:href="'/youthcouncils/' + ${municipality} + '/informativepages/create'">+</a>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" th:if="${informativePages.size() > 0}">
 		<div class="col-6 col-md-4 col-xl-3" th:each="page : ${informativePages}">
 			<div class="card">
 				<div class="card-body">
-					<h2><a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title}"
-						   th:text="${page.title.replaceAll('-', ' ')}"></a></h2>
+					<h2>
+						<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title}"
+						   th:text="${page.title.replaceAll('-', ' ')}"></a>
+					</h2>
 				</div>
 				<div class="card-footer">
 					<a th:href="'/youthcouncils/' + ${municipality} + '/informativepages/' + ${page.title} + '/edit'"
@@ -32,6 +34,9 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="row" th:unless="${informativePages.size() > 0}">
+		<p th:text="${municipality + ' has no informative pages!'}"></p>
 	</div>
 
 </section>

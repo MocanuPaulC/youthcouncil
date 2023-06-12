@@ -11,6 +11,7 @@ import be.kdg.youthcouncil.domain.users.PlatformUser;
 import be.kdg.youthcouncil.domain.youthcouncil.YouthCouncil;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.ActionPoint;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.CallForIdea;
+import be.kdg.youthcouncil.domain.youthcouncil.modules.ModuleStatus;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.enums.ActionPointStatus;
 import be.kdg.youthcouncil.service.EmailService;
 import be.kdg.youthcouncil.service.users.UserService;
@@ -32,7 +33,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -212,7 +212,11 @@ public class YouthCouncilController {
 	@GetMapping ("/{municipality}/announcements")
 	public String getAnnouncements(Model model, @PathVariable String municipality) {
 		model.addAttribute("municipality", municipality);
-		model.addAttribute("announcements", announcementService.findAll(municipality));
+		model.addAttribute("announcements", announcementService.findAll(municipality)
+		                                                       .stream()
+		                                                       .filter(a -> a.getModuleStatus()
+		                                                                     .equals(ModuleStatus.DISPLAYED))
+		                                                       .toList());
 		return "announcements";
 	}
 

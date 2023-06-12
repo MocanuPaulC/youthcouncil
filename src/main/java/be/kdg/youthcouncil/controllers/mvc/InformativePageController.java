@@ -4,6 +4,7 @@ package be.kdg.youthcouncil.controllers.mvc;
 import be.kdg.youthcouncil.controllers.mvc.viewModels.NewInformativePageViewModel;
 import be.kdg.youthcouncil.domain.youthcouncil.modules.InformativePage;
 import be.kdg.youthcouncil.exceptions.InformativePageNotFoundException;
+import be.kdg.youthcouncil.exceptions.MunicipalityNotFoundException;
 import be.kdg.youthcouncil.service.youthcouncil.YouthCouncilService;
 import be.kdg.youthcouncil.service.youthcouncil.modules.InformativePageService;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +32,12 @@ public class InformativePageController {
 
 	@GetMapping ("/youthcouncils/{municipality}/informativepages")
 	public String informativePages(Model model, @PathVariable String municipality) {
-		List<InformativePage> pages = youthCouncilService.getAllInformativePages(municipality);
+		List<InformativePage> pages;
+		try {
+			pages = youthCouncilService.getAllInformativePages(municipality);
+		} catch (MunicipalityNotFoundException e) {
+			pages = new ArrayList<>();
+		}
 		model.addAttribute("municipality", municipality);
 		model.addAttribute("informativePages", pages);
 		return "informativePages";
