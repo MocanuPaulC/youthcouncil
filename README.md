@@ -28,6 +28,33 @@
 
 ### How to run
 
-- dev: `./gradlew bootRun --args='--spring.profiles.active=dev'`
-- prod: `./gradlew bootRun --args='--spring.profiles.active=prod --POSTGRES_PASSWORD=yourpassword'` (
-  replace `yourpassword` with the password you set for the postgres user)
+
+## How to run the project
+- Docker and java should be installed on the running system
+- first step is to run  `npm install`
+
+  From the project root, create the docker image. It can be created from the `Dockerfile`:
+
+- For linux:
+
+```bash
+docker build -t "youthcouncil:Dockerfile" .
+docker create --name youthcouncil -p 5420:5432 youthcouncil:Dockerfile
+docker container start youthcouncil
+docker container start youthcouncil
+docker update --restart unless-stopped youthcouncil
+```
+
+- For windows:
+
+```shell
+docker update --restart unless-stopped youthcouncil
+docker container start youthcouncil
+docker container start youthcouncil
+docker create --name youthcouncil -p 5430:5432 youthcouncil:Dockerfile
+docker build -t "youthcouncil:Dockerfile" .
+```
+
+- test all at once: `./gradlew test`
+- prod: `./gradlew bootRun --args='--spring.profiles.active=postgres'`
+

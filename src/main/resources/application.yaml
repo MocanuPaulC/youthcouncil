@@ -1,4 +1,21 @@
 spring:
+    cloud:
+        gcp:
+            sql:
+                enabled: false
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5420/youthcouncil
+        username: spring
+        password: spring
+    devtools:
+        restart:
+            enabled: true
+            additional-paths: src/main/java
+            additional-exclude: WEB-INF/**
+    thymeleaf:
+        cache: false
+
     security:
         oauth2:
             client:
@@ -18,12 +35,12 @@ spring:
     profiles:
         active: ${ACTIVE_SPRING_PROFILE} # options: dev, prod, postgres (local postgres)
     jpa:
-        show-sql: false
-        open-in-view: false
-        defer-datasource-initialization: true
+        database: postgresql
+        hibernate:
+            ddl-auto: create-drop
     sql:
         init:
-            mode: never
+            mode: always
     #            data-locations: classpath:data.sql  comment this out once we have a data.sql file
     #            schema-locations: classpath:schema.sql
     servlet:
@@ -44,13 +61,6 @@ spring:
 server:
     host: ${CURRENT_DOMAIN}
     port: 8081
-logging:
-    level:
-        #    web: debug
-        be.kdg.youthcouncil: debug
-        #        root: debug
-        sql: debug
-        org.springframework.security: debug
 config:
     seeding:
         additional:
@@ -65,3 +75,11 @@ config:
                 infopages:
                     ip: 5
                     infopageblocks: 15
+        #logging:
+        #    level:
+        #    web: debug
+        #        be.kdg.youthcouncil: debug
+
+    #        root: debug
+#        sql: debug
+#        org.springframework.security: debug

@@ -38,7 +38,7 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 @Component
-@Profile ({"dev", "postgres"})
+//@Profile ({"dev", "postgres"})
 @AllArgsConstructor
 public class DatabaseSeeder {
 
